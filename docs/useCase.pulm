@@ -1,0 +1,50 @@
+@startuml
+
+:User: as usr
+:Admin: as org
+
+left to right direction
+
+
+package App {
+    (Connect to webApp) as InAPP
+    (Scan QRCode) as scanQR
+    package User {
+      (Scan Picture) as scanPic
+      (Play video in repeat) as startVid
+      (Switch to fullscreen video playback) as switchMod
+      (Mute / Unmute video) as mute
+      (Stop video playback) as closeVid
+    }
+    package Admin {
+      (Create project) as createPro
+      (Delete project) as deletePro
+      (Display project list) as listPro
+      (Duplicate project) as dupePro
+      (Rename project) as renaPro
+      (Upload picture on project) as UplPic
+      (Delete picture on project) as delPic
+      (Upload video on project) as UplVid
+      (Delete video on project) as delVid
+      (Upload song on project) as UplSon
+      (Delete song on project) as DelSon
+      (Login) as Login
+    }
+}
+
+org--addProject
+org--listProject
+org--InAPP
+
+
+usr--InAPP: Enter webapp URL
+usr--scanPic: View picture with camera
+usr--switchMod: Tracked picture is no longer detectable
+usr--mute
+usr--closeVid: Click on close button
+
+'Includes / extends
+startVid .> scanPic: << extends >> {if tracked picture is detected}
+scanQR .> InAPP: << extends >>
+
+@enduml
