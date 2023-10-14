@@ -1,0 +1,31 @@
+@startuml
+:User: as usr
+
+left to right direction
+
+
+package App {
+    (Connect to webApp) as InAPP
+    (Scan QRCode) as scanQR
+    Rectangle "User" {
+      (Scan Picture) as scanPic
+      (Play video in repeat) as startVid
+      (Switch to fullscreen video playback) as switchMod
+      (Mute / Unmute video) as mute
+      (Stop video playback) as closeVid
+    }
+}
+
+
+usr--InAPP: Enter webapp URL
+usr--scanPic: View picture with camera
+usr--switchMod: Tracked picture is no longer detectable
+usr--mute
+usr--closeVid: Click on close button
+
+
+'Includes / extends
+startVid .> scanPic: << extends >> {if tracked picture is detected}
+scanQR .> InAPP: << extends >>
+
+@enduml
