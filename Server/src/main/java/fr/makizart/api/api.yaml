@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: Admin API
+  version: 1.0.0
+  description: API for managing projects and user authentication
+paths:
+  /admin/projects:
+    get:
+      summary: Get a list of projects
+      description: Returns a list of projects created by the admin.
+      responses:
+        200:
+          description: List of projects successfully retrieved
+      security:
+        - GoogleOAuth2: []
+
+    post:
+      summary: Create a new project
+      description: Create a new project within the admin's account.
+      requestBody:
+        description: Project data to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        201:
+          description: Project successfully created
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{projectId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project to be accessed
+        required: true
+        schema:
+          type: integer
+      get:
+        summary: Get project details
+        description: Returns details of a specific project.
+        responses:
+          200:
+            description: Project details successfully retrieved
+        security:
+          - GoogleOAuth2: []
+
+      put:
+        summary: Update project details
+        description: Update the details of a specific project.
+        requestBody:
+          description: Updated project data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        responses:
+          200:
+            description: Project details successfully updated
+        security:
+          - GoogleOAuth2: []
+
+      delete:
+        summary: Delete a project
+        description: Delete a specific project.
+        responses:
+          204:
+            description: Project successfully deleted
+        security:
+          - GoogleOAuth2: []
+
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+      example:
+        name: "Sample Project"
+        description: "This is a sample project."
+
+securitySchemes:
+  GoogleOAuth2:
+    type: oauth2
+    flows:
+      authorizationCode:
+        authorizationUrl: "https://accounts.google.com/o/oauth2/auth"
+        tokenUrl: "https://accounts.google.com/o/oauth2/token"
+        scopes:
+          openid: OpenID Connect
+          profile: View user profile
