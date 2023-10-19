@@ -30,12 +30,12 @@ paths:
       security:
         - GoogleOAuth2: []
 
-  /admin/projects/{projectId}:
+  /admin/projects/{project_id}:
     get:
       summary: Get project details
       description: Returns details of a specific project.
       parameters:
-        - name: projectId
+        - name: project_id
           in: path
           description: ID of the project to be accessed
           required: true
@@ -51,7 +51,7 @@ paths:
       summary: Update project details
       description: Update the details of a specific project.
       parameters:
-        - name: projectId
+        - name: project_id
           in: path
           description: ID of the project to be accessed
           required: true
@@ -70,7 +70,7 @@ paths:
         - GoogleOAuth2: []
 
   /admin/projects/{project_id}/delete:
-    post:
+    delete:
       summary: Delete a project
       description: Delete a project by specifying the project ID to delete.
       parameters:
@@ -87,6 +87,110 @@ paths:
           description: Unauthorized. You do not have the necessary permissions.
         404:
           description: Project not found. The specified project ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}/deletePicture:
+    delete:
+      summary: Delete picture on project
+      description: Delete a picture by specifying the project ID containing the picture to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project containing the picture to be deleted.
+      responses:
+        201:
+          description: Picture deleted successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project not found. The specified project ID does not exist.
+        444:
+          description: Picture not found. The project does not contains picture.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}/deleteVideo:
+    delete:
+      summary: Delete video on project
+      description: Delete a video by specifying the project ID containing the video to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project containing the video to be deleted.
+      responses:
+        201:
+          description: Video deleted successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project not found. The specified project ID does not exist.
+        444:
+          description: Video not found. The project does not contains video.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}/deleteSong:
+    delete:
+      summary: Delete song on project
+      description: Delete a song by specifying the project ID containing the song to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project containing the song to be deleted.
+      responses:
+        201:
+          description: Song deleted successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project not found. The specified project ID does not exist.
+        444:
+          description: Song not found. The project does not contains song.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}{new_name}/renameProject:
+    post:
+      summary: Rename a project
+      description: Rename a project by specifying the new project name.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the picture.
+        - in: path
+          name: new_name
+          required: true
+          schema:
+            type: string
+          description: The new name of the project.
+      responses:
+        201:
+          description: Picture uploaded successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
         500:
           description: Internal server error. Please try again later.
       security:
