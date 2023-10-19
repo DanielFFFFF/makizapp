@@ -3,6 +3,7 @@ info:
   title: Admin API
   version: 1.0.0
   description: API for managing projects and user authentication
+  
 paths:
   /admin/projects:
     get:
@@ -30,44 +31,114 @@ paths:
         - GoogleOAuth2: []
 
   /admin/projects/{projectId}:
-    parameters:
-      - name: projectId
-        in: path
-        description: ID of the project to be accessed
+    get:
+      summary: Get project details
+      description: Returns details of a specific project.
+      parameters:
+        - name: projectId
+          in: path
+          description: ID of the project to be accessed
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Project details successfully retrieved
+      security:
+        - GoogleOAuth2: []
+
+    put:
+      summary: Update project details
+      description: Update the details of a specific project.
+      parameters:
+        - name: projectId
+          in: path
+          description: ID of the project to be accessed
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated project data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        200:
+          description: Project details successfully updated
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}/delete:
+    post:
+      summary: Delete a project
+      description: Delete a project by specifying the project ID to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project to delete.
+      responses:
+        201:
+          description: Project deleted successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project not found. The specified project ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}/duplicate:
+    post:
+      summary: Duplicate a project
+      description: Duplicate a project by specifying the project ID to duplicate.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project to duplicate.
+      responses:
+        201:
+          description: Project duplicated successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project not found. The specified project ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/create:
+    post:
+      summary: Create a project
+      description: Create a new project by specifying the project name.
+      requestBody:
         required: true
-        schema:
-          type: integer
-      get:
-        summary: Get project details
-        description: Returns details of a specific project.
-        responses:
-          200:
-            description: Project details successfully retrieved
-        security:
-          - GoogleOAuth2: []
-
-      put:
-        summary: Update project details
-        description: Update the details of a specific project.
-        requestBody:
-          description: Updated project data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-        responses:
-          200:
-            description: Project details successfully updated
-        security:
-          - GoogleOAuth2: []
-
-      delete:
-        summary: Delete a project
-        description: Delete a specific project.
-        responses:
-          204:
-            description: Project successfully deleted
-        security:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Project name.
+      responses:
+        201:
+          description: Project created successfully.
+        400:
+          description: Bad request. Check the input data.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        500:
+          description: Internal server error. Please try again later.
+      security:
           - GoogleOAuth2: []
 
 components:
@@ -85,13 +156,13 @@ components:
         name: "Sample Project"
         description: "This is a sample project."
 
-securitySchemes:
-  GoogleOAuth2:
-    type: oauth2
-    flows:
-      authorizationCode:
-        authorizationUrl: "https://accounts.google.com/o/oauth2/auth"
-        tokenUrl: "https://accounts.google.com/o/oauth2/token"
-        scopes:
-          openid: OpenID Connect
-          profile: View user profile
+  securitySchemes:
+    GoogleOAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: "https://accounts.google.com/o/oauth2/auth"
+          tokenUrl: "https://accounts.google.com/o/oauth2/token"
+          scopes:
+            openid: OpenID Connect
+            profile: View user profile
