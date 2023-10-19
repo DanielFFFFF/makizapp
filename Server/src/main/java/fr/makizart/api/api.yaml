@@ -3,7 +3,7 @@ info:
   title: Admin API
   version: 1.0.0
   description: API for managing projects and user authentication
-  
+
 paths:
   /admin/projects:
     get:
@@ -139,7 +139,97 @@ paths:
         500:
           description: Internal server error. Please try again later.
       security:
-          - GoogleOAuth2: []
+        - GoogleOAuth2: []
+
+
+  /admin/projects/{project_id}{picture_id}/uploadPicture:
+    post:
+      summary: Upload a picture on a project
+      description: Upload a picture on a project by specifying the project ID and the picture ID.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the picture.
+        - in: path
+          name: picture_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the picture to upload to the project.
+      responses:
+        201:
+          description: Picture uploaded successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}{video_id}/uploadVideo:
+    post:
+      summary: Upload a video on a project
+      description: Upload a video on a project by specifying the project ID and the video ID.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the video.
+        - in: path
+          name: video_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the video to upload to the project.
+      responses:
+        201:
+          description: Video uploaded successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project and/or video not found. The specified project ID and/or video ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+  /admin/projects/{project_id}{song_id}/uploadSong:
+    post:
+      summary: Upload a song on a project
+      description: Upload a song on a project by specifying the project ID and the song ID.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the song.
+        - in: path
+          name: song_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the song to upload to the project.
+      responses:
+        201:
+          description: Song uploaded successfully.
+        401:
+          description: Unauthorized. You do not have the necessary permissions.
+        404:
+          description: Project and/or song not found. The specified project ID and/or song ID does not exist.
+        500:
+          description: Internal server error. Please try again later.
+      security:
+        - GoogleOAuth2: []
+
+
 
 components:
   schemas:
