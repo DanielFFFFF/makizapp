@@ -11,20 +11,33 @@ paths:
       description: Returns a list of projects created by the admin.
       responses:
         200:
-          description: List of projects successfully retrieved
+          description: List of projects as string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: array
+                    items:
+                      type: string
 
     post:
       summary: Create a new project
-      description: Create a new project within the admin's account.
-      requestBody:
-        description: Project data to be created
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectMetadata'
+      description: Create a new project within the admin account.
+      parameters:
+        - name: project_id
+          in: query
+          description: ID of the project to be created
+          required: true
+          schema:
+            type: string
+
       responses:
-        201:
-          description: Project successfully created
+        200:
+          description: OK
+        400:
+          description: Invalid id
       security:
         - GoogleOAuth2: [admin]
 
@@ -38,13 +51,14 @@ paths:
           description: ID of the project to be accessed
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         200:
           description: Project metadata successfully retrieved
+        400:
+          description: Invalid id
       security:
         - GoogleOAuth2: [admin]
-
     delete:
       summary: Delete a project
       description: Delete a project by specifying the project ID to delete.
@@ -57,40 +71,15 @@ paths:
           description: The ID of the project to delete.
       responses:
         200:
-          description: Project deleted successfully.
+          description: OK
+        400:
+          description: Invalid id
         404:
           description: Project not found. The specified project ID does not exist.
         5XX:
           description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
-
-
-  /admin/projects/{project_id}/deletemedia:
-    delete:
-      summary: Delete media on project
-      description: Delete a media by specifying the project ID containing the media to delete.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project containing the picture to be deleted.
-      responses:
-        200:
-          description:  deleted successfully.
-        404:
-          description: Project not found or invalid permission.
-        444:
-          description: Picture not found. The project does not contains picture.
-        5XX:
-          description: Unexpected error
-      security:
-        - GoogleOAuth2: [admin]
-
-
-  /admin/projects/{project_id}{new_name}/renameProject:
     post:
       summary: Rename a project
       description: Rename a project by specifying the new project name.
@@ -101,17 +90,65 @@ paths:
           schema:
             type: string
           description: The ID of the project where to upload the picture.
-        - in: path
+        - in: query
           name: new_name
           required: true
           schema:
             type: string
           description: The new name of the project.
       responses:
+        200:
+          description: OK.
+        404:
+          description: Unauthorized or not found.
+        5XX:
+          description: Unexpected error
+      security:
+        - GoogleOAuth2: [ admin ]
+
+    put:
+      summary: Create a new project
+      description: Create a new project within the admin's account.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+      responses:
         201:
+          description: Project successfully created
+      security:
+        - GoogleOAuth2: [admin]
+
+  /admin/projects/{project_id}/addVideo:
+    post:
+      summary: Upload a video on a project
+      description: Upload a picture on a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the project.
+        - in: query
+          name: picture_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
           description: Picture uploaded successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
+        400:
+          description: Invalid name or unsupported media
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
         5XX:
@@ -119,37 +156,10 @@ paths:
       security:
         - GoogleOAuth2: [admin]
 
-  /admin/projects/{project_id}/duplicate:
-    post:
-      summary: Duplicate a project
-      description: Duplicate a project by specifying the project ID to duplicate.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project to duplicate.
-      responses:
-        201:
-          description: Project duplicated successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        404:
-          description: Project not found. The specified project ID does not exist.
-        5XX:
-          description: Unexpected error
-      security:
-        - GoogleOAuth2: [admin]
-
-  /admin/projects/create:
-
-
-
-  /admin/projects/{project_id}{picture_id}/uploadMedia:
+  /admin/projects/{project_id}/addImage:
     post:
       summary: Upload a picture on a project
-      description: Upload a picture on a project by specifying the project ID and the picture ID.
+      description: Upload a picture on a project
       parameters:
         - in: path
           name: project_id
@@ -157,18 +167,23 @@ paths:
           schema:
             type: string
           description: The ID of the project where to upload the picture.
-        - in: path
+        - in: query
           name: picture_id
           required: true
           schema:
             type: string
-          description: The ID of the picture to upload to the project.
-
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
       responses:
-        201:
+        200:
           description: Picture uploaded successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
+        400:
+          description: Invalid name or unsupported media
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
         5XX:
@@ -176,25 +191,102 @@ paths:
       security:
         - GoogleOAuth2: [admin]
 
+  /admin/projects/{project_id}/addSound:
+    post:
+      summary: Upload a picture on a project
+      description: Upload a picture on a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project where to upload the picture.
+        - in: query
+          name: picture_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          audio/mp3:
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        200:
+          description: Picture uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - GoogleOAuth2: [ admin ]
+
+  /admin/projects/{project_id}/{media_id}:
+
+    post:
+      summary: Rename media on project
+      description: Rename a media by specifying the project ID containing the media to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project containing the picture to be renamed.
+        - in: path
+          name: media_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to be deleted.
+      responses:
+        200:
+          description: Rename successfully.
+        404:
+          description: Project not found or invalid permission.
+        444:
+          description: Picture not found. The project does not contains picture.
+        5XX:
+          description: Unexpected error
+      security:
+        - GoogleOAuth2: [ admin ]
+
+    delete:
+      summary: Delete media on project
+      description: Delete a media by specifying the project ID containing the media to delete.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project containing the picture to be deleted.
+        - in: path
+          name: media_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to be deleted.
+      responses:
+        200:
+          description: deleted successfully.
+        404:
+          description: Project not found or invalid permission.
+        444:
+          description: Picture not found. The project does not contains picture.
+        5XX:
+          description: Unexpected error
+      security:
+        - GoogleOAuth2: [ admin ]
+
 
 components:
-  schemas:
-    ProjectMetadata:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        size:
-          type: integer
-        creationDate:
-          type: string
-      required:
-        - name
-      example:
-        name: "Sample Project"
-        description: "This is a sample project."
 
   securitySchemes:
     GoogleOAuth2:
