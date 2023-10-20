@@ -12,8 +12,6 @@ paths:
       responses:
         200:
           description: List of projects successfully retrieved
-      security:
-        - GoogleOAuth2: []
 
     post:
       summary: Create a new project
@@ -23,7 +21,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectMetadata'
       responses:
         201:
           description: Project successfully created
@@ -32,8 +30,8 @@ paths:
 
   /admin/projects/{project_id}:
     get:
-      summary: Get project details
-      description: Returns details of a specific project.
+      summary: Get project metadata
+      description: Returns metadata of a specific project such as size on disk, creation date.
       parameters:
         - name: project_id
           in: path
@@ -43,33 +41,10 @@ paths:
             type: integer
       responses:
         200:
-          description: Project details successfully retrieved
+          description: Project metadata successfully retrieved
       security:
         - GoogleOAuth2: [admin]
 
-    put:
-      summary: Update project details
-      description: Update the details of a specific project.
-      parameters:
-        - name: project_id
-          in: path
-          description: ID of the project to be accessed
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        description: Updated project data
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-      responses:
-        200:
-          description: Project details successfully updated
-      security:
-        - GoogleOAuth2: [admin]
-
-  /admin/projects/{project_id}/delete:
     delete:
       summary: Delete a project
       description: Delete a project by specifying the project ID to delete.
@@ -81,21 +56,20 @@ paths:
             type: string
           description: The ID of the project to delete.
       responses:
-        201:
+        200:
           description: Project deleted successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
         404:
           description: Project not found. The specified project ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
+        5XX:
+          description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
 
-  /admin/projects/{project_id}/deletePicture:
+
+  /admin/projects/{project_id}/deletemedia:
     delete:
-      summary: Delete picture on project
-      description: Delete a picture by specifying the project ID containing the picture to delete.
+      summary: Delete media on project
+      description: Delete a media by specifying the project ID containing the media to delete.
       parameters:
         - in: path
           name: project_id
@@ -104,68 +78,17 @@ paths:
             type: string
           description: The ID of the project containing the picture to be deleted.
       responses:
-        201:
-          description: Picture deleted successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
+        200:
+          description:  deleted successfully.
         404:
-          description: Project not found. The specified project ID does not exist.
+          description: Project not found or invalid permission.
         444:
           description: Picture not found. The project does not contains picture.
-        500:
-          description: Internal server error. Please try again later.
+        5XX:
+          description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
 
-  /admin/projects/{project_id}/deleteVideo:
-    delete:
-      summary: Delete video on project
-      description: Delete a video by specifying the project ID containing the video to delete.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project containing the video to be deleted.
-      responses:
-        201:
-          description: Video deleted successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        404:
-          description: Project not found. The specified project ID does not exist.
-        444:
-          description: Video not found. The project does not contains video.
-        500:
-          description: Internal server error. Please try again later.
-      security:
-        - GoogleOAuth2: [admin]
-
-  /admin/projects/{project_id}/deleteSong:
-    delete:
-      summary: Delete song on project
-      description: Delete a song by specifying the project ID containing the song to delete.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project containing the song to be deleted.
-      responses:
-        201:
-          description: Song deleted successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        404:
-          description: Project not found. The specified project ID does not exist.
-        444:
-          description: Song not found. The project does not contains song.
-        500:
-          description: Internal server error. Please try again later.
-      security:
-        - GoogleOAuth2: [admin]
 
   /admin/projects/{project_id}{new_name}/renameProject:
     post:
@@ -191,8 +114,8 @@ paths:
           description: Unauthorized. You do not have the necessary permissions.
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
+        5XX:
+          description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
 
@@ -214,39 +137,16 @@ paths:
           description: Unauthorized. You do not have the necessary permissions.
         404:
           description: Project not found. The specified project ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
+        5XX:
+          description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
 
   /admin/projects/create:
-    post:
-      summary: Create a project
-      description: Create a new project by specifying the project name.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: Project name.
-      responses:
-        201:
-          description: Project created successfully.
-        400:
-          description: Bad request. Check the input data.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        500:
-          description: Internal server error. Please try again later.
-      security:
-        - GoogleOAuth2: [admin]
 
 
-  /admin/projects/{project_id}{picture_id}/uploadPicture:
+
+  /admin/projects/{project_id}{picture_id}/uploadMedia:
     post:
       summary: Upload a picture on a project
       description: Upload a picture on a project by specifying the project ID and the picture ID.
@@ -271,79 +171,24 @@ paths:
           description: Unauthorized. You do not have the necessary permissions.
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
+        5XX:
+          description: Unexpected error
       security:
         - GoogleOAuth2: [admin]
-
-  /admin/projects/{project_id}{video_id}/uploadVideo:
-    post:
-      summary: Upload a video on a project
-      description: Upload a video on a project by specifying the project ID and the video ID.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project where to upload the video.
-        - in: path
-          name: video_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the video to upload to the project.
-      responses:
-        201:
-          description: Video uploaded successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        404:
-          description: Project and/or video not found. The specified project ID and/or video ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
-      security:
-        - GoogleOAuth2: [admin]
-
-  /admin/projects/{project_id}{song_id}/uploadSong:
-    post:
-      summary: Upload a song on a project
-      description: Upload a song on a project by specifying the project ID and the song ID.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project where to upload the song.
-        - in: path
-          name: song_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the song to upload to the project.
-      responses:
-        201:
-          description: Song uploaded successfully.
-        401:
-          description: Unauthorized. You do not have the necessary permissions.
-        404:
-          description: Project and/or song not found. The specified project ID and/or song ID does not exist.
-        500:
-          description: Internal server error. Please try again later.
-      security:
-        - GoogleOAuth2: [admin]
-
 
 
 components:
   schemas:
-    Project:
+    ProjectMetadata:
       type: object
       properties:
         name:
           type: string
         description:
+          type: string
+        size:
+          type: integer
+        creationDate:
           type: string
       required:
         - name
