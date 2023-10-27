@@ -5,7 +5,7 @@ info:
   description: API for managing projects and user authentication
 
 paths:
-  /admin/projects:
+  /public/projects:
     get:
       summary: Get a list of projects
       description: Returns a list of projects created by the admin.
@@ -22,6 +22,119 @@ paths:
                     items:
                       type: string
 
+  /public/projects/{project_id}/getProjectComposition:
+    get:
+      summary: Get what media should be played when detecting an image
+      description: Returns all element associated with image
+      parameters:
+        - name: project_id
+          in: path
+          description: ID of the project to be accessed
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description:  "Element in the form imageId:[mediaID1,mediaID2...]"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  medias:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+
+  /public/projects/{project_id}/getAllMediaNameInProject:
+      get:
+        summary: Get project element
+        description: Returns the id of all element in project along with associated type
+        parameters:
+          - name: project_id
+            in: path
+            description: ID of the project to be accessed
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: Return all project element list
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    medias:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          type:
+                            type: string
+
+  /public/projects/{project_id}/getLocallyStoredImage:
+    get:
+      summary: Get an image
+      description: Get an image stored on server
+      parameters:
+        - name: project_id
+          in: path
+          description: ID of the project to be accessed
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: media_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to be accessed.
+      responses:
+        200:
+          description: The media, in binary form
+          content:
+            image/jpeg:
+              schema:
+                  type: string
+                  format: binary
+        404:
+          description: image not found
+
+  /public/projects/{project_id}/getLocallyStoredSound:
+    get:
+      summary: Get a sound file
+      description: Get sound stored on server
+      parameters:
+        - name: project_id
+          in: path
+          description: ID of the project to be accessed
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: media_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the media to be accessed.
+      responses:
+        200:
+          description: The media, in binary form
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+
+  /admin/projects/:
     post:
       summary: Create a new project
       description: Create a new project within the admin account.
@@ -124,7 +237,7 @@ paths:
   /admin/projects/{project_id}/addVideo:
     post:
       summary: Upload a video on a project
-      description: Upload a picture on a project
+      description: Upload a video on a project
       parameters:
         - in: path
           name: project_id
@@ -133,7 +246,7 @@ paths:
             type: string
           description: The ID of the project where to upload the project.
         - in: query
-          name: picture_id
+          name: videoName
           required: true
           schema:
             type: string
@@ -146,7 +259,7 @@ paths:
               format: binary
       responses:
         200:
-          description: Picture uploaded successfully.
+          description: Video uploaded successfully.
         400:
           description: Invalid name or unsupported media
         404:
@@ -193,8 +306,8 @@ paths:
 
   /admin/projects/{project_id}/addSound:
     post:
-      summary: Upload a picture on a project
-      description: Upload a picture on a project
+      summary: Upload sound on a project
+      description: Upload sound on a project
       parameters:
         - in: path
           name: project_id
@@ -227,7 +340,7 @@ paths:
       security:
         - GoogleOAuth2: [ admin ]
 
-  /admin/projects/{project_id}/{media_id}:
+  /admin/projects/{project_id}/rename:
 
     post:
       summary: Rename media on project
@@ -239,7 +352,7 @@ paths:
           schema:
             type: string
           description: The ID of the project containing the picture to be renamed.
-        - in: path
+        - in: query
           name: media_id
           required: true
           schema:
@@ -289,11 +402,11 @@ paths:
 components:
 
   securitySchemes:
-    GoogleOAuth2:
+    SpringOAuth2:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: "https://accounts.google.com/o/oauth2/auth"
-          tokenUrl: "https://accounts.google.com/o/oauth2/token"
+          authorizationUrl: "http://localhost:9000/oauth2/authorize"
+          tokenUrl: "http://localhost:9000/oauth2/token"
           scopes:
             admin: Grants access to admin read/write operations

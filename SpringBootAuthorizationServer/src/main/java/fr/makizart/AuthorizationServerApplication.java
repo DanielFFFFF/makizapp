@@ -1,14 +1,11 @@
-package makizapp;
+package fr.makizart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MakizappApplication {
-
-
+public class AuthorizationServerApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(MakizappApplication.class, args);
+		SpringApplication.run(AuthorizationServerApplication.class, args);
 	}
-
 }

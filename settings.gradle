@@ -1,4 +1,5 @@
 rootProject.name = 'makizapp'
 include ':SpringBootServer'
 include ':Server'
+include 'SpringBootAuthorizationServer'
 

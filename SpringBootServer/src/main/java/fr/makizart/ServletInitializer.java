@@ -1,4 +1,4 @@
-package makizapp;
+package fr.makizart;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
