@@ -1,6 +1,5 @@
 package fr.makizart;
 
-import fr.makizart.datastore.common.StorageService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,12 +13,6 @@ import java.util.Map;
 public class RestController {
 
 
-	private final StorageService storageService;
-
-	@Autowired
-	public RestController(StorageService storageService) {
-		this.storageService = storageService;
-	}
 
 	@GetMapping("/public/projects")
 	public List<String> getProjects() {

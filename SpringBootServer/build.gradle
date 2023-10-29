@@ -30,7 +30,6 @@ dependencies {
     implementation 'org.postgresql:postgresql'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation project(path: ':Server')
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.security:spring-security-oauth2-authorization-server"
     implementation "org.springframework.security:spring-security-oauth2-client"
