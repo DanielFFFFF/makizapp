@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/makizapp>
+    url: jdbc:postgresql://localhost:5432/makizapp
     username: admin
     password: password
   jpa:

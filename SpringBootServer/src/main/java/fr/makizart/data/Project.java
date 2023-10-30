@@ -16,4 +16,20 @@ public class Project {
 
     @Column(name="NAME", nullable = false)
     private String name;
+
+    public List<ArRessource> getArRessource() {
+        return arRessource;
+    }
+
+    public void setArRessource(List<ArRessource> arRessource) {
+        this.arRessource = arRessource;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

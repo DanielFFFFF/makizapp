@@ -154,7 +154,7 @@ paths:
       security:
         - GoogleOAuth2: [admin]
 
-  /admin/projects/{project_id}:
+  /admin/projects/{project_id}/:
     get:
       summary: Get project metadata
       description: Returns metadata of a specific project such as size on disk, creation date.
@@ -340,7 +340,7 @@ paths:
       security:
         - GoogleOAuth2: [ admin ]
 
-  /admin/projects/{project_id}/rename:
+  /admin/projects/{project_id}/{media_id}/rename:
 
     post:
       summary: Rename media on project
@@ -352,7 +352,7 @@ paths:
           schema:
             type: string
           description: The ID of the project containing the picture to be renamed.
-        - in: query
+        - in: path
           name: media_id
           required: true
           schema:

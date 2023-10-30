@@ -54,7 +54,7 @@ public class RestController {
 		throw new NotImplementedException("Not Implemented");
 	}
 
-	@PostMapping("/admin/projects/{project_id}/rename")
+	@PostMapping("/admin/projects/{project_id}")
 	public ResponseEntity<String> renameProject(@PathVariable String project_id, @RequestParam String new_name) {
 		throw new NotImplementedException("Not Implemented");
 	}
@@ -74,8 +74,8 @@ public class RestController {
 		throw new NotImplementedException("Not Implemented");
 	}
 
-	@PostMapping("/admin/projects/{project_id}/rename")
-	public ResponseEntity<String> renameMedia(@PathVariable String project_id, @RequestParam String media_id, @RequestParam String new_name) {
+	@PostMapping("/admin/projects/{project_id}/{media_id}/rename")
+	public ResponseEntity<String> renameMedia(@PathVariable String project_id, @PathVariable String media_id, @RequestParam String new_name) {
 		throw new NotImplementedException("Not Implemented");
 	}
 
