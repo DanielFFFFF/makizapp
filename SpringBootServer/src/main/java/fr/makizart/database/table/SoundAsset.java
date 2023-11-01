@@ -1,9 +1,8 @@
-package fr.makizart.data;
+package fr.makizart.database.table;
 
 import jakarta.persistence.*;
 
 import java.net.URI;
-import java.nio.file.Path;
 
 @Entity
 @Table(name = "SOUNDASSET")

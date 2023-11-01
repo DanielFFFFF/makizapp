@@ -1,4 +1,4 @@
-package fr.makizart.data;
+package fr.makizart.database.table;
 
 import jakarta.persistence.*;
 
@@ -13,4 +13,12 @@ public class VideoAsset {
 
     @Column(name = "URL", nullable=false)
     private URL videoURL;
+
+    public URL getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(URL videoURL) {
+        this.videoURL = videoURL;
+    }
 }
