@@ -1,0 +1,27 @@
+.btn{
+  background-color : #0ACF97;
+  color: white;
+}
+
+.btn:hover{
+  background-color : #00B57D;
+  color: white;
+}
+
+.hr{
+  color: var(--bs-gray-600);
+}
+
+.project:hover {
+  background-color: var(--bs-gray-200);
+}
+
+.project:active {
+  background-color: var(--bs-gray-400);
+}
+
+.max-height-10 {
+  max-height: calc(50px * 10);
+  overflow-y: auto;
+}
+

@@ -1,0 +1,195 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<div *ngIf="entitySelected!=null" class="d-flex align-items-center" id="EntityPopup">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-7 row content rounded">
+
+        <div class="col-4 pe-1">
+          <div class="color-component rounded p-3">
+            <div class="colorBack d-flex justify-content-center rounded mb-1">
+              <div class="flex-column">
+                <h1 class="mt-2 text-center">{{entitySelected.name}}</h1>
+                <div class="d-flex flex-column colorFont">
+                  <h6><b>Auteur</b> : {{entitySelected.author}}</h6>
+                  <h6><b>Créé le</b> : {{entitySelected.creationDate}}</h6>
+                  <h6><b>Nb d'accès</b> : {{entitySelected.accessCount}}</h6>
+
+                  <hr class="hr mb-0 mt-2" />
+
+                  <h6><b>Image</b> : {{entitySelected.picture_size}}Mb</h6>
+                  <h6><b>Son</b> : {{entitySelected.audio_size}}Mb</h6>
+                  <h6><b>Vidéo</b> : {{entitySelected.video_size}}Mb</h6>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center rounded mt-3">
+              <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="saveEntity()">Appliquer les modifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4 pe-1">
+          <div class="row">
+
+            <div class="col-12 mb-2">
+              <div class="color-component rounded p-2">
+                <div class="d-flex justify-content-center">
+                  <div class="flex-column">
+                    <h4 class="mt-2 text-center">Image</h4>
+                    <div class="d-flex border colorBack square mb-3 position-relative hidden">
+                      <img class="mh-100 mw-100" src="{{entitySelected.picture_url}}">
+                      <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none" (click)="uploadNewPicture()" data-toggle="tooltip" title="Upload une nouvelle image">upload</button>
+                      <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none" (click)="deletePicture()" data-toggle="tooltip" title="Supprimer l'image">close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="color-component rounded p-2">
+                <div class="d-flex justify-content-center">
+                  <div class="flex-column">
+                    <h4 class="mt-2 text-center">Vidéo</h4>
+                    <div class="d-flex border colorBack square mb-1">
+                      <iframe class="mw-100 mh-100" [src]="entitySelected.video_url | safe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="d-flex border colorBack mb-3">
+                      <input type="text" class="form-control" placeholder="Url..." value="{{entitySelected.video_url}}" (change)="setModified()">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4 pe-1">
+          <div class="row">
+            <div class="col-12 mb-2">
+              <div class="color-component rounded p-2 hidden">
+                <div class="d-flex justify-content-center">
+                  <div class="flex-column">
+                    <h4 class="mt-2 text-center">Son</h4>
+                    <figure>
+                      <audio controls src="https://universal-soundbank.com/sounds/1645.mp3"></audio>
+                    </figure>
+                    <div class="d-flex justify-content-between">
+                      <button type="button" class="p-1 btn material-symbols-outlined" (click)="uploadNewAudio()" data-toggle="tooltip" title="Upload un nouveau son">upload</button>
+                      <button type="button" class="p-1 btn material-symbols-outlined" (click)="deleteAudio()" data-toggle="tooltip" title="Supprimer le son">close</button>
+                    </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12">
+              <div class="color-component rounded p-2 hidden">
+                <div class="d-flex justify-content-center">
+                  <div class="flex-column">
+                    <h4 class="mt-2 text-center">Marker</h4>
+                    <h6>Etat : {{entitySelected.marker_state}}</h6>
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="p-1 btn material-symbols-outlined" (click)="saveEntity()" data-toggle="tooltip" title="Créer / re-créer le marker">frame_reload</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid color-component rounded mb-3">
+  <div class="row ms-2">
+
+    <div class="col-12 me-0 ms-0 pe-2 ps-2" id="research">
+      <div class="col-lg-3 col-xl-2 col-sm-6 col-md-3 mt-4 colorBack rounded">
+        <div class="custom-form colorFont">
+          <span class="material-symbols-outlined ms-2">search</span>
+          <input class="form-control" type="search" placeholder="Rechercher ...">
+        </div>
+      </div>
+    </div>
+    <div class="col-12 row me-0 ms-0 pe-2 ps-2">
+      <div class="d-flex justify-content-between mt-4 rounded colorBack" id="bar">
+        <div class="d-flex align-items-center">
+          <span class="colorFont">{{project.name}}</span>
+        </div>
+        <div class="d-flex align-items-center mt-2 mb-2">
+          <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="createNewEntity()" [disabled]="project.id == -1">+ Créer nouveau</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 row-column justify-content-center col-12 ps-2 pe-2 mt-2 mb-3 max-height-10" id="entityShowing">
+      <div *ngIf="project.id != -1">
+        <div class="container-fluid ms-0 me-0">
+          <div class="row justify-content-center">
+          <div *ngFor="let entity of entities" class="col-3">
+            <div class="border-bottom mt-1 mb-1 card" (click)="this.entitySelected = entity;">
+              <img class="mh-100 mw-100" src="{{entity.picture_url}}" alt="Url non valide">
+              <h4 class="mb-1 text-center">{{entity.name}}</h4>
+            </div>
+          </div>
+              <!--div class ="d-flex flex-row ms-3 colorFont">
+
+                <div class="flex-1-5 d-flex flex-column" id="information">
+                  <h3 class="mb-3">{{entity.name}}</h3>
+                  <h6>Auteur : {{entity.author}}</h6>
+                  <h6>Créé le : {{entity.creationDate}}</h6>
+                  <h6>Nb d'accès : {{entity.accessCount}}</h6>
+                </div>
+                <div class="flex-1-5 ps-3 pe-3">
+                  <div class="border border-3 mh-100 d-flex justify-content-center">
+                    <img class="mh-100 mw-100" src="{{entity.picture_url}}" alt="Url non valide">
+                  </div>
+                  <h4 class="text-center">Image</h4>
+                </div>
+                <div class="flex-1-5 d-flex flex-column justify-content-center ps-3 pe-3">
+                  <div class="border border-3 d-flex justify-content-center">
+                    <audio src="{{entity.audio_url}}">dsdsd </audio>
+
+                    <audio controls class="audioPlayer">
+                      <source src="{{entity.audio_url}}" type="audio/ogg">
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                  <h4 class="text-center">Son</h4>
+                </div>
+                <div class="flex-1-5" id="video" style="background-color: orange;">
+                  <span>toto</span>
+                </div>
+                <div class="flex-1-5" id="marker" style="background-color: purple;">
+                  <span>toto</span>
+                </div>
+              </div>
+              <hr class="hr mb-1 mt-2" />
+            </div-->
+
+        </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>
