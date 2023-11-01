@@ -1,4 +1,4 @@
-package fr.makizart.data;
+package fr.makizart.database.table;
 
 import jakarta.persistence.*;
 
@@ -31,4 +31,6 @@ public class ImageAsset {
     public void setPathToRessource(URI pathToRessource) {
         this.pathToRessource = pathToRessource;
     }
+
+
 }
