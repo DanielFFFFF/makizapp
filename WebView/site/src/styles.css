@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* Imports*/
+
+/* Import boostrap */
+@import "node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+body{
+  background-color : #F6F7FA;
+  font-family: "Calibri";
+}
+
+.color-component{
+  background-color: var(--bs-white);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
