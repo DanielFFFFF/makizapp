@@ -1,82 +1,92 @@
 package fr.makizart.datastore;
 
 import fr.makizart.datastore.common.StorageService;
-import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.stereotype.Component;
 
+import javax.naming.NameAlreadyBoundException;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.net.URL;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Component
 public class SimpleStorageService implements StorageService {
 	@Override
 	public List<String> getProjects() {
-		throw new NotImplementedException();
+		return null;
 	}
 
 	@Override
-	public Map<String, List<String>> getProjectComposition(String projectId) {
-		throw new NotImplementedException();
+	public Map<String, List<String>> getProjectComposition(String projectId) throws NoSuchElementException {
+		return null;
 	}
 
 	@Override
-	public List<Map<String, String>> getAllMediaNameInProject(String projectId) {
-		throw new NotImplementedException();
+	public List<Map<String, String>> getAllMediaNameInProject(String projectId) throws NoSuchElementException {
+		return null;
 	}
 
 	@Override
-	public File getLocallyStoredImage(String projectId, String mediaId) {
-		throw new NotImplementedException();
+	public File getLocallyStoredImage(String projectId, String mediaId) throws NoSuchElementException {
+		return null;
 	}
 
 	@Override
-	public File getLocallyStoredSound(String projectId, String mediaId) {
-		throw new NotImplementedException();
+	public File getLocallyStoredSound(String projectId, String mediaId) throws NoSuchElementException {
+		return null;
 	}
 
 	@Override
-	public String createProject(String projectId) {
-		throw new NotImplementedException();
+	public String createProject(String projectName) throws NameAlreadyBoundException {
+		return null;
 	}
 
 	@Override
-	public String getProjectMetadata(String projectId) {
-		throw new NotImplementedException();
+	public String getProjectMetadata(String projectId) throws NoSuchElementException {
+		return null;
 	}
 
 	@Override
-	public String deleteProject(String projectId) {
-		throw new NotImplementedException();
+	public boolean deleteProject(String projectId) throws NoSuchElementException {
+		return false;
 	}
 
 	@Override
-	public String renameProject(String projectId, String newName) {
-		throw new NotImplementedException();
+	public String renameProject(String projectId, String newName) throws NoSuchElementException, InvalidParameterException {
+		return null;
 	}
 
 	@Override
-	public void saveRemoteVideo(String projectId, String pictureId, String videoData) {
-		throw new NotImplementedException();
+	public void saveRemoteVideo(String projectId, String pictureId, URL videoUrl) throws NoSuchElementException, InvalidParameterException {
+
 	}
 
 	@Override
-	public void saveImage(String projectId, String pictureId, Image imageData) {
-		throw new NotImplementedException();
+	public void saveImage(String projectId, String pictureId, Image imageData) throws InvalidParameterException, NoSuchElementException {
+
 	}
 
 	@Override
-	public void saveSound(String projectId, String pictureId, byte[] soundData) {
-		throw new NotImplementedException();
+	public void saveSound(String projectId, String pictureId, byte[] soundData) throws InvalidParameterException, NoSuchElementException, NameAlreadyBoundException {
+
 	}
 
 	@Override
-	public void renameMedia(String projectId, String mediaId, String newName) throws NoSuchElementException {
-		throw new NotImplementedException();
+	public void saveSound(String projectId, String pictureId, ByteArrayInputStream inputStream) throws InvalidParameterException, NoSuchElementException {
+
 	}
 
 	@Override
-	public String deleteMedia(String projectId, String mediaId) throws NoSuchElementException {
-		throw new NotImplementedException();
+	public void renameMedia(String projectId, String mediaId, String newName) throws NoSuchElementException, InvalidParameterException {
+
+	}
+
+	@Override
+	public String deleteMedia(String projectId, String mediaId) throws NoSuchElementException, InvalidParameterException {
+		return null;
 	}
 }

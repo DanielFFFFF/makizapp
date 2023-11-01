@@ -6,13 +6,16 @@ import java.net.URI;
 
 @Entity
 @Table(name="ArRessource")
-public class ArRessource {
+public class ArResource {
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(name="PATH_TO_MARKERS", nullable=false)
     private URI pathToMarkers;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private ImageAsset thumbnail;
 
     @OneToOne(cascade = CascadeType.ALL)
     private ImageAsset imageAsset;
@@ -63,4 +66,11 @@ public class ArRessource {
     }
 
 
+    public ImageAsset getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(ImageAsset thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }
