@@ -7,6 +7,7 @@ import { ProjectManagerComponent } from './project-manager/project-manager.compo
 import { ProjectEditorComponent } from './project-editor/project-editor.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import {SafePipe} from "./commons/safe.pipe";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -16,10 +17,11 @@ import {SafePipe} from "./commons/safe.pipe";
     TopBarComponent,
     SafePipe
   ],
-  imports: [
-    BrowserModule,
-    NgbModule
-  ],
+    imports: [
+        BrowserModule,
+        NgbModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

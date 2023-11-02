@@ -12,13 +12,18 @@ export class ProjectManagerComponent {
 
   storage: number[] = [1,15];
 
-  //private idProjectSelected = any;
-
   constructor(private projectService: DataService) {
+    this.updateApp();
+  }
+
+  updateApp(){
+    //TODO recupérer depuis le serveur les noms des projets
     for (let i = 0; i < 20; i++) {
       const newProject = new Project(i + 1, `Projet ${i + 1}`);
       this.projects.push(newProject);
     }
+
+    //TODO récupérer depuis le serveur les infos du stockage
   }
 
   changeSelectedProject(project: Project){

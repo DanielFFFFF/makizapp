@@ -7,16 +7,17 @@
   <div class="container">
 
     <div class="row" id="projectManager">
-      <div class="col-12 d-flex flex-row ps-5 pb-2">
-        <span class="material-symbols-outlined align-bottom ">folder_copy</span>
-        <h4 class="pt-0">   Les projets AREGLER</h4>
+      <div class="col-12 d-flex flex-row justify-content-center pb-2">
+        <span class="material-symbols-outlined align-bottom ms-0 me-2">folder_copy</span>
+        <h4 class="pt-0">   Les projets</h4>
       </div>
 
       <div class="col-12" id="listProject">
         <div *ngIf="projects.length!=0;else projectEmpty" class="max-height-10">
-          <div *ngFor="let project of projects" class="mb-n1 pt-1 cursor-pointer user-select-none project" (click)="changeSelectedProject(project)">
+          <div *ngFor="let project of projects" class="hidden mb-n1 pt-1 cursor-pointer user-select-none project" (click)="changeSelectedProject(project)">
             <span class="material-symbols-outlined align-bottom ">folder</span>
             <span class="mt-5">  {{project.name}}</span>
+            <!--button type="button" class="material-symbols-outlined btn px-lg-5 px-sm-4 shadow-sm">close</button-->
             <hr class="hr mb-0 mt-2" />
           </div>
         </div>

@@ -6,6 +6,7 @@
 body{
   background-color : #F6F7FA;
   font-family: "Calibri";
+  overflow-y: scroll;
 }
 
 .color-component{
