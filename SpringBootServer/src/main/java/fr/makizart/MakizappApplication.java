@@ -3,13 +3,12 @@ package fr.makizart;
 import fr.makizart.database.repositories.ArRessourceAssetRepository;
 import fr.makizart.database.repositories.ImageAssetRepository;
 import fr.makizart.database.repositories.VideoAssetRepository;
-import fr.makizart.database.table.ArRessource;
+import fr.makizart.database.table.ArResource;
 import fr.makizart.database.table.ImageAsset;
 import fr.makizart.database.table.Project;
 import fr.makizart.database.repositories.ProjectRepository;
 import fr.makizart.database.table.VideoAsset;
 import jakarta.transaction.Transactional;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,19 +18,18 @@ import org.springframework.context.event.EventListener;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 @SpringBootApplication
 public class MakizappApplication {
 
 	private final ArRessourceAssetRepository arRessourceAssetRepository;
+
 	@Autowired
-	private ProjectRepository projectRepository;
+	public ProjectRepository projectRepository;
 	@Autowired
-	private ImageAssetRepository imageAssetRepository
-			;
+	public ImageAssetRepository imageAssetRepository;
 	@Autowired
-	private VideoAssetRepository videoAssetRepository;
+	public VideoAssetRepository videoAssetRepository;
 
 	public MakizappApplication(ArRessourceAssetRepository arRessourceAssetRepository) {
 		this.arRessourceAssetRepository = arRessourceAssetRepository;
@@ -56,21 +54,21 @@ public class MakizappApplication {
 		imageAssetRepository.save(imageAsset);*/
 
 		Project asset = new Project();
-		ArRessource arRessource = new ArRessource();
-		arRessource.setPathToMarkers(new URI("file://test"));
+		ArResource arResource = new ArResource();
+		arResource.setPathToMarkers(new URI("file://test"));
 /*		arRessourceAssetRepository.save(arRessource);*/
 
 
 		asset.setName("foo");
-		asset.getArRessource().add(arRessource);
-		arRessource.setImageAsset(imageAsset);
-		arRessource.setVideoAsset(videoAsset);
+		asset.getArResource().add(arResource);
+		arResource.setImageAsset(imageAsset);
+		arResource.setVideoAsset(videoAsset);
 
 		projectRepository.save(asset);
 		System.out.println(projectRepository.findAll());
 
 		var project = projectRepository.findAll().get(0);
-		System.out.println(project.getArRessource().get(0).getVideoAsset().getVideoURL());
+		System.out.println(project.getArResource().get(0).getVideoAsset().getVideoURL());
 
 	}
 

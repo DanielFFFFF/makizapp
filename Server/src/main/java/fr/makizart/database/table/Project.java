@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Project {
 
     public Project() {
-        arRessource= Objects.requireNonNullElse(this.arRessource, new ArrayList<>());
+        arResource = Objects.requireNonNullElse(this.arResource, new ArrayList<>());
     }
 
     @Id
@@ -19,13 +19,13 @@ public class Project {
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<ArRessource> arRessource;
+    private List<ArResource> arResource;
 
     @Column(name="NAME", nullable = false)
     private String name;
 
-    public List<ArRessource> getArRessource() {
-        return arRessource;
+    public List<ArResource> getArResource() {
+        return arResource;
     }
 
     public String getName() {

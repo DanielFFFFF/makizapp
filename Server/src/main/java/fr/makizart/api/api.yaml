@@ -151,6 +151,8 @@ paths:
           description: OK
         400:
           description: Invalid id
+        409:
+          description: If resource already exist
       security:
         - GoogleOAuth2: [admin]
 
@@ -214,6 +216,8 @@ paths:
           description: OK.
         404:
           description: Unauthorized or not found.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
@@ -250,6 +254,11 @@ paths:
           required: true
           schema:
             type: string
+        - in: query
+          name: url
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -264,6 +273,8 @@ paths:
           description: Invalid name or unsupported media
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
@@ -281,7 +292,7 @@ paths:
             type: string
           description: The ID of the project where to upload the picture.
         - in: query
-          name: picture_id
+          name: name
           required: true
           schema:
             type: string
@@ -299,6 +310,8 @@ paths:
           description: Invalid name or unsupported media
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
@@ -316,7 +329,7 @@ paths:
             type: string
           description: The ID of the project where to upload the picture.
         - in: query
-          name: picture_id
+          name: name
           required: true
           schema:
             type: string
@@ -335,6 +348,8 @@ paths:
           description: Invalid name or unsupported media
         404:
           description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
@@ -361,10 +376,12 @@ paths:
       responses:
         200:
           description: Rename successfully.
-        404:
+        400:
           description: Project not found or invalid permission.
-        444:
+        404:
           description: Picture not found. The project does not contains picture.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
@@ -391,8 +408,8 @@ paths:
           description: deleted successfully.
         404:
           description: Project not found or invalid permission.
-        444:
-          description: Picture not found. The project does not contains picture.
+        409:
+          description: If resource already exist
         5XX:
           description: Unexpected error
       security:
