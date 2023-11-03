@@ -1,7 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
 import {Entity} from "../commons/Entity";
-import {DataService} from "../commons/DataService";
+import {ProjectSelector} from "../commons/ProjectSelector";
+import {ProjectRemover} from "../commons/ProjectRemover";
 
 @Component({
   selector: 'project-editor',
@@ -15,16 +16,17 @@ import {DataService} from "../commons/DataService";
  */
 export class ProjectEditorComponent {
   /**
-   * @property {ElementRef | null} filterEntity - Référence à l'élément HTML pour filtrer les entités.
-   * @property {Project} project - Le projet actuellement édité (initialisé à un projet (id = -1) pour afficher le texte par défaut : "Selectionnez un projet...".
-   * @property {Entity[]} entities - Liste de toutes les entités du projet. Cette liste est complête et non filtrée.
-   * @property {Entity[]} entitiesFiltered - Liste des entités filtrées. Cette liste est filtrée selon la barre de recherche.
-   * @property {Entity | null} entitySelected - L'entité actuellement sélectionnée pour l'édition. Elle peut être null, dans ce cas le menu d'édition d'entité n'est pas affiché.
-   * @property {boolean} videoMod - Indique si le mode vidéo est activé. Cette variable sert lorsque le mode d'édition d'entité est activé, comme l'utilisateur peut choisir soit une vidéo, soit une image, le bloc d'édition change selon cette variable.
-   * @property {boolean} saved - Indique si les modifications ont été enregistrées. Permet d'avoir un visuel (boutton rouge) lorsqu'on quitte le mode d'édition.
+   * @property {ElementRef | null} filterEntity - Reference to the HTML element for filtering entities.
+   * @property {Project} project - The currently edited project (initialized to a project (id = -1) to display the default text: "Select a project...").
+   * @property {Entity[]} entities - List of all entities in the project. This list is complete and unfiltered.
+   * @property {Entity[]} entitiesFiltered - List of filtered entities. This list is filtered according to the search bar.
+   * @property {Entity | null} entitySelected - The currently selected entity for editing. It can be null; in that case, the entity edit menu is not displayed.
+   * @property {boolean} videoMod - Indicates if the video mode is enabled. This variable is used when the entity edit mode is active, as the user can choose either a video or an image; the edit block changes according to this variable.
+   * @property {boolean} saved - Indicates whether changes have been saved. It provides a visual (red button) when leaving edit mode.
    */
   @ViewChild('filterEntity') filterEntity: ElementRef | null = null;
-  public project: Project = new Project(-1, "Selectionnez un projet ...");
+  defaultProject = new Project(-1, "Selectionnez un projet ...");
+  public project: Project = this.defaultProject;
   entities : Entity[] = [];
   entitiesFiltered : Entity[] = [];
   entitySelected : Entity | null = null;
@@ -32,16 +34,16 @@ export class ProjectEditorComponent {
   saved : boolean = false;
 
 
-  constructor(private projectService: DataService) {}
+  constructor(private projectSelected: ProjectSelector, private projectToDelete: ProjectRemover) {}
 
   /**
    * @method ngOnInit()
-   * Méthode d'initialisation du composant.
-   * Elle est utilisée pour communiquer avec le service DataService
-   * permettant de récupérer le projet selectionné dans la liste des projets.
+   * Component initialization method.
+   * It is used to communicate with the ProjectSelector to retrieve
+   * the selected project from the list of projects.
    */
   ngOnInit() {
-      this.projectService.project$.subscribe(project => {
+      this.projectSelected.project$.subscribe(project => {
           this.project = project;
           this.updateProjectSelected()
       });
@@ -49,9 +51,9 @@ export class ProjectEditorComponent {
 
   /**
    * @method updateProjectSelected()
-   * Met à jour le projet selectionné.
-   * Etape 1 : Mise à jour de la liste des entités du projet.
-   * Etape 2 : Mise à jour des informations du projet : (accessCount, date de création)
+   * Updates the selected project.
+   * Step 1: Update the list of entities in the project.
+   * Step 2: Update the project information: (accessCount, creation date)
    */
   updateProjectSelected() {
     this.entities = [];
@@ -65,8 +67,8 @@ export class ProjectEditorComponent {
 
   /**
    * @method filterList()
-   * Filtre la liste des entités en fonction de la valeur saisie dans la barre de recherche.
-   * Si rien n'a été saisi, alors c'est la liste complête qui est affichée.
+   * Filters the list of entities based on the value entered in the search bar.
+   * If nothing is entered, the complete list is displayed.
    */
   filterList(){
     if(this.filterEntity != null){
@@ -80,7 +82,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method formatDate(date: Date): string
-   * Formate une date en chaîne de caractères de cette façon : DD/MM/YY.
+   * Formats a date into a string in this way: DD/MM/YY.
    */
   formatDate(date: Date):string{
     const day = date.getDate().toString().padStart(2, '0');
@@ -90,9 +92,9 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method switchEntityDisplayed(entity : Entity)
-   * Change l'entité actuellement affichée pour l'édition.
-   * Selectionne également le mode de l'entité (Vidéo ou image)
+   * @method switchEntityDisplayed(entity: Entity)
+   * Changes the currently displayed entity for editing.
+   * Also selects the entity mode (Video or image).
    */
   switchEntityDisplayed(entity : Entity){
     this.entitySelected = entity;
@@ -103,7 +105,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method createNewEntity()
-   * Crée une nouvelle entité et l'envoie au serveur.
+   * Creates a new entity and sends it to the server.
    */
   createNewEntity(){
     //TODO create the new entity and push into the server
@@ -112,7 +114,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method uploadNewTrackedPicture()
-   * Télécharge une nouvelle image suivie pour l'entité sélectionnée.
+   * Uploads a new tracked picture for the selected entity.
    */
   uploadNewTrackedPicture(){
     //TODO Upload a tracked picture for this selected entity
@@ -122,7 +124,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteTrackedPicture()
-   * Supprime l'image suivie de l'entité sélectionnée.
+   * Deletes the tracked picture of the selected entity.
    */
   deleteTrackedPicture(){
     //TODO Delete the tracked picture of this selected entity
@@ -131,7 +133,7 @@ export class ProjectEditorComponent {
   }
   /**
    * @method uploadNewPicture()
-   * Télécharge une nouvelle image pour l'entité sélectionnée.
+   * Uploads a new image for the selected entity.
    */
   uploadNewPicture(){
     //TODO Upload a picture for this selected entity
@@ -140,8 +142,8 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method uploadNewPicture()
-   * Télécharge une nouvelle image pour l'entité sélectionnée.
+   * @method deletePicture()
+   * Deletes the picture of the selected entity.
    */
   deletePicture(){
     //TODO Delete the picture of this selected entity
@@ -150,8 +152,8 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method deletePicture()
-   * Supprime l'image de l'entité sélectionnée.
+   * @method uploadNewAudio()
+   * Uploads a new audio file for the selected entity.
    */
   uploadNewAudio(){
     //TODO Upload a audio for this selected entity
@@ -161,7 +163,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteAudio()
-   * Supprime le fichier audio de l'entité sélectionnée.
+   * Deletes the audio file of the selected entity.
    */
   deleteAudio(){
     //TODO Delete the audio of this selected entity
@@ -171,7 +173,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method reloadMarker()
-   * Recharge le marqueur.
+   * Reloads the marker.
    */
   reloadMarker(){
     //TODO reload the marker
@@ -180,7 +182,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method saveEntity()
-   * Enregistre l'entité en la poussant sur le serveur.
+   * Saves the entity by pushing it to the server.
    */
   saveEntity(){
     //TODO Save the entity by push into the server
@@ -189,10 +191,20 @@ export class ProjectEditorComponent {
 
   /**
    * @method exitEdition()
-   * Quitte le mode d'édition.
+   * Exits edit mode.
    */
   exitEdition(){
     this.entitySelected = null;
     this.saved = false;
+  }
+
+  /**
+   * @method deleteProject()
+   * Delete the project.
+   */
+  deleteProject(){
+    console.log("Delete project required");
+    this.projectToDelete.setProject(this.project);
+    this.project = this.defaultProject;
   }
 }

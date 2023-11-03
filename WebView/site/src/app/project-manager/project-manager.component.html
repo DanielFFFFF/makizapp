@@ -14,10 +14,9 @@
 
       <div class="col-12" id="listProject">
         <div *ngIf="projects.length!=0;else projectEmpty" class="max-height-10">
-          <div *ngFor="let project of projects" class="hidden mb-n1 pt-1 cursor-pointer user-select-none project" (click)="changeSelectedProject(project)">
+          <div *ngFor="let project of projects" (click)="changeSelectedProject(project)" class="hidden pt-1 cursor-pointer user-select-none project">
             <span class="material-symbols-outlined align-bottom ">folder</span>
             <span class="mt-5">  {{project.name}}</span>
-            <!--button type="button" class="material-symbols-outlined btn px-lg-5 px-sm-4 shadow-sm">close</button-->
             <hr class="hr mb-0 mt-2" />
           </div>
         </div>

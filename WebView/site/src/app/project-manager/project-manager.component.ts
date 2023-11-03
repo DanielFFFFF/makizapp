@@ -1,6 +1,7 @@
 import {Component, Output} from '@angular/core';
 import {Project} from "../commons/Project";
-import {DataService} from "../commons/DataService";
+import {ProjectSelector} from "../commons/ProjectSelector";
+import {ProjectRemover} from "../commons/ProjectRemover";
 
 @Component({
   selector: 'project-manager',
@@ -12,30 +13,46 @@ export class ProjectManagerComponent {
 
   storage: number[] = [1,15];
 
-  constructor(private projectService: DataService) {
+  constructor(private projectSelected: ProjectSelector, private projectDeleted: ProjectRemover) {
     this.updateApp();
+  }
+
+  ngOnInit() {
+    //If there are changes (project deletion), the list must be updated.
+    this.projectDeleted.project$.subscribe(project => {
+      this.deleteProject(project);
+    });
   }
 
   updateApp(){
     //TODO recupérer depuis le serveur les noms des projets
+    this.projects = [];
     for (let i = 0; i < 20; i++) {
-      const newProject = new Project(i + 1, `Projet ${i + 1}`);
+      const newProject = new Project(i + 1, `Projig,ug,,gi,,i,,i,ii,,i,i,i,,et ${i + 1}`);
       this.projects.push(newProject);
     }
 
     //TODO récupérer depuis le serveur les infos du stockage
+
+    console.log("Project up to date");
   }
 
   changeSelectedProject(project: Project){
-    this.projectService.setProject(project);
+    this.projectSelected.setProject(project);
   }
 
   createNewProject(){
     console.log('Le bouton de création de nouveau projet a été cliqué');
   }
 
+
   getPercentOfStorage(): number{
     return isNaN((this.storage)[0] / (this.storage)[1] * 100) ? 0: Math.trunc((this.storage)[0] / (this.storage)[1] * 100);
+  }
+
+  deleteProject(project : Project){
+    console.log("Delete project : " + project.name);
+    this.updateApp();
   }
 
   protected readonly isNaN = isNaN;

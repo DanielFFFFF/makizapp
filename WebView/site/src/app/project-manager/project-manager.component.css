@@ -25,11 +25,11 @@
   overflow-y: auto;
 }
 
-.hidden:hover button{
+.hidden:hover .hidden{
   visibility: visible;
 }
 
-.hidden button{
+.hidden .hidden{
   visibility: hidden;
 }
 

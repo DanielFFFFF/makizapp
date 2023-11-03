@@ -8,10 +8,8 @@
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-7 row justify-content-center content rounded">
-
         <div class="col-4 pe-1">
           <div class="row">
-
             <div class="col-12">
               <div class="color-component rounded p-2 vh-37">
                 <div class="d-flex justify-content-center">
@@ -131,7 +129,7 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-center mt-4">
-                  <button type="button" class="p-1 btn w-75" (click)="saveEntity()">Enregistrer les modifications</button>
+                  <button type="button" class=" btn w-75" (click)="saveEntity()">Enregistrer les modifications</button>
                 </div>
               </div>
             </div>
@@ -143,14 +141,17 @@
 </div>
 
 <div class="container-fluid color-component rounded mb-3">
-  <div class="row ms-2">
+  <div class="row ms-2 me-2">
 
-    <div class="col-12 me-0 ms-0 pe-2 ps-2" id="research">
+    <div class="d-flex justify-content-between col-12 me-0 ms-0 pe-2 ps-2" id="research">
       <div class="col-lg-3 col-xl-2 col-sm-6 col-md-3 mt-4 colorBack rounded">
         <div class="custom-form colorFont">
           <span class="material-symbols-outlined ms-2">search</span>
           <input class="form-control" type="search" placeholder="Rechercher ..." (change)="filterList()" (input)="filterList()" #filterEntity>
         </div>
+      </div>
+      <div class="mt-4 rounded">
+          <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="deleteProject()">- Supprimer projet</button>
       </div>
     </div>
     <div class="col-12 row me-0 ms-0 pe-2 ps-2">

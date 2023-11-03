@@ -6,8 +6,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
 import { ProjectEditorComponent } from './project-editor/project-editor.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
-import {SafePipe} from "./commons/safe.pipe";
-import {FormsModule} from "@angular/forms";
+import { SafePipe } from "./commons/safe.pipe";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
