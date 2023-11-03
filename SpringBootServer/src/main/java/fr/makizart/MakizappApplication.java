@@ -55,13 +55,14 @@ public class MakizappApplication {
 
 		Project asset = new Project();
 		ArResource arResource = new ArResource();
-		arResource.setPathToMarkers(new URI("file://test"));
+		arResource.setPathToMarker1(new URI("file://test"));
+		arResource.setPathToMarker2(new URI("file://test"));
+		arResource.setPathToMarker3(new URI("file://test"));
 /*		arRessourceAssetRepository.save(arRessource);*/
 
 
 		asset.setName("foo");
 		asset.getArResource().add(arResource);
-		arResource.setImageAsset(imageAsset);
 		arResource.setVideoAsset(videoAsset);
 
 		projectRepository.save(asset);

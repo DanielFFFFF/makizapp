@@ -6,13 +6,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.security.InvalidParameterException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 public interface StorageService  {
 
-	List<String> getProjects();
+	Collection<String> getProjects();
 
 	Map<String, List<String>> getProjectComposition(String projectId) throws NoSuchElementException;
 

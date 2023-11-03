@@ -1,6 +1,7 @@
 package fr.makizart;
 
 import fr.makizart.datastore.SimpleStorageService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.security.InvalidParameterException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -29,7 +31,7 @@ public class RestController {
 	}
 
 	@GetMapping("/public/projects")
-	public List<String> getProjects() {
+	public Collection<String> getProjects() {
 		return storageService.getProjects();
 	}
 
@@ -123,6 +125,10 @@ public class RestController {
 	@ExceptionHandler(NameAlreadyBoundException.class)
 	public ResponseEntity<?> HandleInvalidParameter(NameAlreadyBoundException exc) {
 		return ResponseEntity.status(HttpStatus.CONFLICT).build();
+	}
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<?> HandleInvalidID(NameAlreadyBoundException exc) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
 	@ExceptionHandler(IOException.class)

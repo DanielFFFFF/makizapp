@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "PROJECT")
-public class Project {
+public class Project extends DatedEntity {
 
     public Project() {
         arResource = Objects.requireNonNullElse(this.arResource, new ArrayList<>());

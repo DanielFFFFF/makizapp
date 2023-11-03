@@ -6,10 +6,7 @@ import java.net.URI;
 
 @Entity
 @Table(name = "SOUNDASSET")
-public class SoundAsset {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class SoundAsset extends Media {
 
     @Column(name="PATH", nullable=false)
     private URI pathToRessource;

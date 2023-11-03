@@ -5,10 +5,10 @@ info:
   description: API for managing projects and user authentication
 
 paths:
-  /public/projects:
+  /public/projects/:
     get:
       summary: Get a list of projects
-      description: Returns a list of projects created by the admin.
+      description: Returns a list of public projects.
       responses:
         200:
           description: List of projects as string
@@ -17,41 +17,22 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: array
-                    items:
-                      type: string
-
-  /public/projects/{project_id}/getProjectComposition:
-    get:
-      summary: Get what media should be played when detecting an image
-      description: Returns all element associated with image
-      parameters:
-        - name: project_id
-          in: path
-          description: ID of the project to be accessed
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description:  "Element in the form imageId:[mediaID1,mediaID2...]"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  medias:
+                  projects:
                     type: array
                     items:
                       type: object
                       properties:
                         id:
+                          type: integer
+                        name:
                           type: string
-                        type:
+                        creationDate:
                           type: string
 
-  /public/projects/{project_id}/getAllMediaNameInProject:
+
+
+
+  /public/projects/{project_id}/getAllResourceInProject/:
       get:
         summary: Get project element
         description: Returns the id of all element in project along with associated type
@@ -61,45 +42,91 @@ paths:
             description: ID of the project to be accessed
             required: true
             schema:
-              type: string
+              type: integer
         responses:
           200:
-            description: Return all project element list
+            description: Return all resource in a project
             content:
               application/json:
                 schema:
                   type: object
                   properties:
-                    medias:
+                    resources:
                       type: array
                       items:
                         type: object
                         properties:
                           id:
+                            type: integer
+                          name:
                             type: string
-                          type:
+                          creationDate:
                             type: string
+                          thumbnail:
+                            description: "thumbnail image id"
+                            type: string
+          404:
+            description: Project not found
 
-  /public/projects/{project_id}/getLocallyStoredImage:
+  /public/projects/{resource_id}/:
+    get:
+      summary: Get a resource
+      parameters:
+        - name: resource_id
+          in: path
+          description: ID of the resource to be accessed
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Return all project element list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  creationDate:
+                    type: string
+                  marker1:
+                    type: string
+                  marker2:
+                    type: string
+                  marker3:
+                    type: string
+                  image:
+                    description: 'Base64 Image. Might be null if not set'
+                    type: string
+                  sound_id:
+                    description: "Sound url, send a request if needed. Might be null if not set"
+                    type: integer
+
+                  video_url:
+                    description: "Remote video ID. Might be null if not set"
+                    type: string
+        404:
+          description: resource not found
+        5XX:
+          description: Bad request
+
+  /public/projects/{media_id}/getLocallyStoredImage/:
     get:
       summary: Get an image
       description: Get an image stored on server
       parameters:
-        - name: project_id
-          in: path
-          description: ID of the project to be accessed
-          required: true
-          schema:
-            type: string
-        - in: query
+        - in: path
           name: media_id
           required: true
           schema:
-            type: string
+            type: integer
           description: The ID of the media to be accessed.
       responses:
         200:
-          description: The media, in binary form
+          description: The media, in Base64 form
           content:
             image/jpeg:
               schema:
@@ -108,22 +135,16 @@ paths:
         404:
           description: image not found
 
-  /public/projects/{project_id}/getLocallyStoredSound:
+  /public/projects/{media_id}/getLocallyStoredSound/:
     get:
       summary: Get a sound file
       description: Get sound stored on server
       parameters:
-        - name: project_id
-          in: path
-          description: ID of the project to be accessed
-          required: true
-          schema:
-            type: string
-        - in: query
+        - in: path
           name: media_id
           required: true
           schema:
-            type: string
+            type: integer
           description: The ID of the media to be accessed.
       responses:
         200:
@@ -133,28 +154,10 @@ paths:
               schema:
                 type: string
                 format: binary
-
-  /admin/projects/:
-    post:
-      summary: Create a new project
-      description: Create a new project within the admin account.
-      parameters:
-        - name: project_id
-          in: query
-          description: ID of the project to be created
-          required: true
-          schema:
-            type: string
-
-      responses:
-        200:
-          description: OK
-        400:
-          description: Invalid id
-        409:
-          description: If resource already exist
-      security:
-        - GoogleOAuth2: [admin]
+        404:
+         description: Image not found. The specified project ID or image does not exist.
+        5XX:
+          description: Unexpected error
 
   /admin/projects/{project_id}/:
     get:
@@ -166,7 +169,7 @@ paths:
           description: ID of the project to be accessed
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Project metadata successfully retrieved
@@ -182,7 +185,7 @@ paths:
           name: project_id
           required: true
           schema:
-            type: string
+            type: integer
           description: The ID of the project to delete.
       responses:
         200:
@@ -194,7 +197,7 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [admin]
+        - SpringOAuth2: [admin]
     post:
       summary: Rename a project
       description: Rename a project by specifying the new project name.
@@ -231,23 +234,44 @@ paths:
           name: project_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         201:
           description: Project successfully created
       security:
-        - GoogleOAuth2: [admin]
+        - SpringOAuth2: [admin]
 
-  /admin/projects/{project_id}/addVideo:
+  /admin/projects/:
+    post:
+      summary: Create a new project
+      description: Create a new project within the admin account.
+      parameters:
+        - name: project_id
+          in: query
+          description: ID of the project to be created
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid id
+        409:
+          description: If resource already exist
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/{resource_id}/addVideo/:
     post:
       summary: Upload a video on a project
       description: Upload a video on a project
       parameters:
         - in: path
-          name: project_id
+          name: resource_id
           required: true
           schema:
-            type: string
+            type: integer
           description: The ID of the project where to upload the project.
         - in: query
           name: videoName
@@ -278,18 +302,56 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [admin]
+        - SpringOAuth2: [admin]
 
-  /admin/projects/{project_id}/addImage:
-    post:
-      summary: Upload a picture on a project
-      description: Upload a picture on a project
+  /admin/projects/{project_id}/addVideo/:
+    put:
+      summary: Upload a video on a project
+      description: Upload a video on a project
       parameters:
         - in: path
           name: project_id
           required: true
           schema:
+            type: integer
+          description: The ID of the project where the new resource whill be created
+        - in: query
+          name: name
+          description: The name of the new resource
+          required: true
+          schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: resource created successfully.
+        400:
+          description: Invalid name.
+        404:
+          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
+        409:
+          description: If resource already exist
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/{resource_id}/addImage/:
+    post:
+      summary: Upload a picture on a project
+      description: Upload a picture on a project
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
           description: The ID of the project where to upload the picture.
         - in: query
           name: name
@@ -315,19 +377,21 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [admin]
+        - SpringOAuth2: [admin]
 
-  /admin/projects/{project_id}/addSound:
+
+
+  /admin/projects/{resource_id}/addSound/:
     post:
       summary: Upload sound on a project
       description: Upload sound on a project
       parameters:
         - in: path
-          name: project_id
+          name: resource_id
           required: true
           schema:
             type: string
-          description: The ID of the project where to upload the picture.
+          description: The ID of the resource where to upload the picture.
         - in: query
           name: name
           required: true
@@ -353,20 +417,14 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [ admin ]
+        - SpringOAuth2: [ admin ]
 
-  /admin/projects/{project_id}/{media_id}/rename:
+  /admin/projects/{media_id}/rename/:
 
     post:
       summary: Rename media on project
       description: Rename a media by specifying the project ID containing the media to delete.
       parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project containing the picture to be renamed.
         - in: path
           name: media_id
           required: true
@@ -385,18 +443,14 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [ admin ]
+        - SpringOAuth2: [ admin ]
+
+  /admin/projects/{media_id}/delete:
 
     delete:
       summary: Delete media on project
       description: Delete a media by specifying the project ID containing the media to delete.
       parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project containing the picture to be deleted.
         - in: path
           name: media_id
           required: true
@@ -413,7 +467,7 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [ admin ]
+        - SpringOAuth2: [ admin ]
 
 
 components:
