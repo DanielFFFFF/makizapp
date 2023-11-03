@@ -1,10 +1,47 @@
 <!-- IMPORTS -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+
+<div *ngIf="renameView" class="d-flex align-items-center" id="EntityPopup">
+  <div class="container-fluid ">
+    <div class="d-flex justify-content-center ">
+      <div class="colorBack rounded p-2">
+        <h3 class="text-center ">Rennomer le projet</h3>
+        <div class="d-flex flex-column justify-content-center">
+          <div>
+            <span class="me-2">Ancien nom :</span>
+            <span >{{project.name}}</span>
+          </div>
+          <div class="mt-2">
+            <span class="me-2">Nouveau nom :</span>
+            <input #newName>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <button type="button"
+                    class="m-1 p-1 btn cursor-pointer user-select-none material-symbols-outlined"
+                    (click)="renameProject(newName.value)">close
+            </button>
+            <button type="button"
+                    class="m-1 p-1 btn cursor-pointer user-select-none"
+                    (click)="renameProject(newName.value)">Enregistrer
+            </button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Editing entities. This section is only visible when the user selects an entity -->
 
-<div *ngIf="entitySelected!=null" class="d-flex align-items-center" id="EntityPopup">
-  <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"  [style.backgroundColor]="!saved ? 'red':''" (click)="exitEdition()">close</button>
+<div *ngIf="editEntityView" class="d-flex align-items-center" id="EntityPopup">
+  <button type="button"
+          class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
+          [style.backgroundColor]="!saved ? 'red':''" (click)="exitEdition()">close
+  </button>
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-7 row justify-content-center content rounded">
@@ -16,9 +53,16 @@
                   <div class="flex-column">
                     <h4 class="mt-2 text-center">Image à scanner</h4>
                     <div class="d-flex border colorBack square mb-3 position-relative hidden">
-                      <img class="mh-100 mw-100" src="{{entitySelected.tracked_picture}}">
-                      <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none" (click)="uploadNewTrackedPicture()" data-toggle="tooltip" title="Upload une nouvelle image">upload</button>
-                      <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none" (click)="deleteTrackedPicture()" data-toggle="tooltip" title="Supprimer l'image">close</button>
+                      <img class="mh-100 mw-100" src="{{entitySelected?.tracked_picture}}">
+                      <button type="button"
+                              class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none"
+                              (click)="uploadNewTrackedPicture()" data-toggle="tooltip"
+                              title="Upload une nouvelle image">upload
+                      </button>
+                      <button type="button"
+                              class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
+                              (click)="deleteTrackedPicture()" data-toggle="tooltip" title="Supprimer l'image">close
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -36,15 +80,19 @@
                     <div class="flex-column">
                       <h4 class="mt-2 text-center">Vidéo</h4>
                       <div class="d-flex border colorBack square mb-1">
-                        <iframe class="mw-100 mh-100" [src]="entitySelected.video | safe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="mw-100 mh-100" [src]="entitySelected?.video | safe"
+                                allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                       </div>
                       <div class="d-flex border colorBack mb-3">
-                        <input type="text" class="form-control" placeholder="Url..." value="{{entitySelected.video}}">
+                        <input type="text" class="form-control" placeholder="Url..." value="{{entitySelected?.video}}">
                       </div>
                     </div>
                   </div>
                 </div>
-                <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none" (click)="videoMod = false" data-toggle="tooltip" title="Mode image">image</button>
+                <button type="button"
+                        class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
+                        (click)="videoMod = false" data-toggle="tooltip" title="Mode image">image
+                </button>
               </div>
 
               <ng-template #pictureFace>
@@ -54,16 +102,26 @@
                       <div class="flex-column">
                         <h4 class="mt-2 text-center">Image</h4>
                         <div class="d-flex border colorBack square mb-3 position-relative hidden">
-                          <img class="mh-100 mw-100" src="{{entitySelected.picture}}">
-                          <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none" (click)="uploadNewPicture()" data-toggle="tooltip" title="Upload une nouvelle image">upload</button>
-                          <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none" (click)="deletePicture()" data-toggle="tooltip" title="Supprimer l'image">close</button>
+                          <img class="mh-100 mw-100" src="{{entitySelected?.picture}}">
+                          <button type="button"
+                                  class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none"
+                                  (click)="uploadNewPicture()" data-toggle="tooltip" title="Upload une nouvelle image">
+                            upload
+                          </button>
+                          <button type="button"
+                                  class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
+                                  (click)="deletePicture()" data-toggle="tooltip" title="Supprimer l'image">close
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <button type="button" class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none" (click)="videoMod = true" data-toggle="tooltip" title="Mode vidéo">smart_display</button>
+                  <button type="button"
+                          class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
+                          (click)="videoMod = true" data-toggle="tooltip" title="Mode vidéo">smart_display
+                  </button>
                 </div>
-                </ng-template>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -80,20 +138,26 @@
                         <audio controls src="https://universal-soundbank.com/sounds/1645.mp3"></audio>
                       </figure>
                       <div class="d-flex justify-content-between">
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="uploadNewAudio()" data-toggle="tooltip" title="Upload un nouveau son">upload</button>
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="deleteAudio()" data-toggle="tooltip" title="Supprimer le son">close</button>
+                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="uploadNewAudio()"
+                                data-toggle="tooltip" title="Upload un nouveau son">upload
+                        </button>
+                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="deleteAudio()"
+                                data-toggle="tooltip" title="Supprimer le son">close
+                        </button>
                       </div>
                     </div>
 
-                    <hr class="hr mb-1 mt-1" />
+                    <hr class="hr mb-1 mt-1"/>
 
                     <div class="hidden">
                       <h4 class="mt-2 text-center">Marker</h4>
                       <div class="d-flex justify-content-center">
-                        <h6><b>Etat</b> : {{entitySelected.marker_state}}</h6>
+                        <h6><b>Etat</b> : {{entitySelected?.marker_state}}</h6>
                       </div>
                       <div class="d-flex justify-content-center">
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="reloadMarker()" data-toggle="tooltip" title="Créer / re-créer le marker">frame_reload</button>
+                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="reloadMarker()"
+                                data-toggle="tooltip" title="Créer / re-créer le marker">frame_reload
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -107,25 +171,25 @@
               <div class="color-component rounded p-2 vh-37">
                 <div class="d-flex justify-content-center">
                   <div class="flex-column">
-                    <h1 class="mt-2 text-center">{{entitySelected.name}}</h1>
+                    <h1 class="mt-2 text-center">{{entitySelected?.name}}</h1>
                     <div class="d-flex flex-column colorFont">
-                      <h6><b>Auteur</b> : {{entitySelected.author}}</h6>
-                      <h6><b>Créé le</b> : {{entitySelected.creationDate}}</h6>
-                      <h6><b>Nb d'accès</b> : {{entitySelected.accessCount}}</h6>
+                      <h6><b>Auteur</b> : {{entitySelected?.author}}</h6>
+                      <h6><b>Créé le</b> : {{entitySelected?.creationDate}}</h6>
+                      <h6><b>Nb d'accès</b> : {{entitySelected?.accessCount}}</h6>
 
-                      <hr class="hr mb-1 mt-1" />
+                      <hr class="hr mb-1 mt-1"/>
 
-                      <h6><b>Image à scanner</b> : {{entitySelected.tracked_picture_size}}Mb</h6>
-                      <h6><b>Son</b> : {{entitySelected.audio_size}}Mb</h6>
+                      <h6><b>Image à scanner</b> : {{entitySelected?.tracked_picture_size}}Mb</h6>
+                      <h6><b>Son</b> : {{entitySelected?.audio_size}}Mb</h6>
 
                       <div *ngIf="videoMod;else pictureIndications">
-                        <h6><b>Vidéo</b> : {{entitySelected.video_size}}Mb</h6>
+                        <h6><b>Vidéo</b> : {{entitySelected?.video_size}}Mb</h6>
                       </div>
                       <ng-template #pictureIndications>
-                        <h6><b>Image</b> : {{entitySelected.picture_size}}Mb</h6>
+                        <h6><b>Image</b> : {{entitySelected?.picture_size}}Mb</h6>
                       </ng-template>
 
-                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="d-flex justify-content-center mt-4">
@@ -147,12 +211,20 @@
       <div class="col-lg-3 col-xl-2 col-sm-6 col-md-3 mt-4 colorBack rounded">
         <div class="custom-form colorFont">
           <span class="material-symbols-outlined ms-2">search</span>
-          <input class="form-control" type="search" placeholder="Rechercher ..." (change)="filterList()" (input)="filterList()" #filterEntity>
+          <input class="form-control" type="search" placeholder="Rechercher ..." (change)="filterList()"
+                 (input)="filterList()" #filterEntity>
         </div>
       </div>
-      <div class="mt-4 rounded">
-          <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="deleteProject()">- Supprimer projet</button>
+      <div class="mt-4 colorBack rounded">
+        <div class="dropdown user-select-none cursor-pointer">
+          <button type="button" class="btn material-symbols-outlined" [disabled]="project.id == -1">Settings</button>
+          <div class="dropdown-content">
+            <a (click)="showRenameProject()">Renommer</a>
+            <a (click)="deleteProject()">Supprimer</a>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class="col-12 row me-0 ms-0 pe-2 ps-2">
       <div class="d-flex justify-content-between mt-4 rounded colorBack" id="bar">
@@ -160,7 +232,9 @@
           <b class="colorFont">{{project.name}}</b>
         </div>
         <div class="d-flex align-items-center mt-2 mb-2">
-          <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="createNewEntity()" [disabled]="project.id == -1">+ Créer nouveau</button>
+          <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="createNewEntity()"
+                  [disabled]="project.id == -1">+ Créer nouveau
+          </button>
         </div>
       </div>
     </div>
@@ -169,14 +243,14 @@
       <div *ngIf="project.id != -1">
         <div class="container-fluid ms-0 me-0">
           <div class="row justify-content-center">
-          <div *ngFor="let entity of entitiesFiltered" class="col-3">
-            <div class="border-bottom mt-1 mb-1 card" (click)="switchEntityDisplayed(entity)">
-              <img class="mh-100 mw-100 rounded-top" src="{{entity.tracked_picture}}" alt="Url non valide">
-              <h4 class="mb-1 text-center">{{entity.name}}</h4>
+            <div *ngFor="let entity of entitiesFiltered" class="col-3">
+              <div class="border-bottom mt-1 mb-1 card" (click)="selectedEntity(entity)">
+                <img class="mh-100 mw-100 rounded-top" src="{{entity.tracked_picture}}" alt="Url non valide">
+                <h4 class="mb-1 text-center">{{entity.name}}</h4>
+              </div>
             </div>
           </div>
         </div>
-          </div>
       </div>
     </div>
   </div>

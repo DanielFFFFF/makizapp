@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
 import {Entity} from "../commons/Entity";
 import {ProjectSelector} from "../commons/ProjectSelector";
-import {ProjectRemover} from "../commons/ProjectRemover";
+import {UpdatorService} from "../commons/UpdatorService";
 
 @Component({
   selector: 'project-editor',
@@ -32,9 +32,11 @@ export class ProjectEditorComponent {
   entitySelected : Entity | null = null;
   videoMod : boolean = true;
   saved : boolean = false;
+  renameView : boolean = false;
+  editEntityView : boolean = false;
 
 
-  constructor(private projectSelected: ProjectSelector, private projectToDelete: ProjectRemover) {}
+  constructor(private projectSelected: ProjectSelector, private updator : UpdatorService) {}
 
   /**
    * @method ngOnInit()
@@ -58,6 +60,7 @@ export class ProjectEditorComponent {
   updateProjectSelected() {
     this.entities = [];
     //TODO remplacer par le code qui récupère en faisant appel au serveur
+    //TODO send request to server --> on sucess set the list --> on echec show popup error
     for (let i = 0; i < this.project.id; i++) {
         const entity = new Entity(1, "toto",`Entité ${i}`,"https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg",Math.trunc(Math.random()*100),"https://player.vimeo.com/video/879891554?h=fba301cac0",Math.trunc(Math.random()*100),null,Math.trunc(Math.random()*100),"https://lasonotheque.org/UPLOAD/mp3/0001.mp3",Math.trunc(Math.random()*100),0,Math.trunc(Math.random()*100),this.formatDate(new Date()));
         this.entities.push(entity);
@@ -92,23 +95,12 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method switchEntityDisplayed(entity: Entity)
-   * Changes the currently displayed entity for editing.
-   * Also selects the entity mode (Video or image).
-   */
-  switchEntityDisplayed(entity : Entity){
-    this.entitySelected = entity;
-    if(this.entitySelected.picture!=null){
-      this.videoMod = false;
-    }
-  }
-
-  /**
    * @method createNewEntity()
    * Creates a new entity and sends it to the server.
    */
   createNewEntity(){
     //TODO create the new entity and push into the server
+    //TODO send request to server --> on sucess refresh the list --> on echec show popup error
     console.log('Le bouton de création de nouvelle entité a été cliqué');
   }
 
@@ -118,6 +110,7 @@ export class ProjectEditorComponent {
    */
   uploadNewTrackedPicture(){
     //TODO Upload a tracked picture for this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Tracked Picture");
     this.saved = false;
   }
@@ -128,6 +121,7 @@ export class ProjectEditorComponent {
    */
   deleteTrackedPicture(){
     //TODO Delete the tracked picture of this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete TrackedPicture");
     this.saved = false;
   }
@@ -137,6 +131,7 @@ export class ProjectEditorComponent {
    */
   uploadNewPicture(){
     //TODO Upload a picture for this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Picture");
     this.saved = false;
   }
@@ -147,6 +142,7 @@ export class ProjectEditorComponent {
    */
   deletePicture(){
     //TODO Delete the picture of this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete Picture");
     this.saved = false;
   }
@@ -157,6 +153,7 @@ export class ProjectEditorComponent {
    */
   uploadNewAudio(){
     //TODO Upload a audio for this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Audio");
     this.saved = false;
   }
@@ -167,6 +164,7 @@ export class ProjectEditorComponent {
    */
   deleteAudio(){
     //TODO Delete the audio of this selected entity
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete Audio");
     this.saved = false;
   }
@@ -176,7 +174,7 @@ export class ProjectEditorComponent {
    * Reloads the marker.
    */
   reloadMarker(){
-    //TODO reload the marker
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Marker reloaded");
   }
 
@@ -185,8 +183,41 @@ export class ProjectEditorComponent {
    * Saves the entity by pushing it to the server.
    */
   saveEntity(){
-    //TODO Save the entity by push into the server
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
     this.saved = true;
+  }
+
+  /**
+   * @method deleteProject()
+   * Delete the project.
+   */
+  deleteProject(){
+    console.log("Delete project");
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
+    this.updator.refresh();
+    //Set the default project to indicate (select a project)
+    this.project = this.defaultProject;
+  }
+
+  /**
+   * @method renameProject()
+   * Rename the project.
+   */
+  renameProject(newName : string){
+    console.log("Rename project");
+    //TODO send request to server --> on sucess refresh --> on echec show popup error
+    this.updator.refresh();
+    //To avoid reloading project recovery
+    this.project.name = newName;
+    this.hideRenameProject();
+  }
+
+  selectedEntity(entity:Entity){
+    this.entitySelected = entity;
+    if(this.entitySelected.picture!=null){
+      this.videoMod = false;
+    }
+    this.showEditEntity()
   }
 
   /**
@@ -196,15 +227,24 @@ export class ProjectEditorComponent {
   exitEdition(){
     this.entitySelected = null;
     this.saved = false;
+    this.hideEditEntity();
   }
 
-  /**
-   * @method deleteProject()
-   * Delete the project.
-   */
-  deleteProject(){
-    console.log("Delete project required");
-    this.projectToDelete.setProject(this.project);
-    this.project = this.defaultProject;
+  showEditEntity(){
+    this.editEntityView = true;
   }
+
+  hideEditEntity(){
+    this.editEntityView = false;
+  }
+
+  showRenameProject(){
+    this.renameView = true;
+  }
+
+  hideRenameProject(){
+    this.renameView = false;
+  }
+
+
 }

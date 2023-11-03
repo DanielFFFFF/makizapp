@@ -1,7 +1,7 @@
 import {Component, Output} from '@angular/core';
 import {Project} from "../commons/Project";
 import {ProjectSelector} from "../commons/ProjectSelector";
-import {ProjectRemover} from "../commons/ProjectRemover";
+import {UpdatorService} from "../commons/UpdatorService";
 
 @Component({
   selector: 'project-manager',
@@ -13,15 +13,15 @@ export class ProjectManagerComponent {
 
   storage: number[] = [1,15];
 
-  constructor(private projectSelected: ProjectSelector, private projectDeleted: ProjectRemover) {
+  constructor(private projectSelected: ProjectSelector, private updator: UpdatorService) {
     this.updateApp();
   }
 
   ngOnInit() {
-    //If there are changes (project deletion), the list must be updated.
-    this.projectDeleted.project$.subscribe(project => {
-      this.deleteProject(project);
-    });
+    this.updator.refreshNeeded$
+      .subscribe(() => {
+        this.updateApp();
+      });
   }
 
   updateApp(){

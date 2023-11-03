@@ -1,4 +1,3 @@
-
 export class Project{
   private _id : number;
   private _name : string;
@@ -14,5 +13,10 @@ export class Project{
 
   get id() : number{
     return this._id;
+  }
+
+
+  set name(value: string) {
+    this._name = value;
   }
 }
