@@ -1,23 +1,25 @@
 <div class="d-flex flex-column align-items-center color-component rounded">
 
   <div class="mb-2 mt-2 " id="createNewProject">
-    <button type="button" class="btn mt-3 mb-3 px-lg-5 px-sm-4 shadow-sm" (click)="createNewProject()">+ Créer nouveau</button>
+    <button type="button" class="btn mt-3 mb-3 px-lg-5 px-sm-4 shadow-sm" (click)="createNewProject()">+ Créer nouveau
+    </button>
   </div>
 
   <div class="container">
 
     <div class="row" id="projectManager">
-      <div class="col-12 d-flex flex-row ps-5 pb-2">
-        <span class="material-symbols-outlined align-bottom ">folder_copy</span>
-        <h4 class="pt-0">   Les projets AREGLER</h4>
+      <div class="col-12 d-flex flex-row justify-content-center pb-2">
+        <span class="material-symbols-outlined align-bottom ms-0 me-2">folder_copy</span>
+        <h4 class="pt-0"> Les projets</h4>
       </div>
 
       <div class="col-12" id="listProject">
         <div *ngIf="projects.length!=0;else projectEmpty" class="max-height-10">
-          <div *ngFor="let project of projects" class="mb-n1 pt-1 cursor-pointer user-select-none project" (click)="changeSelectedProject(project)">
+          <div *ngFor="let project of projects" (click)="changeSelectedProject(project)"
+               class="hidden pt-1 cursor-pointer user-select-none project">
             <span class="material-symbols-outlined align-bottom ">folder</span>
             <span class="mt-5">  {{project.name}}</span>
-            <hr class="hr mb-0 mt-2" />
+            <hr class="hr mb-0 mt-2"/>
           </div>
         </div>
         <ng-template #projectEmpty>
@@ -33,9 +35,11 @@
       <div class="d-flex flex-column ">
         <span class="ms-2 mb-2">Stockage</span>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width:{{getPercentOfStorage()}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar" role="progressbar" style="width:{{getPercentOfStorage()}}%" aria-valuenow="25"
+               aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <span style="font-size: small;" class = " ms-2 mt-2">{{storage[0]}} GB ({{getPercentOfStorage()}}%) de {{storage[1]}} GB utilisés</span>
+        <span style="font-size: small;" class=" ms-2 mt-2">{{storage[0]}} GB ({{getPercentOfStorage()}}
+          %) de {{storage[1]}} GB utilisés</span>
       </div>
     </div>
 

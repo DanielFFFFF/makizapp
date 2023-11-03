@@ -25,3 +25,12 @@
   overflow-y: auto;
 }
 
+.hidden:hover .hidden{
+  visibility: visible;
+}
+
+.hidden .hidden{
+  visibility: hidden;
+}
+
+
