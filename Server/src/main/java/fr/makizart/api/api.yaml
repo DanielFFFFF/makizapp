@@ -176,7 +176,7 @@ paths:
         400:
           description: Invalid id
       security:
-        - GoogleOAuth2: [admin]
+        - SpringOAuth2: [admin]
     delete:
       summary: Delete a project
       description: Delete a project by specifying the project ID to delete.
@@ -224,7 +224,7 @@ paths:
         5XX:
           description: Unexpected error
       security:
-        - GoogleOAuth2: [ admin ]
+        - SpringOAuth2: [ admin ]
 
     put:
       summary: Create a new project
