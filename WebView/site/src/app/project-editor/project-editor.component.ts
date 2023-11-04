@@ -25,15 +25,17 @@ export class ProjectEditorComponent {
    * @property {boolean} saved - Indicates whether changes have been saved. It provides a visual (red button) when leaving edit mode.
    */
   @ViewChild('filterEntity') filterEntity: ElementRef | null = null;
-  defaultProject = new Project(-1, "Selectionnez un projet ...");
+  defaultProject = new Project(-1, "Selectionnez un projet ...","JJ/MM/AA");
   public project: Project = this.defaultProject;
   entities : Entity[] = [];
   entitiesFiltered : Entity[] = [];
   entitySelected : Entity | null = null;
   videoMod : boolean = true;
   saved : boolean = false;
+
   renameView : boolean = false;
   editEntityView : boolean = false;
+  newEntityView : boolean = false;
 
 
   constructor(private projectSelected: ProjectSelector, private updator : UpdatorService) {}
@@ -94,14 +96,11 @@ export class ProjectEditorComponent {
     return `${day}/${month}/${year}`;
   }
 
-  /**
-   * @method createNewEntity()
-   * Creates a new entity and sends it to the server.
-   */
-  createNewEntity(){
+  createNewEntity(name : String){
     //TODO create the new entity and push into the server
     //TODO send request to server --> on sucess refresh the list --> on echec show popup error
     console.log('Le bouton de création de nouvelle entité a été cliqué');
+    this.hideNewEntity();
   }
 
   /**
@@ -244,6 +243,14 @@ export class ProjectEditorComponent {
 
   hideRenameProject(){
     this.renameView = false;
+  }
+
+  showNewEntity(){
+    this.newEntityView = true;
+  }
+
+  hideNewEntity(){
+    this.newEntityView = false;
   }
 
 
