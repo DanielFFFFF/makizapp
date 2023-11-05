@@ -5,7 +5,7 @@ import {Subject} from "rxjs";
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectSelector{
+export class ProjectSelectorService {
   private project = new Subject<Project>();
   public project$ = this.project.asObservable();
 

@@ -1,7 +1,11 @@
-import {Component, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {Project} from "../commons/Project";
-import {ProjectSelector} from "../commons/ProjectSelector";
-import {UpdatorService} from "../commons/UpdatorService";
+import {ProjectSelectorService} from "../commons/ProjectSelector.service";
+import {UpdatorService} from "../commons/Updator.service";
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs";
+import {ProjectList} from "./class";
+import {SERVER_PATH} from "../commons/config";
 
 @Component({
   selector: 'project-manager',
@@ -13,11 +17,17 @@ export class ProjectManagerComponent {
 
   storage: number[] = [1,15];
 
-  constructor(private projectSelected: ProjectSelector, private updator: UpdatorService) {
+  newProjectView : boolean = false;
+
+  private serverPath : string = "";
+
+  constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient) {
     this.updateApp();
   }
 
   ngOnInit() {
+    console.log(this.serverPath);
+
     this.updator.refreshNeeded$
       .subscribe(() => {
         this.updateApp();
@@ -25,13 +35,12 @@ export class ProjectManagerComponent {
   }
 
   updateApp(){
-    //TODO recupérer depuis le serveur les noms des projets
     this.projects = [];
-    for (let i = 0; i < 20; i++) {
-      const newProject = new Project(i + 1, `Projig,ug,,gi,,i,,i,ii,,i,i,i,,et ${i + 1}`);
-      this.projects.push(newProject);
-    }
 
+    this.http.get<any>(SERVER_PATH + "/public/projects/").pipe( map((value: ProjectList) => {return value})).subscribe((res: ProjectList) =>{
+      console.log(res);
+      this.projects = res.projects;
+    });
     //TODO récupérer depuis le serveur les infos du stockage
 
     console.log("Project up to date");
@@ -41,8 +50,8 @@ export class ProjectManagerComponent {
     this.projectSelected.setProject(project);
   }
 
-  createNewProject(){
-    console.log('Le bouton de création de nouveau projet a été cliqué');
+  createNewProject(name : string){
+    this.hideNewProject();
   }
 
 
@@ -50,11 +59,12 @@ export class ProjectManagerComponent {
     return isNaN((this.storage)[0] / (this.storage)[1] * 100) ? 0: Math.trunc((this.storage)[0] / (this.storage)[1] * 100);
   }
 
-  deleteProject(project : Project){
-    console.log("Delete project : " + project.name);
-    this.updateApp();
+  showNewProject(){
+    this.newProjectView = true;
   }
 
-  protected readonly isNaN = isNaN;
-  protected readonly Math = Math;
+  hideNewProject(){
+    this.newProjectView = false;
+  }
+
 }

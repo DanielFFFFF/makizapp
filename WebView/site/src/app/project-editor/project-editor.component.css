@@ -3,10 +3,6 @@
   align-items: center;
 }
 
-.colorBack{
-  background-color: #EEF2F7;
-}
-
 .form-control{
   background: none;
   border:none;
@@ -43,23 +39,6 @@
   transition: transform .2s;
 }
 
-#EntityPopup{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5); /* Couleur de fond semi-transparente */
-  z-index: 9999; /* Assurez-vous que cette div est au-dessus des autres */
-}
-
-#EntityPopup.content{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .square {
   width: 300px;
   height: 200px;
@@ -79,8 +58,15 @@
   height:75vh;
 }
 
-.vh-37{
-  height:37vh;
+@media (max-width: 1200px) {
+  .blocEditing {
+    height: 50vh;
+  }
+}
+@media (min-width: 1201px) {
+  .blocEditing {
+    height: 37vh;
+  }
 }
 
 .vh-1{
