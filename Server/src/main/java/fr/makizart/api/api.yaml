@@ -158,6 +158,23 @@ paths:
          description: Image not found. The specified project ID or image does not exist.
         5XX:
           description: Unexpected error
+          
+  /public/projects/storage/:
+    get:
+      summary: Get storage informations
+      description: Get the free space and max space on the disk (in Mb)
+      responses:
+        200:
+          description: Storage informations as string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  used:
+                    type: integer
+                  total:
+                    type: integer
 
   /admin/projects/{project_id}/:
     get:
