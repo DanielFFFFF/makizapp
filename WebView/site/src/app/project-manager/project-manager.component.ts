@@ -1,10 +1,11 @@
-import {Component, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {Project} from "../commons/Project";
-import {ProjectSelector} from "../commons/ProjectSelector";
-import {UpdatorService} from "../commons/UpdatorService";
+import {ProjectSelectorService} from "../commons/ProjectSelector.service";
+import {UpdatorService} from "../commons/Updator.service";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
-import {ResponseProjects} from "./class";
+import {ProjectList} from "./class";
+import {SERVER_PATH} from "../commons/config";
 
 @Component({
   selector: 'project-manager',
@@ -18,11 +19,15 @@ export class ProjectManagerComponent {
 
   newProjectView : boolean = false;
 
-  constructor(private projectSelected: ProjectSelector, private updator: UpdatorService, private http: HttpClient) {
+  private serverPath : string = "";
+
+  constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient) {
     this.updateApp();
   }
 
   ngOnInit() {
+    console.log(this.serverPath);
+
     this.updator.refreshNeeded$
       .subscribe(() => {
         this.updateApp();
@@ -30,23 +35,12 @@ export class ProjectManagerComponent {
   }
 
   updateApp(){
-    //TODO recupérer depuis le serveur les noms des projets
     this.projects = [];
 
-    this.http.get<any>(`http://test/public/projects`).pipe( map((value: ResponseProjects) => {return value})).subscribe((res: ResponseProjects) =>{
-        this.projects = res.response.projects;
+    this.http.get<any>(SERVER_PATH + "/public/projects/").pipe( map((value: ProjectList) => {return value})).subscribe((res: ProjectList) =>{
+      console.log(res);
+      this.projects = res.projects;
     });
-
-
-  /*
-    for (let i = 0; i < 20; i++) {
-      const newProject = new Project(i + 1, `Projig,ug,,gi,,i,,i,ii,,i,i,i,,et ${i + 1}`,new Date().toString());
-      this.projects.push(newProject);
-    }
-
-   */
-
-
     //TODO récupérer depuis le serveur les infos du stockage
 
     console.log("Project up to date");
@@ -57,7 +51,6 @@ export class ProjectManagerComponent {
   }
 
   createNewProject(name : string){
-    console.log('Le bouton de création de nouveau projet a été cliqué');
     this.hideNewProject();
   }
 
@@ -74,6 +67,4 @@ export class ProjectManagerComponent {
     this.newProjectView = false;
   }
 
-  protected readonly isNaN = isNaN;
-  protected readonly Math = Math;
 }
