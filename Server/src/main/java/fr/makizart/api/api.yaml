@@ -242,16 +242,18 @@ paths:
           description: Unexpected error
       security:
         - SpringOAuth2: [ admin ]
-
+        
+  /admin/projects/createProject/:
     post:
       summary: Create a new project
       description: Create a new project within the admin's account.
       parameters:
-        - in: path
-          name: project_id
+        - in: query
+          name: name
           required: true
           schema:
-            type: integer
+            type: string
+          description: The name of the new project.
       responses:
         200:
           description: Project successfully created
