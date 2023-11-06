@@ -5,6 +5,359 @@ info:
   description: API for managing projects and user authentication
 
 paths:
+  /admin/projects/create/project/:
+    post:
+      summary: Create a new project
+      description: Create a new project within the admin's account.
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+          description: The name of the new project.
+      responses:
+        200:
+          description: Project successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/{project_id}/create/resource/:
+    post:
+      summary: Create a resource in a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the project where the new resource will be created
+        - in: query
+          name: name
+          description: The name of the new resource
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: ressource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+        404:
+          description: Id not found
+        409:
+          description: If resource already exist
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/ressources/{resource_id}/image/:
+    put:
+      summary: Upload a image on a ressource
+      description: Upload an image on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the project where to upload the image.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: Image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Ressource not found. The specified ressource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+  
+  /admin/projects/ressources/{resource_id}/trackedImage/:
+    put:
+      summary: Upload a tracked image on a ressource
+      description: Upload an tracked image on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the ressource where to upload the tracked image.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: Tracked image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Ressource not found. The specified ressource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+        
+  /admin/projects/ressources/{resource_id}/markers/:
+    put:
+      summary: Upload markers on a ressource
+      description: Upload markes on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the ressource where to upload the markers.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          marker1/iset:
+            schema:
+              type: string
+              format: binary
+          marker2/fset:
+            schema:
+              type: string
+              format: binary
+          marker3/fset3:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          description: Markers uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Ressource not found. The specified ressource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+        
+  /admin/projects/ressources/{resource_id}/sound/:
+    put:
+      summary: Upload sound on a ressource
+      description: Upload sound on a ressource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the resource where to upload the sound.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          audio/mp3:
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        200:
+          description: Tracked image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Ressource not found. The specified ressource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+
+  /admin/projects/ressources/{resource_id}/video/:
+    put:
+      summary: Upload video on a ressource
+      description: Upload video on a ressource
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the resource where to upload the video.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: url
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Tracked image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Ressource not found. The specified ressource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+        
+  /public/projects/{project_id}/rename/:
+    put:
+      summary: Rename a project
+      description: Rename a project by specifying the new project id.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project.
+        - in: query
+          name: new_name
+          required: true
+          schema:
+            type: string
+          description: The new name of the project.
+      responses:
+        200:
+          description: Rename successful.
+        404:
+          description: Unauthorized or not found.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+        
+        
+  /public/projects/ressources/{ressource_id}/rename/:
+    put:
+      summary: Rename a ressource
+      description: Rename a ressource by specifying the new ressource id.
+      parameters:
+        - in: path
+          name: ressource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the ressource.
+        - in: query
+          name: new_name
+          required: true
+          schema:
+            type: string
+          description: The new name of the ressource.
+      responses:
+        200:
+          description: Rename successful.
+        404:
+          description: Unauthorized or not found.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+
+  /admin/projects/ressources/medias/{media_id}/rename/:
+    put:
+      summary: Rename media
+      description: Rename a media by specifying the media ID.
+      parameters:
+        - in: path
+          name: media_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the media.
+      responses:
+        200:
+          description: Rename successfully.
+        400:
+          description: Project not found or invalid permission.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+        
+  /public/projects/{project_id}/delete/:
+    delete:
+      summary: Delete a project
+      description: Delete a project by specifying the project id.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the project.
+      responses:
+        200:
+          description: Rename successful.
+        404:
+          description: Unauthorized or not found.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+        
+  /public/projects/ressources/{ressource_id}/delete/:
+    delete:
+      summary: Delete a ressource
+      description: Delete a ressource by specifying the ressource id.
+      parameters:
+        - in: path
+          name: ressource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the ressource.
+      responses:
+        200:
+          description: Rename successful.
+        404:
+          description: Unauthorized or not found.
+        5XX:
+          description: Unexpected error.
+      security:
+        - SpringOAuth2: [ admin ]
+
   /public/projects/:
     get:
       summary: Get a list of projects
@@ -28,24 +381,20 @@ paths:
                           type: string
                         creationDate:
                           type: string
-
-
-
-
-  /public/projects/{project_id}/getAllResourceInProject/:
-      get:
-        summary: Get project element
-        description: Returns the id of all element in project along with associated type
-        parameters:
-          - name: project_id
-            in: path
-            description: ID of the project to be accessed
-            required: true
-            schema:
-              type: integer
-        responses:
+  
+  /public/projects/{project_id}/ressources/:
+    get:
+      summary: Get a list of ressources in project
+      description: Returns a list of ressource in a projects specified by ID.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: string
+      responses:
           200:
-            description: Return all resource in a project
+            description: All resources in a project
             content:
               application/json:
                 schema:
@@ -63,12 +412,12 @@ paths:
                           creationDate:
                             type: string
                           thumbnail:
-                            description: "thumbnail image id"
+                            description: "thumbnail image"
                             type: string
           404:
             description: Project not found
-
-  /public/projects/{resource_id}/:
+            
+  /public/projects/ressources/{resource_id}/:
     get:
       summary: Get a resource
       parameters:
@@ -92,31 +441,27 @@ paths:
                     type: string
                   creationDate:
                     type: string
-                  marker1:
-                    type: string
-                  marker2:
-                    type: string
-                  marker3:
-                    type: string
-                  image:
-                    description: 'Base64 Image. Might be null if not set'
-                    type: string
-                  sound_id:
-                    description: "Sound url, send a request if needed. Might be null if not set"
+                  marker1_id:
                     type: integer
-
-                  video_url:
-                    description: "Remote video ID. Might be null if not set"
-                    type: string
+                  marker2_id:
+                    type: integer
+                  marker3_id:
+                    type: integer
+                  image_id:
+                    type: integer
+                  sound_id:
+                    type: integer
+                  video_id:
+                    type: integer
         404:
           description: resource not found
         5XX:
           description: Bad request
 
-  /public/projects/{media_id}/getLocallyStoredImage/:
+  /public/projects/ressources/images/{media_id}/:
     get:
-      summary: Get an image
-      description: Get an image stored on server
+      summary: Get a image
+      description: Get an image (or tracked image) stored on server by specified the ID.
       parameters:
         - in: path
           name: media_id
@@ -126,7 +471,7 @@ paths:
           description: The ID of the media to be accessed.
       responses:
         200:
-          description: The media, in Base64 form
+          description: The image, in Base64 form
           content:
             image/jpeg:
               schema:
@@ -135,10 +480,10 @@ paths:
         404:
           description: image not found
 
-  /public/projects/{media_id}/getLocallyStoredSound/:
+  /public/projects/ressources/sounds/{media_id}/:
     get:
       summary: Get a sound file
-      description: Get sound stored on server
+      description: Get sound stored on server by specified the ID.
       parameters:
         - in: path
           name: media_id
@@ -158,8 +503,59 @@ paths:
          description: Image not found. The specified project ID or image does not exist.
         5XX:
           description: Unexpected error
-          
-  /public/projects/storage/:
+
+  /public/projects/ressources/video/{media_id}/:
+    get:
+      summary: Get a video
+      description: Get a video stored on server by specified the ID.
+      parameters:
+        - in: path
+          name: media_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the media to be accessed.
+      responses:
+        200:
+          description: The media, in string form
+          content:
+             application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    description: The url of the video
+                    type: string
+        404:
+          description: image not found
+  
+  /public/projects/{project_id}/ressources/markers:
+    get:
+      summary: Get a list of markers in a project
+      description: Get the list of markers with the IDs of the resources in which they are.
+      responses:
+        200:
+          description: List of markers and id as string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ressources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        marker_1:
+                          type: string
+                        marker_2:
+                          type: string
+                        marker_3:
+                          type: string
+
+  /public/storage/:
     get:
       summary: Get storage informations
       description: Get the free space and max space on the disk (in Mb)
@@ -176,323 +572,7 @@ paths:
                   total:
                     type: integer
 
-  /admin/projects/{project_id}/:
-    get:
-      summary: Get project metadata
-      description: Returns metadata of a specific project such as size on disk, creation date.
-      parameters:
-        - name: project_id
-          in: path
-          description: ID of the project to be accessed
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Project metadata successfully retrieved
-        400:
-          description: Invalid id
-      security:
-        - SpringOAuth2: [admin]
-    delete:
-      summary: Delete a project
-      description: Delete a project by specifying the project ID to delete.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the project to delete.
-      responses:
-        200:
-          description: OK
-        400:
-          description: Invalid id
-        404:
-          description: Project not found. The specified project ID does not exist.
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [admin]
-    put:
-      summary: Rename a project
-      description: Rename a project by specifying the new project name.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the project where to upload the picture.
-        - in: query
-          name: new_name
-          required: true
-          schema:
-            type: string
-          description: The new name of the project.
-      responses:
-        200:
-          description: OK.
-        404:
-          description: Unauthorized or not found.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [ admin ]
-        
-  /admin/projects/createProject/:
-    post:
-      summary: Create a new project
-      description: Create a new project within the admin's account.
-      parameters:
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
-          description: The name of the new project.
-      responses:
-        200:
-          description: Project successfully created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/created_id'
-      security:
-        - SpringOAuth2: [admin]
-
-  /admin/projects/{resource_id}/addVideo/:
-    post:
-      summary: Upload a video on a project
-      description: Upload a video on a project
-      parameters:
-        - in: path
-          name: resource_id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the project where to upload the project.
-        - in: query
-          name: videoName
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: url
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          text/plain:
-            schema:
-              type: string
-              format: binary
-      responses:
-        200:
-          description: Video uploaded successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/created_id'
-        400:
-          description: Invalid name or unsupported media
-        404:
-          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [admin]
-
-  /admin/projects/{project_id}/createResource/:
-    post:
-      summary: Create a resource in a project
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the project where the new resource whill be created
-        - in: query
-          name: name
-          description: The name of the new resource
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                marker1_id:
-                  type: string
-                marker2_id:
-                  type: string
-                marker3_id:
-                  type: string
-                image_id:
-                  type: string
-                video_id:
-                  type: string
-                sound_id:
-                  type: string
-      responses:
-        200:
-          description: resource created successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/created_id'
-        404:
-          description: Id not found
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [admin]
-
-  /admin/projects/{resource_id}/addImage/:
-    post:
-      summary: Upload a picture on a project
-      description: Upload a picture on a project
-      parameters:
-        - in: path
-          name: resource_id
-          required: true
-          schema:
-            type: integer
-          description: The ID of the project where to upload the picture.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
-      responses:
-        200:
-          description: Picture uploaded successfully.
-        400:
-          description: Invalid name or unsupported media
-        404:
-          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [admin]
-
-
-
-  /admin/projects/{resource_id}/addSound/:
-    post:
-      summary: Upload sound on a project
-      description: Upload sound on a project
-      parameters:
-        - in: path
-          name: resource_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the resource where to upload the picture.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          audio/mp3:
-            schema:
-              type: string
-              format: binary
-
-      responses:
-        200:
-          description: created sound
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/created_id'
-        400:
-          description: Invalid name or unsupported media
-        404:
-          description: Project and/or picture not found. The specified project ID and/or picture ID does not exist.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [ admin ]
-
-  /admin/projects/{media_id}/rename/:
-
-    post:
-      summary: Rename media on project
-      description: Rename a media by specifying the project ID containing the media to delete.
-      parameters:
-        - in: path
-          name: media_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the media to be deleted.
-      responses:
-        200:
-          description: Rename successfully.
-        400:
-          description: Project not found or invalid permission.
-        404:
-          description: Picture not found. The project does not contains picture.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [ admin ]
-
-  /admin/projects/{media_id}/delete:
-    delete:
-      summary: Delete media on project
-      description: Delete a media by specifying the project ID containing the media to delete.
-      parameters:
-        - in: path
-          name: media_id
-          required: true
-          schema:
-            type: string
-          description: The ID of the media to be deleted.
-      responses:
-        200:
-          description: deleted successfully.
-        404:
-          description: Project not found or invalid permission.
-        409:
-          description: If resource already exist
-        5XX:
-          description: Unexpected error
-      security:
-        - SpringOAuth2: [ admin ]
-
 components:
-
   schemas:
     created_id:
       type: object
@@ -502,9 +582,7 @@ components:
             properties:
               id:
                 type: integer
-                description: id of the created resource
-
-
+                description: id of the created element
 
   securitySchemes:
     SpringOAuth2:
