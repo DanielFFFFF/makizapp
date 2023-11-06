@@ -310,12 +310,12 @@ paths:
       security:
         - SpringOAuth2: [admin]
 
-  /admin/projects/{resource_id}/createResource/:
+  /admin/projects/{project_id}/createResource/:
     post:
       summary: Create a resource in a project
       parameters:
         - in: path
-          name: resource_id
+          name: project_id
           required: true
           schema:
             type: integer
