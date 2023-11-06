@@ -11,12 +11,12 @@ public class ArResource extends DatedEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(name="PATH_TO_MARKER1", nullable=false)
-    private URI pathToMarker1;
-    @Column(name="PATH_TO_MARKER2", nullable=false)
-    private URI pathToMarker2;
-    @Column(name="PATH_TO_MARKER3", nullable=false)
-    private URI pathToMarker3;
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private ImageAsset pathToMarker1;
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private ImageAsset pathToMarker2;
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private ImageAsset pathToMarker3;
 
     @OneToOne(cascade = CascadeType.ALL)
     private ImageAsset thumbnail;
@@ -41,29 +41,6 @@ public class ArResource extends DatedEntity {
         return id;
     }
 
-    public URI getPathToMarker1() {
-        return pathToMarker1;
-    }
-
-    public void setPathToMarker1(URI pathToMarker1) {
-        this.pathToMarker1 = pathToMarker1;
-    }
-
-    public URI getPathToMarker2() {
-        return pathToMarker2;
-    }
-
-    public void setPathToMarker2(URI pathToMarker2) {
-        this.pathToMarker2 = pathToMarker2;
-    }
-
-    public URI getPathToMarker3() {
-        return pathToMarker3;
-    }
-
-    public void setPathToMarker3(URI pathToMarker3) {
-        this.pathToMarker3 = pathToMarker3;
-    }
 
     public ImageAsset getImageAsset() {
         return imageAsset;
