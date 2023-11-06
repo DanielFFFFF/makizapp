@@ -122,7 +122,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method formatDate(date: Date): string
-   * @param date - The date to format
+   * @param {Date} date - The date to format
    * Formats a date into a string in this way: DD/MM/YY.
    */
   formatDate(date: Date): string {
@@ -134,7 +134,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method createNewEntity(name: String)
-   * @param name - The name of the entity
+   * @param {string} name - The name of the entity
    * Create a new entity and push to the server.
    */
   createNewEntity(name: String) {
@@ -242,6 +242,7 @@ export class ProjectEditorComponent {
 
   /**
    * @method renameProject()
+   * @param {string} newName - The new name of the project.
    * Rename the project.
    */
   renameProject(newName: string) {
@@ -252,7 +253,7 @@ export class ProjectEditorComponent {
     this.project.name = newName;
     this.hideRenameProject();
   }
-
+  
   selectedEntity(entity: Entity) {
     this.entitySelected = entity;
     if (this.entitySelected.picture != null) {
