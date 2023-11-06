@@ -264,31 +264,6 @@ paths:
       security:
         - SpringOAuth2: [admin]
 
-  /admin/projects/:
-    post:
-      summary: Create a new project
-      description: Create a new project within the admin account.
-      parameters:
-        - name: project_id
-          in: query
-          description: ID of the project to be created
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/created_id'
-        400:
-          description: Invalid id
-        409:
-          description: If resource already exist
-      security:
-        - SpringOAuth2: [admin]
-
   /admin/projects/{resource_id}/addVideo/:
     post:
       summary: Upload a video on a project
