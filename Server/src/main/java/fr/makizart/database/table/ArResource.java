@@ -12,11 +12,11 @@ public class ArResource extends DatedEntity {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private ImageAsset pathToMarker1;
+    private Marker pathToMarker1;
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private ImageAsset pathToMarker2;
+    private Marker pathToMarker2;
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private ImageAsset pathToMarker3;
+    private Marker pathToMarker3;
 
     @OneToOne(cascade = CascadeType.ALL)
     private ImageAsset thumbnail;
