@@ -1,8 +1,13 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
-import {Ressource} from "../commons/Ressource";
+import {Resource} from "../commons/Resource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
 import {UpdatorService} from "../commons/Updator.service";
+import {SERVER_PATH} from "../commons/config";
+import {map} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {ResourceList} from "./class";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'project-editor',
@@ -13,42 +18,42 @@ import {UpdatorService} from "../commons/Updator.service";
  * @class ProjectEditorComponent
  *
  * This class is an Angular component that allows you to edit a project.
- * This component takes care of displaying the list of ressources and providing menus for editing/creating/deleting ressources.
+ * This component takes care of displaying the list of resources and providing menus for editing/creating/deleting resources.
  */
 export class ProjectEditorComponent {
 
   /**
-   * @property {ElementRef | null} filterRessource - Reference to the HTML element for filtering ressources.
+   * @property {ElementRef | null} filterResource - Reference to the HTML element for filtering resources.
    */
-  @ViewChild('filterRessource') filterRessource: ElementRef | null = null;
+  @ViewChild('filterResource') filterResource: ElementRef | null = null;
 
   /**
-   * @property {Ressource} defaultProject - The default project when no project has been selected.
+   * @property {Resource} defaultProject - The default project when no project has been selected.
    */
   defaultProject = new Project(-1, "Selectionnez un projet ...", "JJ/MM/AA");
 
   /**
    @property {Project} project - The currently edited project (initialized to a project (id = -1) to display the default text: "Select a project...").
    */
-  public project: Project = this.defaultProject;
+  project: Project = this.defaultProject;
 
   /**
-   @property {Ressource[]} ressources - List of all ressources in the project. This list is complete and unfiltered.
+   @property {Resource[]} resources - List of all resources in the project. This list is complete and unfiltered.
    */
-  ressources: Ressource[] = [];
+  resources: Resource[] = [];
 
   /**
-   * @property {Ressource[]} ressourcesFiltered - List of filtered ressources. This list is filtered according to the search bar.
+   * @property {Resource[]} resourcesFiltered - List of filtered resources. This list is filtered according to the search bar.
    */
-  ressourcesFiltered: Ressource[] = [];
+  resourcesFiltered: Resource[] = [];
 
   /**
-   * @property {Ressource | null} ressourceSelected - The ressource clicked by the player for use in the ressource edit display.
+   * @property {Resource | null} resourceSelected - The resource clicked by the player for use in the resource edit display.
    */
-  ressourceSelected: Ressource | null = null;
+  resourceSelected: Resource | null = null;
 
   /**
-   * @property {boolean} videoMod - Check if we should display the video or image menu in an ressource.
+   * @property {boolean} videoMod - Check if we should display the video or image menu in an resource.
    */
   videoMod: boolean = true;
 
@@ -58,22 +63,22 @@ export class ProjectEditorComponent {
   saved: boolean = false;
 
   /**
-   * @property {boolean} renameView - Show or not the menu to rename an ressource.
+   * @property {boolean} renameView - Show or not the menu to rename an resource.
    */
   renameView: boolean = false;
 
   /**
-   * @property {boolean} renameView - Show or not the menu to edit an ressource.
+   * @property {boolean} renameView - Show or not the menu to edit an resource.
    */
-  editRessourceView: boolean = false;
+  editResourceView: boolean = false;
 
   /**
-   * @property {boolean} newRessourceView - Show or not the menu to create an ressource.
+   * @property {boolean} newResourceView - Show or not the menu to create an resource.
    */
-  newRessourceView: boolean = false;
+  newResourceView: boolean = false;
 
 
-  constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService) {
+  constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient) {
   }
 
   /**
@@ -92,30 +97,34 @@ export class ProjectEditorComponent {
   /**
    * @method updateProjectSelected()
    * Updates the selected project.
-   * Update the list of ressources in the project.
+   * Update the list of resources in the project.
    */
   updateProjectSelected() {
-    this.ressources = [];
-    //TODO remplacer par le code qui récupère en faisant appel au serveur
-    //TODO send request to server --> on sucess set the list --> on echec show popup error
+    this.resources = [];
+
+    this.http.get<any>(SERVER_PATH + `/public/projects/${this.project.id}/resources/`).pipe( map((value: ResourceList) => {return value})).subscribe((res: ResourceList) =>{
+      this.resources = res.resources;
+      this.resourcesFiltered = this.resources;
+    });
+    /*
     for (let i = 0; i < this.project.id; i++) {
-      const ressource = new Ressource(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
-      this.ressources.push(ressource);
+      const resource = new Resource(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
+      this.resources.push(resource);
     }
-    this.ressourcesFiltered = this.ressources;
+     */
   }
 
   /**
    * @method filterList()
-   * Filters the list of ressources based on the value entered in the search bar.
+   * Filters the list of resources based on the value entered in the search bar.
    * If nothing is entered, the complete list is displayed.
    */
   filterList() {
-    if (this.filterRessource != null) {
-      let filter = this.filterRessource.nativeElement.value;
-      this.ressourcesFiltered = this.ressources.filter(ressource => ressource.name.includes(filter));
+    if (this.filterResource != null) {
+      let filter = this.filterResource.nativeElement.value;
+      this.resourcesFiltered = this.resources.filter(resource => resource.name.includes(filter));
     } else {
-      this.ressourcesFiltered = this.ressources;
+      this.resourcesFiltered = this.resources;
     }
 
   }
@@ -133,23 +142,25 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method createNewRessource(name: String)
-   * @param {string} name - The name of the ressource
-   * Create a new ressource and push to the server.
+   * @method createNewResource(name: String)
+   * @param {string} name - The name of the resource
+   * Create a new resource and push to the server.
    */
-  createNewRessource(name: String) {
-    //TODO create the new ressource and push into the server
-    //TODO send request to server --> on sucess refresh the list --> on echec show popup error
-    console.log('Le bouton de création de nouvelle entité a été cliqué');
-    this.hideNewRessource();
+  createNewResource(name: string) {
+      // @ts-ignore
+      this.http.post(SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, {'name': name}).subscribe((data: Created_id) => {
+          //Or create temporaly the new project
+          this.resources.push(new Resource(data.created_id, name, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg" , this.formatDate(new Date())));
+          this.hideNewResource();
+      })
   }
 
   /**
    * @method uploadNewTrackedImage()
-   * Uploads a new tracked image for the selected ressource.
+   * Uploads a new tracked image for the selected resource.
    */
   uploadNewTrackedImage() {
-    //TODO Upload a tracked image for this selected ressource
+    //TODO Upload a tracked image for this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Tracked Image");
     this.saved = false;
@@ -157,10 +168,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteTrackedImage()
-   * Deletes the tracked image of the selected ressource.
+   * Deletes the tracked image of the selected resource.
    */
   deleteTrackedImage() {
-    //TODO Delete the tracked image of this selected ressource
+    //TODO Delete the tracked image of this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete TrackedImage");
     this.saved = false;
@@ -168,10 +179,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method uploadNewImage()
-   * Uploads a new image for the selected ressource.
+   * Uploads a new image for the selected resource.
    */
   uploadNewImage() {
-    //TODO Upload a image for this selected ressource
+    //TODO Upload a image for this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Image");
     this.saved = false;
@@ -179,10 +190,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteImage()
-   * Deletes the image of the selected ressource.
+   * Deletes the image of the selected resource.
    */
   deleteImage() {
-    //TODO Delete the image of this selected ressource
+    //TODO Delete the image of this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete Image");
     this.saved = false;
@@ -190,10 +201,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method uploadNewAudio()
-   * Uploads a new audio file for the selected ressource.
+   * Uploads a new audio file for the selected resource.
    */
   uploadNewAudio() {
-    //TODO Upload a audio for this selected ressource
+    //TODO Upload a audio for this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Audio");
     this.saved = false;
@@ -201,10 +212,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteAudio()
-   * Deletes the audio file of the selected ressource.
+   * Deletes the audio file of the selected resource.
    */
   deleteAudio() {
-    //TODO Delete the audio of this selected ressource
+    //TODO Delete the audio of this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete Audio");
     this.saved = false;
@@ -220,10 +231,10 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method saveRessource()
-   * Saves the ressource by pushing it to the server.
+   * @method saveResource()
+   * Saves the resource by pushing it to the server.
    */
-  saveRessource() {
+  saveResource() {
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     this.saved = true;
   }
@@ -254,12 +265,12 @@ export class ProjectEditorComponent {
     this.hideRenameProject();
   }
 
-  selectedRessource(ressource: Ressource) {
-    this.ressourceSelected = ressource;
-    if (this.ressourceSelected.image != null) {
+  selectResource(resource: Resource) {
+    this.resourceSelected = resource;
+    if (this.resourceSelected.image != null) {
       this.videoMod = false;
     }
-    this.showEditRessource()
+    this.showEditResource()
   }
 
   /**
@@ -267,25 +278,25 @@ export class ProjectEditorComponent {
    * Exits edit mode.
    */
   exitEdition() {
-    this.ressourceSelected = null;
+    this.resourceSelected = null;
     this.saved = false;
-    this.hideEditRessource();
+    this.hideEditResource();
   }
 
   /**
-   * @method showEditRessource()
-   * Displays the ressource edit mode.
+   * @method showEditResource()
+   * Displays the resource edit mode.
    */
-  showEditRessource() {
-    this.editRessourceView = true;
+  showEditResource() {
+    this.editResourceView = true;
   }
 
   /**
-   * @method hideEditRessource()
-   * Hides the ressource edit mode.
+   * @method hideEditResource()
+   * Hides the resource edit mode.
    */
-  hideEditRessource() {
-    this.editRessourceView = false;
+  hideEditResource() {
+    this.editResourceView = false;
   }
 
   /**
@@ -305,18 +316,18 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method showNewRessource()
-   * Displays the new ressource mode.
+   * @method showNewResource()
+   * Displays the new resource mode.
    */
-  showNewRessource() {
-    this.newRessourceView = true;
+  showNewResource() {
+    this.newResourceView = true;
   }
 
   /**
-   * @method hideNewRessource()
-   * Hides the new ressource mode.
+   * @method hideNewResource()
+   * Hides the new resource mode.
    */
-  hideNewRessource() {
-    this.newRessourceView = false;
+  hideNewResource() {
+    this.newResourceView = false;
   }
 }
