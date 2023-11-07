@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
-import {Entity} from "../commons/Entity";
+import {Ressource} from "../commons/Ressource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
 import {UpdatorService} from "../commons/Updator.service";
 
@@ -13,17 +13,17 @@ import {UpdatorService} from "../commons/Updator.service";
  * @class ProjectEditorComponent
  *
  * This class is an Angular component that allows you to edit a project.
- * This component takes care of displaying the list of entities and providing menus for editing/creating/deleting entities.
+ * This component takes care of displaying the list of ressources and providing menus for editing/creating/deleting ressources.
  */
 export class ProjectEditorComponent {
 
   /**
-   * @property {ElementRef | null} filterEntity - Reference to the HTML element for filtering entities.
+   * @property {ElementRef | null} filterRessource - Reference to the HTML element for filtering ressources.
    */
-  @ViewChild('filterEntity') filterEntity: ElementRef | null = null;
+  @ViewChild('filterRessource') filterRessource: ElementRef | null = null;
 
   /**
-   * @property {Entity} defaultProject - The default project when no project has been selected.
+   * @property {Ressource} defaultProject - The default project when no project has been selected.
    */
   defaultProject = new Project(-1, "Selectionnez un projet ...", "JJ/MM/AA");
 
@@ -33,22 +33,22 @@ export class ProjectEditorComponent {
   public project: Project = this.defaultProject;
 
   /**
-   @property {Entity[]} entities - List of all entities in the project. This list is complete and unfiltered.
+   @property {Ressource[]} ressources - List of all ressources in the project. This list is complete and unfiltered.
    */
-  entities: Entity[] = [];
+  ressources: Ressource[] = [];
 
   /**
-   * @property {Entity[]} entitiesFiltered - List of filtered entities. This list is filtered according to the search bar.
+   * @property {Ressource[]} ressourcesFiltered - List of filtered ressources. This list is filtered according to the search bar.
    */
-  entitiesFiltered: Entity[] = [];
+  ressourcesFiltered: Ressource[] = [];
 
   /**
-   * @property {Entity | null} entitySelected - The entity clicked by the player for use in the entity edit display.
+   * @property {Ressource | null} ressourceSelected - The ressource clicked by the player for use in the ressource edit display.
    */
-  entitySelected: Entity | null = null;
+  ressourceSelected: Ressource | null = null;
 
   /**
-   * @property {boolean} videoMod - Check if we should display the video or image menu in an entity.
+   * @property {boolean} videoMod - Check if we should display the video or image menu in an ressource.
    */
   videoMod: boolean = true;
 
@@ -58,19 +58,19 @@ export class ProjectEditorComponent {
   saved: boolean = false;
 
   /**
-   * @property {boolean} renameView - Show or not the menu to rename an entity.
+   * @property {boolean} renameView - Show or not the menu to rename an ressource.
    */
   renameView: boolean = false;
 
   /**
-   * @property {boolean} renameView - Show or not the menu to edit an entity.
+   * @property {boolean} renameView - Show or not the menu to edit an ressource.
    */
-  editEntityView: boolean = false;
+  editRessourceView: boolean = false;
 
   /**
-   * @property {boolean} newEntityView - Show or not the menu to create an entity.
+   * @property {boolean} newRessourceView - Show or not the menu to create an ressource.
    */
-  newEntityView: boolean = false;
+  newRessourceView: boolean = false;
 
 
   constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService) {
@@ -92,30 +92,30 @@ export class ProjectEditorComponent {
   /**
    * @method updateProjectSelected()
    * Updates the selected project.
-   * Update the list of entities in the project.
+   * Update the list of ressources in the project.
    */
   updateProjectSelected() {
-    this.entities = [];
+    this.ressources = [];
     //TODO remplacer par le code qui récupère en faisant appel au serveur
     //TODO send request to server --> on sucess set the list --> on echec show popup error
     for (let i = 0; i < this.project.id; i++) {
-      const entity = new Entity(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
-      this.entities.push(entity);
+      const ressource = new Ressource(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
+      this.ressources.push(ressource);
     }
-    this.entitiesFiltered = this.entities;
+    this.ressourcesFiltered = this.ressources;
   }
 
   /**
    * @method filterList()
-   * Filters the list of entities based on the value entered in the search bar.
+   * Filters the list of ressources based on the value entered in the search bar.
    * If nothing is entered, the complete list is displayed.
    */
   filterList() {
-    if (this.filterEntity != null) {
-      let filter = this.filterEntity.nativeElement.value;
-      this.entitiesFiltered = this.entities.filter(entity => entity.name.includes(filter));
+    if (this.filterRessource != null) {
+      let filter = this.filterRessource.nativeElement.value;
+      this.ressourcesFiltered = this.ressources.filter(ressource => ressource.name.includes(filter));
     } else {
-      this.entitiesFiltered = this.entities;
+      this.ressourcesFiltered = this.ressources;
     }
 
   }
@@ -133,67 +133,67 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method createNewEntity(name: String)
-   * @param {string} name - The name of the entity
-   * Create a new entity and push to the server.
+   * @method createNewRessource(name: String)
+   * @param {string} name - The name of the ressource
+   * Create a new ressource and push to the server.
    */
-  createNewEntity(name: String) {
-    //TODO create the new entity and push into the server
+  createNewRessource(name: String) {
+    //TODO create the new ressource and push into the server
     //TODO send request to server --> on sucess refresh the list --> on echec show popup error
     console.log('Le bouton de création de nouvelle entité a été cliqué');
-    this.hideNewEntity();
+    this.hideNewRessource();
   }
 
   /**
-   * @method uploadNewTrackedPicture()
-   * Uploads a new tracked picture for the selected entity.
+   * @method uploadNewTrackedImage()
+   * Uploads a new tracked image for the selected ressource.
    */
-  uploadNewTrackedPicture() {
-    //TODO Upload a tracked picture for this selected entity
+  uploadNewTrackedImage() {
+    //TODO Upload a tracked image for this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Upload new Tracked Picture");
+    console.log("Upload new Tracked Image");
     this.saved = false;
   }
 
   /**
-   * @method deleteTrackedPicture()
-   * Deletes the tracked picture of the selected entity.
+   * @method deleteTrackedImage()
+   * Deletes the tracked image of the selected ressource.
    */
-  deleteTrackedPicture() {
-    //TODO Delete the tracked picture of this selected entity
+  deleteTrackedImage() {
+    //TODO Delete the tracked image of this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Delete TrackedPicture");
+    console.log("Delete TrackedImage");
     this.saved = false;
   }
 
   /**
-   * @method uploadNewPicture()
-   * Uploads a new image for the selected entity.
+   * @method uploadNewImage()
+   * Uploads a new image for the selected ressource.
    */
-  uploadNewPicture() {
-    //TODO Upload a picture for this selected entity
+  uploadNewImage() {
+    //TODO Upload a image for this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Upload new Picture");
+    console.log("Upload new Image");
     this.saved = false;
   }
 
   /**
-   * @method deletePicture()
-   * Deletes the picture of the selected entity.
+   * @method deleteImage()
+   * Deletes the image of the selected ressource.
    */
-  deletePicture() {
-    //TODO Delete the picture of this selected entity
+  deleteImage() {
+    //TODO Delete the image of this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Delete Picture");
+    console.log("Delete Image");
     this.saved = false;
   }
 
   /**
    * @method uploadNewAudio()
-   * Uploads a new audio file for the selected entity.
+   * Uploads a new audio file for the selected ressource.
    */
   uploadNewAudio() {
-    //TODO Upload a audio for this selected entity
+    //TODO Upload a audio for this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Audio");
     this.saved = false;
@@ -201,10 +201,10 @@ export class ProjectEditorComponent {
 
   /**
    * @method deleteAudio()
-   * Deletes the audio file of the selected entity.
+   * Deletes the audio file of the selected ressource.
    */
   deleteAudio() {
-    //TODO Delete the audio of this selected entity
+    //TODO Delete the audio of this selected ressource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Delete Audio");
     this.saved = false;
@@ -220,10 +220,10 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method saveEntity()
-   * Saves the entity by pushing it to the server.
+   * @method saveRessource()
+   * Saves the ressource by pushing it to the server.
    */
-  saveEntity() {
+  saveRessource() {
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     this.saved = true;
   }
@@ -253,13 +253,13 @@ export class ProjectEditorComponent {
     this.project.name = newName;
     this.hideRenameProject();
   }
-  
-  selectedEntity(entity: Entity) {
-    this.entitySelected = entity;
-    if (this.entitySelected.picture != null) {
+
+  selectedRessource(ressource: Ressource) {
+    this.ressourceSelected = ressource;
+    if (this.ressourceSelected.image != null) {
       this.videoMod = false;
     }
-    this.showEditEntity()
+    this.showEditRessource()
   }
 
   /**
@@ -267,25 +267,25 @@ export class ProjectEditorComponent {
    * Exits edit mode.
    */
   exitEdition() {
-    this.entitySelected = null;
+    this.ressourceSelected = null;
     this.saved = false;
-    this.hideEditEntity();
+    this.hideEditRessource();
   }
 
   /**
-   * @method showEditEntity()
-   * Displays the entity edit mode.
+   * @method showEditRessource()
+   * Displays the ressource edit mode.
    */
-  showEditEntity() {
-    this.editEntityView = true;
+  showEditRessource() {
+    this.editRessourceView = true;
   }
 
   /**
-   * @method hideEditEntity()
-   * Hides the entity edit mode.
+   * @method hideEditRessource()
+   * Hides the ressource edit mode.
    */
-  hideEditEntity() {
-    this.editEntityView = false;
+  hideEditRessource() {
+    this.editRessourceView = false;
   }
 
   /**
@@ -305,18 +305,18 @@ export class ProjectEditorComponent {
   }
 
   /**
-   * @method showNewEntity()
-   * Displays the new entity mode.
+   * @method showNewRessource()
+   * Displays the new ressource mode.
    */
-  showNewEntity() {
-    this.newEntityView = true;
+  showNewRessource() {
+    this.newRessourceView = true;
   }
 
   /**
-   * @method hideNewEntity()
-   * Hides the new entity mode.
+   * @method hideNewRessource()
+   * Hides the new ressource mode.
    */
-  hideNewEntity() {
-    this.newEntityView = false;
+  hideNewRessource() {
+    this.newRessourceView = false;
   }
 }
