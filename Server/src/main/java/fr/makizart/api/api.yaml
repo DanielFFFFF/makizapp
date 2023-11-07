@@ -5,7 +5,7 @@ info:
   description: API for managing projects and user authentication
 
 paths:
-  /admin/projects/create/project/:
+  /admin/projects/create/project:
     post:
       summary: Create a new project
       description: Create a new project within the admin's account.
@@ -26,7 +26,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
 
-  /admin/projects/{project_id}/create/resource/:
+  /admin/projects/{project_id}/create/resource:
     post:
       summary: Create a resource in a project
       parameters:
@@ -58,7 +58,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
 
-  /admin/projects/ressources/{resource_id}/image/:
+  /admin/projects/ressources/{resource_id}/image:
     put:
       summary: Upload a image on a ressource
       description: Upload an image on a resource, override if already exist.
@@ -93,7 +93,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
   
-  /admin/projects/ressources/{resource_id}/trackedImage/:
+  /admin/projects/ressources/{resource_id}/trackedImage:
     put:
       summary: Upload a tracked image on a ressource
       description: Upload an tracked image on a resource, override if already exist.
@@ -128,7 +128,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
         
-  /admin/projects/ressources/{resource_id}/markers/:
+  /admin/projects/ressources/{resource_id}/markers:
     put:
       summary: Upload markers on a ressource
       description: Upload markes on a resource, override if already exist.
@@ -171,7 +171,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
         
-  /admin/projects/ressources/{resource_id}/sound/:
+  /admin/projects/ressources/{resource_id}/sound:
     put:
       summary: Upload sound on a ressource
       description: Upload sound on a ressource, override if already exist.
@@ -207,7 +207,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
 
-  /admin/projects/ressources/{resource_id}/video/:
+  /admin/projects/ressources/{resource_id}/video:
     put:
       summary: Upload video on a ressource
       description: Upload video on a ressource
@@ -240,7 +240,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
         
-  /public/projects/{project_id}/rename/:
+  /public/projects/{project_id}/rename:
     put:
       summary: Rename a project
       description: Rename a project by specifying the new project id.
@@ -268,7 +268,7 @@ paths:
         - SpringOAuth2: [ admin ]
         
         
-  /public/projects/ressources/{ressource_id}/rename/:
+  /public/projects/ressources/{ressource_id}/rename:
     put:
       summary: Rename a ressource
       description: Rename a ressource by specifying the new ressource id.
