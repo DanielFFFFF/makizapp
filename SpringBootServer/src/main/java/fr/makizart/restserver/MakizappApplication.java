@@ -1,13 +1,13 @@
-package fr.makizart;
+package fr.makizart.restserver;
 
-import fr.makizart.database.repositories.ArRessourceAssetRepository;
-import fr.makizart.database.repositories.ImageAssetRepository;
-import fr.makizart.database.repositories.VideoAssetRepository;
-import fr.makizart.database.table.ArResource;
-import fr.makizart.database.table.ImageAsset;
-import fr.makizart.database.table.Project;
-import fr.makizart.database.repositories.ProjectRepository;
-import fr.makizart.database.table.VideoAsset;
+import fr.makizart.common.database.repositories.ArRessourceAssetRepository;
+import fr.makizart.common.database.repositories.ImageAssetRepository;
+import fr.makizart.common.database.repositories.VideoAssetRepository;
+import fr.makizart.common.database.table.ArResource;
+import fr.makizart.common.database.table.ImageAsset;
+import fr.makizart.common.database.table.Project;
+import fr.makizart.common.database.repositories.ProjectRepository;
+import fr.makizart.common.database.table.VideoAsset;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -55,9 +55,6 @@ public class MakizappApplication {
 
 		Project asset = new Project();
 		ArResource arResource = new ArResource();
-		arResource.setPathToMarker1(new URI("file://test"));
-		arResource.setPathToMarker2(new URI("file://test"));
-		arResource.setPathToMarker3(new URI("file://test"));
 /*		arRessourceAssetRepository.save(arRessource);*/
 
 

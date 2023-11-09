@@ -1,8 +1,8 @@
-package fr.makizart.database.table;
+package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 
-import java.net.URI;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="AR_RESOURCE")
@@ -11,14 +11,17 @@ public class ArResource extends DatedEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker pathToMarker1;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker pathToMarker2;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker pathToMarker3;
+    @Column(name = "name")
+    private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private Marker marker1;
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private Marker marker2;
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private Marker marker3;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     private ImageAsset thumbnail;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -31,11 +34,17 @@ public class ArResource extends DatedEntity {
     private SoundAsset soundAsset;
 
     @PrePersist
-    public void validateMutualExclusivity() {
-        if ((getImageAsset() != null || getSoundAsset() != null) == (getVideoAsset() != null)) {
+    public void validate() {
+        boolean atLeastOneAsset = getImageAsset() != null || getSoundAsset() != null || getVideoAsset() != null;
+        boolean noVideoAndSoundOrImage = (getImageAsset() != null || getSoundAsset() != null) == (getVideoAsset() != null);
+        if (noVideoAndSoundOrImage) {
             throw new IllegalStateException("(ImageAsset, VideoAsset) and SoundAsset are mutually exclusive.");
         }
+        if (!atLeastOneAsset){
+            throw new IllegalStateException("Cannot create resource without asset");
+        }
     }
+
 
     public Long getId() {
         return id;
@@ -66,6 +75,17 @@ public class ArResource extends DatedEntity {
         this.soundAsset = soundAsset;
     }
 
+    public Marker getMarker1() {
+        return marker1;
+    }
+
+    public Marker getMarker2() {
+        return marker2;
+    }
+
+    public Marker getMarker3() {
+        return marker3;
+    }
 
     public ImageAsset getThumbnail() {
         return thumbnail;
@@ -73,5 +93,14 @@ public class ArResource extends DatedEntity {
 
     public void setThumbnail(ImageAsset thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

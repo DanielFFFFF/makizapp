@@ -1,4 +1,4 @@
-package fr.makizart.database.table;
+package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 
@@ -10,7 +10,8 @@ import java.util.Objects;
 @Table(name = "PROJECT")
 public class Project extends DatedEntity {
 
-    public Project() {
+    public Project(String name) {
+        setName(name);
         arResource = Objects.requireNonNullElse(this.arResource, new ArrayList<>());
     }
 
@@ -24,6 +25,10 @@ public class Project extends DatedEntity {
     @Column(name="NAME", nullable = false)
     private String name;
 
+    public Project() {
+        arResource = Objects.requireNonNullElse(this.arResource, new ArrayList<>());
+    }
+
     public List<ArResource> getArResource() {
         return arResource;
     }
@@ -36,5 +41,7 @@ public class Project extends DatedEntity {
         this.name = name;
     }
 
-
+    public Long getId() {
+        return id;
+    }
 }

@@ -1,8 +1,7 @@
-package fr.makizart.database.table;
+package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 
-import java.io.File;
 import java.net.URI;
 
 

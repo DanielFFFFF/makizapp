@@ -58,6 +58,208 @@ paths:
           description: Unexpected error
       security:
         - SpringOAuth2: [admin]
+
+  /admin/projects/resources/{resource_id}/image/:
+    put:
+      summary: Upload a image on a resource
+      description: Upload an image on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the project where to upload the image.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+          description: Image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Resource not found. The specified resource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/resources/{resource_id}/trackedImage/:
+    put:
+      summary: Upload a tracked image on a resource
+      description: Upload an tracked image on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the resource where to upload the tracked image.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+          description: Tracked image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Resource not found. The specified resource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/resources/{resource_id}/markers/:
+    put:
+      summary: Upload markers on a resource
+      description: Upload markers on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the resource where to upload the markers.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          marker1/iset:
+            schema:
+              type: string
+              format: binary
+          marker2/fset:
+            schema:
+              type: string
+              format: binary
+          marker3/fset3:
+            schema:
+              type: string
+              format: binary
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+          description: Markers uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Resource not found. The specified resource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [admin]
+
+  /admin/projects/resources/{resource_id}/sound/:
+    put:
+      summary: Upload sound on a resource
+      description: Upload sound on a resource, override if already exist.
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the resource where to upload the sound.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          audio/mp3:
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        200:
+          description: Tracked image uploaded successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Resource not found. The specified resource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
+
+  /admin/projects/resources/{resource_id}/video/:
+    put:
+      summary: Upload video on a resource
+      description: Upload video on a resource
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the resource where to upload the video.
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: url
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/created_id'
+          description: Tracked image uploaded successfully.
+        400:
+          description: Invalid name or unsupported media
+        404:
+          description: Resource not found. The specified resource ID  does not exist.
+        5XX:
+          description: Unexpected error
+      security:
+        - SpringOAuth2: [ admin ]
         
   /public/projects/{project_id}/rename/:
     put:
@@ -283,37 +485,7 @@ paths:
         5XX:
           description: Bad request
 
-  /public/projects/{project_id}/resources/markers:
-    get:
-      summary: Get a list of markers in a project
-      description: Get the list of markers with the IDs of the resources in which they are.
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: List of markers and id as string
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  resources:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        marker_1:
-                          type: string
-                        marker_2:
-                          type: string
-                        marker_3:
-                          type: string
+
 
   /public/storage/:
     get:
@@ -354,7 +526,7 @@ components:
         imageAsset:
           type: string
           description: Base64 imageAsset
-        videoAssetURL:
+        videoAsset:
           type: string
           description: video url
         soundAsset:

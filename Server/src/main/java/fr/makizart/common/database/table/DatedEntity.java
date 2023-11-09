@@ -1,4 +1,4 @@
-package fr.makizart.database.table;
+package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,5 +11,9 @@ import java.time.LocalDateTime;
 public abstract class DatedEntity {
     @CreationTimestamp
     @Column(name = "creationDate")
-    private LocalDateTime createdOn;
+    protected LocalDateTime createdOn;
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
 }

@@ -1,4 +1,4 @@
-package fr.makizart.database.table;
+package fr.makizart.common.database.table;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,3 +1,4 @@
+
 plugins {
     id 'java'
     id 'war'
@@ -28,22 +29,25 @@ dependencies {
 
     implementation project(path: ':Server')
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.postgresql:postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4'
+    implementation 'org.postgresql:postgresql:42.5.4'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.security:spring-security-oauth2-authorization-server"
-    implementation "org.springframework.security:spring-security-oauth2-client"
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.4'
+    implementation 'org.springframework.security:spring-security-oauth2-authorization-server:1.0.1'
+    implementation 'org.springframework.security:spring-security-oauth2-client:6.0.2'
 
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:3.0.4'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.0.4'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:3.1.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+

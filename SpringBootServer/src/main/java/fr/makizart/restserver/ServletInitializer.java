@@ -1,4 +1,4 @@
-package fr.makizart;
+package fr.makizart.restserver;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
