@@ -411,9 +411,9 @@ paths:
                             type: string
                           creationDate:
                             type: string
-                          thumbnail:
-                            description: "thumbnail image"
-                            type: string
+                          thumbnail_id:
+                            description: "id of thumbnail image"
+                            type: integer
           404:
             description: Project not found
             
