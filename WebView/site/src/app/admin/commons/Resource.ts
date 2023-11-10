@@ -7,205 +7,244 @@
 export class Resource{
 
   /**
-   * @property _id
+   * @property id
    * Represents the id of the resource.
    */
-  private _id : number;
+  private id : number;
 
   /**
-   * @property _accessCount
+   * @property accessCount
    * Represents the number of times the resource has been accessed.
    */
-  private _accessCount : number = 0;
+  private accessCount : number = 0;
 
   /**
-   * @property _name
+   * @property name
    * Represents the name of the resource.
    */
-  private _name : string;
-
+  private name : string;
 
   /**
-   * @property _creationDate
+   * @property creationDate
    * Represents the creation date of the resource.
    */
-  private _creationDate : string;
+  private creationDate : string;
 
   /**
-   * @property _thumbnail
-   * Represents the tracked image of the resource.
+   * @property thumbnail
+   * Represents the id of the media where stocked tracked image of the resource.
    */
-  private _thumbnail : any;
-  /**
-   * @property _video
-   * Represents the video of the resource.
-   */
-  private _video : any;
+  private thumbnail_id : any;
 
   /**
-   * @property _image
-   * Represents the image of the resource.
+   * @property video
+   * @todo
    */
-  private _image : any;
+  private video_id : any;
 
   /**
-   * @property _audio
-   * Represents the audio of the resource.
+   * @property image
+   * @todo
    */
-  private _audio : any;
+  private image_id : any;
 
   /**
-   * @property _thumbnail_size
+   * @property audio
+   * @todo
+   */
+  private audio_id : any;
+
+  /**
+   * @property thumbnail
+   * Represents the tracked image of the resource in base string.
+   */
+  private thumbnail : any;
+
+  /**
+   * @property videoAsset
+   * @todo
+   */
+  private videoAsset : any;
+
+  /**
+   * @property imageAsset
+   * @todo
+   */
+  private imageAsset : any;
+
+  /**
+   * @property audioAsset
+   * @todo
+   */
+  private audioAsset : any;
+
+  /**
+   * @property thumbnail_size
    * Represents the size of the tracked image of the ressource.
    */
-  private _thumbnail_size : number = 0;
+  private thumbnail_size : number = 0;
 
   /**
-   * @property _image_size
+   * @property image_size
    * Represents the size of the image of the ressource.
    */
-  private _image_size : number = 0;
+  private image_size : number = 0;
 
   /**
-   * @property _audio_size
+   * @property audio_size
    * Represents the size of the audio of the ressource.
    */
-  private _audio_size : number = 0;
+  private audio_size : number = 0;
 
   /**
-   * @property _markers_size
+   * @property markers_size
    * Represents the size of the markers of the ressource.
    */
-  private _markers_size : number = 0;
+  private markers_size : number = 0;
 
   /**
    * @constructor
    * Creates a new instance of the Resource.
    */
-  constructor(id: number, name: string, thumbnail: any,creationDate: string) {
-    this._id = id;
-    this._name = name;
-    this._creationDate = creationDate;
-    this._thumbnail = thumbnail;
+  constructor(id: number, name: string,creationDate: string) {
+    this.id = id;
+    this.name = name;
+    this.creationDate = creationDate;
   }
 
   /**
    * @method accessCount
    * Gets the access count of the resource.
    */
-  get accessCount(): number {
-    return this._accessCount;
+   get _accessCount(): number {
+    return this.accessCount;
   }
 
   /**
    * @method name
    * Gets the name of the resource.
    */
-  get name(): string {
-    return this._name;
+   get _name(): string {
+    return this.name;
   }
 
   /**
    * @method creationDate
    * Gets the creation date of the resource.
    */
-  get creationDate(): string {
-    return this._creationDate;
+   get _creationDate(): string {
+    return this.creationDate;
   }
 
   /**
    * @method thumbnail
    * Gets the tracked image of the resource.
    */
-  get thumbnail (): any {
-    return this._thumbnail;
+   get _thumbnail (): any {
+    return this.thumbnail;
   }
 
   /**
    * @method video
    * Gets the video of the resource.
    */
-  get video(): any {
-    return this._video;
+   get _video(): any {
+    return this.videoAsset;
   }
 
   /**
    * @method image
    * Gets the image of the resource.
    */
-  get image(): any {
-    return this._image;
+   get _image(): any {
+    return this.imageAsset;
   }
 
   /**
    * @method audio
    * Gets the audio of the resource.
    */
-  get audio(): any {
-    return this._audio;
+   get _audio(): any {
+    return this.audioAsset;
   }
 
-  set accessCount(value: number) {
-    this._accessCount = value;
+   set _accessCount(value: number) {
+    this.accessCount = value;
   }
 
-  set name(value: string) {
-    this._name = value;
+   set _name(value: string) {
+    this.name = value;
   }
 
-  set creationDate(value: string) {
-    this._creationDate = value;
+   set _creationDate(value: string) {
+    this.creationDate = value;
   }
 
-  set thumbnail(value: any) {
-    this._thumbnail = value;
+   set _thumbnail(value: any) {
+    this.thumbnail = value;
   }
 
-  set video(value: any) {
-    this._video = value;
+   set _video(value: any) {
+    this.videoAsset = value;
   }
 
-  set image(value: any) {
-    this._image = value;
+   set _image(value: any) {
+    this.imageAsset = value;
   }
 
-  set audio(value: any) {
-    this._audio = value;
+   set _audio(value: any) {
+    this.audioAsset = value;
   }
 
-  get id(): number {
-    return this._id;
+   set _thumbnail_id(value: any) {
+    this.thumbnail_id = value;
   }
 
-  get thumbnail_size(): number {
-    return this._thumbnail_size;
+   set _video_id(value: any) {
+    this.video_id = value;
   }
 
-  set thumbnail_size(value: number) {
-    this._thumbnail_size = value;
+   set _image_id(value: any) {
+    this.image_id = value;
   }
 
-  get image_size(): number {
-    return this._image_size;
+   set _audio_id(value: any) {
+    this.audio_id = value;
   }
 
-  set image_size(value: number) {
-    this._image_size = value;
+   get _id(): number {
+    return this.id;
   }
 
-  get audio_size(): number {
-    return this._audio_size;
+   get _thumbnail_size(): number {
+    return this.thumbnail_size;
   }
 
-  set audio_size(value: number) {
-    this._audio_size = value;
+   set _thumbnail_size(value: number) {
+    this.thumbnail_size = value;
   }
 
-  get markers_size(): number {
-    return this._markers_size;
+   get _image_size(): number {
+    return this.image_size;
   }
 
-  set markers_size(value: number) {
-    this._markers_size = value;
+   set _image_size(value: number) {
+    this.image_size = value;
+  }
+
+   get _audio_size(): number {
+    return this.audio_size;
+  }
+
+   set _audio_size(value: number) {
+    this.audio_size = value;
+  }
+
+   get _markers_size(): number {
+    return this.markers_size;
+  }
+
+   set _markers_size(value: number) {
+    this.markers_size = value;
   }
 }

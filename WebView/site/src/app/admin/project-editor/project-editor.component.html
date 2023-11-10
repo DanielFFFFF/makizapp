@@ -5,13 +5,17 @@
 <div *ngIf="newResourceView" class="d-flex align-items-center popup">
   <div class="container-fluid ">
     <div class="d-flex justify-content-center">
-      <div class="colorBack rounded p-2">
+      <div class="colorBack rounded p-2 w-50">
         <h3 class="text-center ">Créer une nouvelle entité</h3>
-        <div class="d-flex justify-content-center">
-          <div class="mt-2">
-            <span class="me-2">Nom :</span>
-            <input #resourceName>
+        <div class="d-flex flex-column justify-content-center">
+          <div class="mt-2 d-flex flex-column">
+            <span class="me-2">Nom :</span><input #resourceName>
+            <span class="me-2">Image à capturer :</span><input type="file" #resourceThumbnail>
+            <span class="me-2">Son :</span><input type="file" #resourceSound>
+            <span class="me-2">Vidéo (url):</span><input value="https://player.vimeo.com/video/879891554?h=fba301cac0" #resourceVideo>
+            <span class="me-2">Image à afficher : </span><input type="file" #resourceImage>
           </div>
+          <p class="text-justify mb-2">Note : Après capture d'une image, affiche soit la vidéo (url) soit une image. Il est inutile de remplir les 2 champs.</p>
         </div>
         <div class="d-flex justify-content-between mt-2">
           <button type="button"
@@ -20,7 +24,8 @@
           </button>
           <button type="button"
                   class="m-1 p-1 btn cursor-pointer user-select-none"
-                  (click)="createNewResource(resourceName.value)">Enregistrer
+                  (click)="createNewResource(resourceName.value,resourceThumbnail,resourceVideo,resourceSound,resourceImage)">
+            Enregistrer
           </button>
         </div>
       </div>
@@ -66,28 +71,27 @@
 <div *ngIf="editResourceView" class="d-flex align-items-center popup">
   <button type="button"
           class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-          [style.backgroundColor]="!saved ? 'red':''" (click)="exitEdition()">close
+          (click)="exitEdition()">close
   </button>
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-12 row justify-content-center content rounded">
         <div class="col-xl-3 col-5 pe-1">
           <div class="row">
+
+
             <div class="col-12">
               <div class="color-component rounded p-2 blocEditing">
                 <div class="d-flex justify-content-center">
                   <div class="flex-column">
                     <h4 class="mt-2 text-center">Image à scanner</h4>
-                    <div class="border colorBack square mb-3 position-relative hidden">
-                      <img class="img-fluid" src="{{resourceSelected?.thumbnail}}">
-                      <button type="button"
-                              class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none"
-                              (click)="uploadNewTrackedImage()" data-toggle="tooltip"
-                              title="Upload une nouvelle image">upload
-                      </button>
+                    <div class="border colorBack square mb-3 position-relative hidden ">
+                      <img class="img-fluid" src="{{resourceSelected?._thumbnail}}">
+                      <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail)"/>
                       <button type="button"
                               class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                              (click)="deleteTrackedImage()" data-toggle="tooltip" title="Supprimer l'image">close
+                              (click)="NewThumbnail.click()" data-toggle="tooltip"
+                              title="Upload une nouvelle image">upload
                       </button>
                     </div>
                   </div>
@@ -106,11 +110,12 @@
                     <div class="flex-column">
                       <h4 class="mt-2 text-center">Vidéo</h4>
                       <div class="d-flex border colorBack square mb-1">
-                        <iframe class="mw-100 mh-100" [src]="resourceSelected?.video | safe"
+                        <iframe class="mw-100 mh-100" [src]="resourceSelected?._video | safe"
                                 allow="autoplay; fullscreen; image-in-image" allowfullscreen></iframe>
                       </div>
                       <div class="d-flex border colorBack mb-3">
-                        <input type="text" class="form-control" placeholder="Url..." value="{{resourceSelected?.video}}">
+                        <input type="text" class="form-control" placeholder="Url..."
+                               value="{{resourceSelected?._video}}">
                       </div>
                     </div>
                   </div>
@@ -128,15 +133,12 @@
                       <div class="flex-column">
                         <h4 class="mt-2 text-center">Image</h4>
                         <div class="d-flex border colorBack square mb-3 position-relative hidden">
-                          <img class="mh-100 mw-100" src="{{resourceSelected?.image}}">
-                          <button type="button"
-                                  class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 start-0 cursor-pointer user-select-none"
-                                  (click)="uploadNewImage()" data-toggle="tooltip" title="Upload une nouvelle image">
-                            upload
-                          </button>
+                          <img class="mh-100 mw-100" src="{{resourceSelected?._image}}">
+                          <input type="file" style="display: none;" #uploadNewImage/>
                           <button type="button"
                                   class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                                  (click)="deleteImage()" data-toggle="tooltip" title="Supprimer l'image">close
+                                  (click)="uploadNewImage.click()" data-toggle="tooltip" title="Upload une nouvelle image">
+                            upload
                           </button>
                         </div>
                       </div>
@@ -158,17 +160,14 @@
               <div class="color-component rounded p-2 blocEditing">
                 <div class="d-flex justify-content-center">
                   <div class="flex-column">
-                    <div class="hidden">
+                    <div>
                       <h4 class="mt-2 text-center">Son</h4>
                       <figure>
-                        <audio controls src="{{resourceSelected?.audio}}"></audio>
+                        <audio controls src="{{resourceSelected?._audio}}"></audio>
                       </figure>
-                      <div class="d-flex justify-content-between">
+                      <div class="d-flex justify-content-center">
                         <button type="button" class="p-1 btn material-symbols-outlined" (click)="uploadNewAudio()"
                                 data-toggle="tooltip" title="Upload un nouveau son">upload
-                        </button>
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="deleteAudio()"
-                                data-toggle="tooltip" title="Supprimer le son">close
                         </button>
                       </div>
                     </div>
@@ -194,25 +193,32 @@
               <div class="color-component rounded p-2 blocEditing">
                 <div class="d-flex justify-content-center">
                   <div class="flex-column">
-                    <h1 class="mt-2 text-center">{{resourceSelected?.name}}</h1>
+                    <h1 class="mt-2 text-center">{{resourceSelected?._name}}</h1>
                     <div class="d-flex flex-column colorFont">
-                      <h6><b>Créé le</b> : {{resourceSelected?.creationDate}}</h6>
-                      <h6><b>Nb d'accès</b> : {{resourceSelected?.accessCount}}</h6>
+                      <h6><b>Créé le</b> : {{resourceSelected?._creationDate}}</h6>
+                      <h6><b>Nb d'accès</b> : {{resourceSelected?._accessCount}}</h6>
 
                       <hr class="hr mb-1 mt-1"/>
 
-                      <h6><b>Image à scanner</b> : {{resourceSelected?.thumbnail_size}}Mb</h6>
-                      <h6><b>Son</b> : {{resourceSelected?.audio_size}}Mb</h6>
+                      <h6><b>Image à scanner</b> : {{resourceSelected?._thumbnail_size}}Mb</h6>
+                      <h6><b>Son</b> : {{resourceSelected?._audio_size}}Mb</h6>
 
                       <div *ngIf="!videoMod">
-                        <h6><b>Image</b> : {{resourceSelected?.image_size}}Mb</h6>
+                        <h6><b>Image</b> : {{resourceSelected?._image_size}}Mb</h6>
                       </div>
 
                     </div>
                   </div>
                 </div>
-                <div class="d-flex justify-content-center mt-4">
-                  <button type="button" class=" btn w-75" (click)="saveResource()">Enregistrer les modifications</button>
+                <div class="d-flex flex-column mt-4">
+                  <div class="d-flex justify-content-center">
+                    <button type="button" class="btn w-50" (click)="deleteResource()">
+                      Supprimer {{resourceSelected?._name}}</button>
+                  </div>
+                  <div class="d-flex justify-content-center mt-2">
+                    <button type="button" class="btn w-50" (click)="saveEdition()">Enregistrer les modifications
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -264,8 +270,8 @@
           <div class="row justify-content-center">
             <div *ngFor="let resource of resourcesFiltered" class="col-6 col-lg-3">
               <div class="border-bottom mt-1 mb-1 card" (click)="selectResource(resource)">
-                <img class="mh-100 mw-100 rounded-top" src="{{resource.thumbnail}}" alt="Url non valide">
-                <h4 class="mb-1 text-center">{{resource.name}}</h4>
+                <img class="mh-100 mw-100 rounded-top" src="{{resource._thumbnail}}" alt="Url non valide">
+                <h4 class="mb-1 text-center">{{resource._name}}</h4>
               </div>
             </div>
           </div>

@@ -3,11 +3,11 @@ import {Project} from "../commons/Project";
 import {Resource} from "../commons/Resource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
 import {UpdatorService} from "../commons/Updator.service";
-import {SERVER_PATH} from "../commons/config";
+import {DEFAULT_IMAGE, SERVER_PATH} from "../commons/config";
 import {map} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {ResourceList} from "./class";
-import {formatDate} from "@angular/common";
+import {ResourceList, ResponseValue} from "./class";
+import {Created_id} from "../commons/Created_id";
 
 @Component({
   selector: 'project-editor',
@@ -58,11 +58,6 @@ export class ProjectEditorComponent {
   videoMod: boolean = true;
 
   /**
-   * @property {boolean} saved - Allows you to know if the user has saved his changes.
-   */
-  saved: boolean = false;
-
-  /**
    * @property {boolean} renameView - Show or not the menu to rename an resource.
    */
   renameView: boolean = false;
@@ -105,6 +100,10 @@ export class ProjectEditorComponent {
     this.http.get<any>(SERVER_PATH + `/public/projects/${this.project.id}/resources/`).pipe( map((value: ResourceList) => {return value})).subscribe((res: ResourceList) =>{
       this.resources = res.resources;
       this.resourcesFiltered = this.resources;
+
+      for(let i = 0; i<this.resourcesFiltered.length;i++){
+        this.getThumbnailById(this.resources[i]);
+      }
     });
     /*
     for (let i = 0; i < this.project.id; i++) {
@@ -122,7 +121,7 @@ export class ProjectEditorComponent {
   filterList() {
     if (this.filterResource != null) {
       let filter = this.filterResource.nativeElement.value;
-      this.resourcesFiltered = this.resources.filter(resource => resource.name.includes(filter));
+      this.resourcesFiltered = this.resources.filter(resource => resource._name.includes(filter));
     } else {
       this.resourcesFiltered = this.resources;
     }
@@ -143,38 +142,74 @@ export class ProjectEditorComponent {
 
   /**
    * @method createNewResource(name: String)
-   * @param {string} name - The name of the resource
    * Create a new resource and push to the server.
    */
-  createNewResource(name: string) {
-      // @ts-ignore
-      this.http.post(SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, {'name': name}).subscribe((data: Created_id) => {
-          //Or create temporaly the new project
-          this.resources.push(new Resource(data.created_id, name, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg" , this.formatDate(new Date())));
+  createNewResource(name : string, thumbnail : HTMLInputElement, video : HTMLInputElement, sound : HTMLInputElement, image : HTMLInputElement) {
+    let body = {
+      "name": name,
+      "Marker1": "",
+      "Marker2": "",
+      "Marker3": "",
+      "thumbnail": "",
+      "imageAsset": "",
+      "videoAsset": video.value,
+      "soundAsset": ""
+    }
+
+    if(thumbnail.files != null){
+      const reader = new FileReader();
+      reader.readAsDataURL(thumbnail.files[0]);
+      reader.onload = () => {
+        body.thumbnail = reader.result as string;
+        // @ts-ignore
+        this.http.post(SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((data: Created_id) => {
           this.hideNewResource();
-      })
+        });
+      };
+    } else {
+      //todo popup impossible de charger l'image tracking
+    }
+
+    if(image.files != null && image.files.length!=0){
+      const reader = new FileReader();
+      reader.readAsDataURL(image.files[0]);
+      reader.onload = () => {
+        body.imageAsset = reader.result as string;
+      };
+    } else {
+      //todo popup impossible de charger l'image
+    }
+
+    if(sound.files != null){
+      const reader = new FileReader();
+      reader.readAsDataURL(sound.files[0]);
+      reader.onload = () => {
+        body.soundAsset = reader.result as string;
+      };
+    } else {
+      //todo popup impossible de charger le son
+    }
+
+    //Todo générer les markers
+
+
+
+
   }
 
   /**
-   * @method uploadNewTrackedImage()
-   * Uploads a new tracked image for the selected resource.
+   * @method uploadNewThumbnail()
+   * Uploads a new thumbnail for the selected resource.
    */
-  uploadNewTrackedImage() {
-    //TODO Upload a tracked image for this selected resource
-    //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Upload new Tracked Image");
-    this.saved = false;
-  }
+  uploadNewThumbnail(image : HTMLInputElement) {
+    let imgBase64 ="https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg"
+    this.http.post(SERVER_PATH + `/admin/projects/ressources/${this.resourceSelected?._id}/thumbnail/`, {'name': `thumbnail_res_${this.resourceSelected?._id}`,'image':imgBase64}).subscribe(() => {
+      if(this.resourceSelected) {
+        this.resourceSelected._thumbnail = imgBase64;
+      }
+    });
 
-  /**
-   * @method deleteTrackedImage()
-   * Deletes the tracked image of the selected resource.
-   */
-  deleteTrackedImage() {
-    //TODO Delete the tracked image of this selected resource
-    //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Delete TrackedImage");
-    this.saved = false;
+
   }
 
   /**
@@ -185,18 +220,6 @@ export class ProjectEditorComponent {
     //TODO Upload a image for this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Image");
-    this.saved = false;
-  }
-
-  /**
-   * @method deleteImage()
-   * Deletes the image of the selected resource.
-   */
-  deleteImage() {
-    //TODO Delete the image of this selected resource
-    //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Delete Image");
-    this.saved = false;
   }
 
   /**
@@ -207,18 +230,6 @@ export class ProjectEditorComponent {
     //TODO Upload a audio for this selected resource
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Upload new Audio");
-    this.saved = false;
-  }
-
-  /**
-   * @method deleteAudio()
-   * Deletes the audio file of the selected resource.
-   */
-  deleteAudio() {
-    //TODO Delete the audio of this selected resource
-    //TODO send request to server --> on sucess refresh --> on echec show popup error
-    console.log("Delete Audio");
-    this.saved = false;
   }
 
   /**
@@ -228,15 +239,6 @@ export class ProjectEditorComponent {
   reloadMarker() {
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     console.log("Marker reloaded");
-  }
-
-  /**
-   * @method saveResource()
-   * Saves the resource by pushing it to the server.
-   */
-  saveResource() {
-    //TODO send request to server --> on sucess refresh --> on echec show popup error
-    this.saved = true;
   }
 
   /**
@@ -267,7 +269,7 @@ export class ProjectEditorComponent {
 
   selectResource(resource: Resource) {
     this.resourceSelected = resource;
-    if (this.resourceSelected.image != null) {
+    if (this.resourceSelected._image != null) {
       this.videoMod = false;
     }
     this.showEditResource()
@@ -279,7 +281,6 @@ export class ProjectEditorComponent {
    */
   exitEdition() {
     this.resourceSelected = null;
-    this.saved = false;
     this.hideEditResource();
   }
 
@@ -329,5 +330,33 @@ export class ProjectEditorComponent {
    */
   hideNewResource() {
     this.newResourceView = false;
+  }
+
+
+  getThumbnailById(resource: Resource) {
+    console.log(resource);
+    if(resource._thumbnail_id!==undefined) {
+      this.http.get<any>(SERVER_PATH + `/public/projects/ressources/images/${resource._thumbnail_id}/`)
+        .pipe(
+          map((value: ResponseValue) => {
+            return value
+          })
+        )
+        .subscribe((res: ResponseValue) => {
+            resource._thumbnail = res.value;
+        });
+    } else {
+      resource._thumbnail = DEFAULT_IMAGE;
+    }
+  }
+
+  deleteResource(){
+
+    this.exitEdition();
+  }
+
+  saveEdition(){
+
+    this.exitEdition();
   }
 }
