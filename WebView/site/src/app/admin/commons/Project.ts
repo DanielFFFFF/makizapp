@@ -56,12 +56,4 @@ export class Project{
   get name(): string {
     return this._name;
   }
-
-  /**
-   * @method creationDate
-   * Gets the creation date of the project.
-   */
-  get creationDate(): string {
-    return this._creationDate;
-  }
 }
