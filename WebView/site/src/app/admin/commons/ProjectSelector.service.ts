@@ -6,6 +6,7 @@ import {Subject} from "rxjs";
  * @class ProjectSelectorService
  *
  * Service that provides a mechanism to select a project.
+ * It is used to communicate the chosen project from the project manager to the project editor.
  */
 @Injectable({
   providedIn: 'root'

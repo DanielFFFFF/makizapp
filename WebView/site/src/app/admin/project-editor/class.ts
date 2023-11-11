@@ -7,3 +7,11 @@ export class ResourceList{
     this.resources = projects;
   }
 }
+
+export class ResponseValue{
+  value : string;
+
+  constructor(value: string) {
+    this.value = value;
+  }
+}
