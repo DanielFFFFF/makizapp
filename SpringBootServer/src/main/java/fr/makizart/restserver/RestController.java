@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
@@ -35,7 +36,7 @@ public class RestController {
 	@PostMapping("/admin/projects/create/project/")
 	public ResponseEntity<IdDTO> createProject(
 			@RequestParam String name) throws NameAlreadyBoundException {
-		return new ResponseEntity<IdDTO>(storageService.createProject(name), HttpStatus.CREATED);
+		return new ResponseEntity<>(storageService.createProject(name), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/admin/projects/{project_id}/create/resource/")

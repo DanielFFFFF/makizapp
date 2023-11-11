@@ -34,14 +34,14 @@ public class SimpleStorageService implements StorageService {
 
 
 	public static final String FS_SAVE_PATH = "";
-	public ProjectRepository projectRepository;
+	public final ProjectRepository projectRepository;
 
-	public ArRessourceAssetRepository arRessourceRepository;
+	public final ArRessourceAssetRepository arRessourceRepository;
 
-	public ImageAssetRepository imageAssetRepository;
+	public final ImageAssetRepository imageAssetRepository;
 
-	public VideoAssetRepository videoAssetRepository;
-	public SoundAssetReposetory soundAssetReposetory;
+	public final VideoAssetRepository videoAssetRepository;
+	public final SoundAssetReposetory soundAssetReposetory;
 
 
 	Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
@@ -52,13 +52,14 @@ public class SimpleStorageService implements StorageService {
 			@Autowired ArRessourceAssetRepository arRessourceRepository,
 			@Autowired ImageAssetRepository imageAssetRepository,
 			@Autowired VideoAssetRepository videoAssetRepository,
-			@Autowired SoundAssetReposetory soundAssetReposetory) {
+			@Autowired SoundAssetReposetory soundAssetReposetory,
+			@Autowired FileSystemManager fileSystemManager) {
 		this.projectRepository = projectRepository;
 		this.arRessourceRepository = arRessourceRepository;
 		this.imageAssetRepository = imageAssetRepository;
 		this.videoAssetRepository = videoAssetRepository;
 		this.soundAssetReposetory = soundAssetReposetory;
-	}
+    }
 
 	@Override
 	public Page<Project> getProjects(int nbPage, int size) {
@@ -87,10 +88,11 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void uploadMarkers(String resourceId, String name, Map<String, byte[]> markers) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
-		throw new NotImplementedException();
+
 	}
 
 	@Override
+	@Transactional
 	public void uploadSound(String resourceId, String name, byte[] sound) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
 		try {
@@ -98,14 +100,13 @@ public class SimpleStorageService implements StorageService {
 			if(!soundAssetReposetory.existsById(Long.valueOf(resourceId))){
 				throw new  NoSuchElementException();
 			}
-			//TODO write file to disk
 			SoundAsset soundAsset = new SoundAsset();
 			soundAsset.setName(name);
-
+			soundAssetReposetory.save(soundAsset);
+			FileSystemManager.writeSound(soundAsset.getId().toString(),sound);
 		} catch (UnsupportedAudioFileException e) {
 			throw new InvalidParameterException("audio type not supported");
 		}
-		throw new NotImplementedException();
 	}
 
 	@Override
