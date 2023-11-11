@@ -1,7 +1,9 @@
 package fr.makizart.common.storageservice;
 
 
+import fr.makizart.common.database.table.Project;
 import fr.makizart.common.storageservice.dto.*;
+import org.springframework.data.domain.Page;
 
 import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
@@ -12,7 +14,8 @@ import java.util.NoSuchElementException;
 
 public interface StorageService  {
 
-	List<String> getProject();
+
+	Page<Project> getProject(int pageNumber, int pageSize);
 	ProjectDTO getProject(String projectId)throws NoSuchElementException,InvalidParameterException;
 
 	List<String> getResourcesInProject(String projectId) throws InvalidParameterException,NoSuchElementException;

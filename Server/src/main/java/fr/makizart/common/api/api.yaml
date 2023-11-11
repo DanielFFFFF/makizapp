@@ -383,11 +383,24 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
 
-  /public/projects/:
+  /public/projects/{page{size}:
     get:
+      parameters:
+        - in: path
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: size
+          required: true
+          schema:
+            type: integer
       summary: Get a list of projects
       description: Returns a list of public projects.
       responses:
+        400:
+          description: Invalid parameter,
         200:
           description: List of projects as string
           content:

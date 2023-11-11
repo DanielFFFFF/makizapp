@@ -1,5 +1,6 @@
 package fr.makizart.restserver;
 
+import fr.makizart.common.database.table.Project;
 import fr.makizart.common.storageservice.SimpleStorageService;
 import fr.makizart.common.storageservice.dto.ArResourceDTO;
 import fr.makizart.common.storageservice.dto.IncomingResourceDTO;
@@ -7,6 +8,7 @@ import fr.makizart.common.storageservice.dto.ProjectDTO;
 import fr.makizart.common.storageservice.dto.StorageInformationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -136,9 +138,9 @@ public class RestController {
 
 	//Get--------------------
 
-	@GetMapping("/public/projects/")
-	public List<String> getProjects() {
-		return storageService.getProject();
+	@GetMapping("/public/projects/{page}{size}")
+	public Page<Project> getProjects(@PathVariable int page, @PathVariable int size) {
+		return storageService.getProject(page,size);
 	}
 
 	@GetMapping("/public/projects/{project_id}/")

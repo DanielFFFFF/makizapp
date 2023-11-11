@@ -10,6 +10,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import javax.naming.NameAlreadyBoundException;
@@ -17,10 +19,8 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.ByteArrayInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +43,7 @@ public class SimpleStorageService implements StorageService {
 	public VideoAssetRepository videoAssetRepository;
 	public SoundAssetReposetory soundAssetReposetory;
 
+
 	Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
 
 
@@ -60,10 +61,8 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public List<String> getProject() {
-		return projectRepository.findAllID()
-				.stream()
-				.map(Objects::toString).toList();
+	public Page<Project> getProject(int nbPage, int size) {
+		return projectRepository.findAll(PageRequest.of(nbPage, size));
 	}
 
 	@Override
