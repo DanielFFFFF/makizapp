@@ -61,7 +61,7 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public Page<Project> getProject(int nbPage, int size) {
+	public Page<Project> getProjects(int nbPage, int size) {
 		return projectRepository.findAll(PageRequest.of(nbPage, size));
 	}
 

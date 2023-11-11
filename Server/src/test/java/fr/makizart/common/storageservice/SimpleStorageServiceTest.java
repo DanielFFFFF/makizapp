@@ -53,6 +53,6 @@ class SimpleStorageServiceTest {
         projeeeeeeeets.add(new Project("c"));
         when(projectRepository.findAll(Mockito.isA(Pageable.class))).thenReturn(new PageImpl<>(projeeeeeeeets));
 
-        Assertions.assertArrayEquals(projeeeeeeeets.toArray(),storageService.getProject(1,1).stream().toArray());
+        Assertions.assertArrayEquals(projeeeeeeeets.toArray(),storageService.getProjects(1,1).stream().toArray());
     }
 }
