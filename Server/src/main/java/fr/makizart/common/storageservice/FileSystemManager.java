@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.FileStore;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class FileSystemManager {
@@ -159,7 +162,38 @@ public class FileSystemManager {
         deleteFile(fileName, FileType.MARKERS);
     }
 
+    /**
+     * Returns the total and used disk space.
+     *
+     * This method uses the java.nio.file.FileStore class to get disk space information.
+     * It returns a map with two entries: "total" for the total disk space, and "used" for the used disk space.
+     * If an IOException occurs, it returns a map with "total" and "used" set to 0.
+     * @return A map with the total and used disk space.
+     */
+    public static Map<String,Long> getDiskSpace() {
+        HashMap<String, Long> map = new HashMap<>();
+        try {
+            // Get the FileStore representing the file system
+            FileStore store = Files.getFileStore(Paths.get(PATH));
 
+            // Get the total and usable (free) space
+            long totalSpace = store.getTotalSpace();
+            long usableSpace = store.getUsableSpace();
 
+            // Calculate the used space
+            long usedSpace = totalSpace - usableSpace;
+
+            // Put the total and used space in the map
+            map.put("used", usedSpace);
+            map.put("total", totalSpace);
+
+            return map;
+        } catch (IOException e) {
+            // If an IOException occurs, return a map with "total" and "used" set to 0
+            map.put("used", 0L);
+            map.put("total", 0L);
+            return map;
+        }
+    }
 
 }

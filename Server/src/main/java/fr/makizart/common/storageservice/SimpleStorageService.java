@@ -81,7 +81,8 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public StorageInformationDTO getStorageInformation() {
-		throw new NotImplementedException();
+		Map<String,Long> map = FileSystemManager.getDiskSpace();
+		return new StorageInformationDTO(map.get("used"),map.get("total"));
 	}
 
 	@Override
