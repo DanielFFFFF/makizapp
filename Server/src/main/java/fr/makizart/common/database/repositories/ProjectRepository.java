@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project,Long> {
-    @Query(value = "SELECT id from Project")
-    List<Long> findAllID();
+
 }
 

@@ -1,14 +1,14 @@
 package fr.makizart.restserver;
 
+import fr.makizart.common.database.table.Project;
 import fr.makizart.common.storageservice.SimpleStorageService;
-import fr.makizart.common.storageservice.dto.ArResourceDTO;
-import fr.makizart.common.storageservice.dto.IncomingResourceDTO;
-import fr.makizart.common.storageservice.dto.ProjectDTO;
-import fr.makizart.common.storageservice.dto.StorageInformationDTO;
+import fr.makizart.common.storageservice.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
@@ -34,18 +34,16 @@ public class RestController {
 
 	//POST------
 	@PostMapping("/admin/projects/create/project/")
-	public ResponseEntity<String> createProject(
+	public ResponseEntity<IdDTO> createProject(
 			@RequestParam String name) throws NameAlreadyBoundException {
-		storageService.createProject(name);
-		return ResponseEntity.ok("Project created successfully.");
+		return new ResponseEntity<>(storageService.createProject(name), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/admin/projects/{project_id}/create/resource/")
-	public ResponseEntity<String> createResource(
+	public ResponseEntity<ArResourceDTO> createResource(
 			@PathVariable String project_id,
 			@RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException {
-		storageService.createResource(project_id, dto);
-		return ResponseEntity.ok("Resource created successfully.");
+		return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
 	}
 
 	//PUT--------
@@ -136,27 +134,32 @@ public class RestController {
 
 	//Get--------------------
 
-	@GetMapping("/public/projects/")
-	public List<String> getProjects() {
-		return storageService.getProject();
+	@GetMapping("/public/projects/{page}{size}")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Project> getProjects(@PathVariable int page, @PathVariable int size) {
+		return storageService.getProjects(page,size);
 	}
 
 	@GetMapping("/public/projects/{project_id}/")
+	@ResponseStatus(HttpStatus.OK)
 	public ProjectDTO getProject(@PathVariable String project_id) {
 		return storageService.getProject(project_id);
 	}
 
 	@GetMapping("/public/projects/{project_id}/resources/")
+	@ResponseStatus(HttpStatus.OK)
 	public List<String> getResourcesInProject(@PathVariable String project_id) {
 		return storageService.getResourcesInProject(project_id);
 	}
 
 	@GetMapping("/public/projects/resources/{resource_id}/")
+	@ResponseStatus(HttpStatus.OK)
 	public ArResourceDTO getResource(@PathVariable String resource_id) {
 		return storageService.getResource(resource_id);
 	}
 
 	@GetMapping("/public/storage/")
+	@ResponseStatus(HttpStatus.OK)
 	public StorageInformationDTO getStorageInformation() {
 		return storageService.getStorageInformation();
 	}

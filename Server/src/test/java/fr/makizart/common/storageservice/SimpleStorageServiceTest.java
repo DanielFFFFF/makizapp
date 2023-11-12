@@ -1,13 +1,17 @@
 package fr.makizart.common.storageservice;
 
 import fr.makizart.common.database.repositories.*;
+import fr.makizart.common.database.table.Project;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +47,12 @@ class SimpleStorageServiceTest {
 
     @Test
     void testGetAllReturnAllProject() {
-        List<Long> id  = new ArrayList<>(3);
-        id.add(1L);
-        id.add(3L);
-        id.add(2L);
-        when(projectRepository.findAllID()).thenReturn(id);
+        List<Project> projeeeeeeeets  = new ArrayList<>(3);
+        projeeeeeeeets.add(new Project("a"));
+        projeeeeeeeets.add(new Project("b"));
+        projeeeeeeeets.add(new Project("c"));
+        when(projectRepository.findAll(Mockito.isA(Pageable.class))).thenReturn(new PageImpl<>(projeeeeeeeets));
 
-        String[] res = new String[]{"1", "3", "2"};
-        Assertions.assertArrayEquals(res,storageService.getProject().toArray());
+        Assertions.assertArrayEquals(projeeeeeeeets.toArray(),storageService.getProjects(1,1).stream().toArray());
     }
 }
