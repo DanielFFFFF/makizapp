@@ -118,6 +118,47 @@ public class FileSystemManager {
         return readFile(fileName, FileType.MARKERS);
     }
 
+    /**
+     * Deletes a file.
+     *
+     * @param id The id of the saved resource.
+     * @throws IOException If an I/O error occurs during the file deletion process.
+     */
+    private static void deleteFile(String id, FileType type) throws IOException {
+        Path filePath = Paths.get(PATH, id + "." + type.name());
+        Files.delete(filePath);
+    }
+
+    /**
+     * Example usage of deleting an image file.
+     *
+     * @param imageName The name of the image file.
+     * @throws IOException If an I/O error occurs during the file deletion process.
+     */
+    public static void deleteImage(String imageName) throws IOException {
+        deleteFile(imageName, FileType.IMAGE);
+    }
+
+    /**
+     * Example usage of deleting a sound file.
+     *
+     * @param soundName The name of the sound file.
+     * @throws IOException If an I/O error occurs during the file deletion process.
+     */
+    public static void deleteSound(String soundName) throws IOException {
+        deleteFile(soundName, FileType.SOUND);
+    }
+
+    /**
+     * Example usage of deleting a generic file with random byte sequence.
+     *
+     * @param fileName The name of the generic file.
+     * @throws IOException If an I/O error occurs during the file deletion process.
+     */
+    public static void deleteGenericMarkers(String fileName) throws IOException {
+        deleteFile(fileName, FileType.MARKERS);
+    }
+
 
 
 

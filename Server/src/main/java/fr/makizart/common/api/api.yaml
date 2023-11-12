@@ -524,13 +524,13 @@ components:
       properties:
         name:
           type: string
-        Marker1:
+        marker1:
           type: string
           description: Base64 pathToMarker1
-        Marker2:
+        marker2:
           type: string
           description: Base64 pathToMarker2
-        Marker3:
+        marker3:
           type: string
           description: Base64 pathToMarker3
         thumbnail:

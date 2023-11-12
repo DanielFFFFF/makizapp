@@ -1,10 +1,7 @@
 package fr.makizart.common.storageservice;
 
 import fr.makizart.common.database.repositories.*;
-import fr.makizart.common.database.table.ArResource;
-import fr.makizart.common.database.table.Project;
-import fr.makizart.common.database.table.SoundAsset;
-import fr.makizart.common.database.table.VideoAsset;
+import fr.makizart.common.database.table.*;
 import fr.makizart.common.storageservice.dto.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -22,10 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
@@ -43,6 +37,8 @@ public class SimpleStorageService implements StorageService {
 	public final VideoAssetRepository videoAssetRepository;
 	public final SoundAssetReposetory soundAssetReposetory;
 
+	public final MarkerAssetRepository markerAssetRepository;
+
 
 	Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
 
@@ -50,6 +46,7 @@ public class SimpleStorageService implements StorageService {
 	public SimpleStorageService(
 			@Autowired ProjectRepository projectRepository,
 			@Autowired ArRessourceAssetRepository arRessourceRepository,
+			@Autowired MarkerAssetRepository markerAssetRepository,
 			@Autowired ImageAssetRepository imageAssetRepository,
 			@Autowired VideoAssetRepository videoAssetRepository,
 			@Autowired SoundAssetReposetory soundAssetReposetory,
@@ -59,6 +56,7 @@ public class SimpleStorageService implements StorageService {
 		this.imageAssetRepository = imageAssetRepository;
 		this.videoAssetRepository = videoAssetRepository;
 		this.soundAssetReposetory = soundAssetReposetory;
+		this.markerAssetRepository = markerAssetRepository;
     }
 
 	@Override
@@ -87,8 +85,41 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
+	@Transactional
 	public void uploadMarkers(String resourceId, String name, Map<String, byte[]> markers) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+		// Check 1: Is the name valid?
+		validateName(name);
 
+		// Check 2: Does the resource exist?
+		if(!markerAssetRepository.existsById(Long.valueOf(resourceId))){
+			throw new NoSuchElementException();
+		}
+
+		// Check 3: Do we have 3 markers and are they “marker”+{1-3}
+		if(!(markers.containsKey("marker1") && markers.containsKey("marker2") && markers.containsKey("marker3")) && markers.size() != 3){
+			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
+		}
+
+		// List containing markers already saved to delete them if unsuccessful
+		List<Marker> savedMarkers = new ArrayList<>();
+
+		for(int i = 0 ; i<3 ; i++){
+			try{
+				Marker newMarker = new Marker();
+				newMarker.setName(name + "." + "marker"+ (i+1) );
+				byte[] marker = markers.get("marker"+ (i+1));
+				markerAssetRepository.save(newMarker);
+				FileSystemManager.writeGenericMarkers(newMarker.getId().toString(), marker);
+				savedMarkers.add(newMarker); // Adds the marker to the list of saved markers
+			} catch (Exception e) {
+				// Delete all markers that have been saved
+				for (Marker savedMarker : savedMarkers) {
+					markerAssetRepository.delete(savedMarker);
+					FileSystemManager.deleteGenericMarkers(savedMarker.getId().toString());
+				}
+				throw new IOException(e);
+			}
+		}
 	}
 
 	@Override
