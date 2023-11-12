@@ -3,12 +3,13 @@
   align-items: center;
 }
 
-.form-control{
+.form-control-custom{
   background: none;
   border:none;
   outline: none;
 }
-.form-control:focus{
+
+.form-control-custom:focus{
   box-shadow: none;
 }
 
@@ -56,6 +57,10 @@
 
 .vh-75{
   height:75vh;
+}
+
+.vw-25{
+  width:50vh;
 }
 
 @media (max-width: 1200px) {

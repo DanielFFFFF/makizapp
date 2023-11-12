@@ -104,9 +104,11 @@ export class ProjectEditorComponent {
             this.resourcesFiltered = this.resources;
 
             for (let i = 0; i < this.resourcesFiltered.length; i++) {
-                this.getThumbnailById(this.resources[i]);
+                //Gets the thumbnail to displayed
+                this.getContent(this.resources[i].thumbnail_id);
             }
         });
+        console.log(this.resources);
         /*
         for (let i = 0; i < this.project.id; i++) {
           const resource = new Resource(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
@@ -123,7 +125,7 @@ export class ProjectEditorComponent {
     filterList() {
         if (this.filterResource != null) {
             let filter = this.filterResource.nativeElement.value;
-            this.resourcesFiltered = this.resources.filter(resource => resource._name.includes(filter));
+            this.resourcesFiltered = this.resources.filter(resource => resource.name.includes(filter));
         } else {
             this.resourcesFiltered = this.resources;
         }
@@ -152,10 +154,10 @@ export class ProjectEditorComponent {
      * @param {HTMLInputElement} sound - The sound element associated with the new resource.
      * @param {HTMLInputElement} image - The image element associated with the new resource.
      */
-    createNewResource(name: string, thumbnail: HTMLInputElement, video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
+    createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement, video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
         //Create the request body
         let body = {
-            "name": name,
+            "name": name.value,
             "Marker1": "",
             "Marker2": "",
             "Marker3": "",
@@ -165,46 +167,68 @@ export class ProjectEditorComponent {
             "soundAsset": ""
         }
 
+        if (name.value == "") {
+            alert("Il manque le nom de la ressource !");
+            return;
+        }
+
+        // Array containing promises to execute the post query only when all data has been retrieved
+        let promises = [];
+
         //Add to the body the thumbnail if exist (sets by the user)
-        if (thumbnail.files != null) {
+        if (thumbnail.files != null && thumbnail.files.length != 0) {
             const reader = new FileReader();
+            let p = new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    body.thumbnail = reader.result as string;
+                    resolve(true);
+                };
+            });
+            console.log(thumbnail.files);
             reader.readAsDataURL(thumbnail.files[0]);
-            reader.onload = () => {
-                body.thumbnail = reader.result as string;
-            };
+            promises.push(p);
         } else {
-            //todo popup impossible de charger l'image tracking
+            alert("Il manque l'image à capturer !");
+            return;
         }
 
         //Add to the body the image if exist (sets by the user)
         if (image.files != null && image.files.length != 0) {
             const reader = new FileReader();
+            let p = new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    body.imageAsset = reader.result as string;
+                    resolve(true);
+                };
+            });
             reader.readAsDataURL(image.files[0]);
-            reader.onload = () => {
-                body.imageAsset = reader.result as string;
-            };
-        } else {
-            //todo popup impossible de charger l'image
+            promises.push(p);
         }
 
         //Add to the body the sound if exist (sets by the user)
-        if (sound.files != null) {
+        if (sound.files != null && sound.files.length != 0) {
             const reader = new FileReader();
+            let p = new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    body.soundAsset = reader.result as string;
+                    resolve(true);
+                };
+            });
             reader.readAsDataURL(sound.files[0]);
-            reader.onload = () => {
-                body.soundAsset = reader.result as string;
-            };
-        } else {
-            //todo popup impossible de charger le son
+            promises.push(p);
         }
 
         //Todo générer les markers
 
 
         // Execute and send the request POST to create the resource
+        // Will be executed when all promises have been delivered
         // @ts-ignore
-        this.http.post(SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((data: Created_id) => {
-            this.hideNewResource();
+        Promise.all(promises).then(() => {
+            // @ts-ignore
+            this.http.post(SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((data: Created_id) => {
+                this.hideNewResource();
+            });
         });
 
 
@@ -218,9 +242,9 @@ export class ProjectEditorComponent {
     uploadNewThumbnail(thumbnail: HTMLInputElement) {
         //TODO changer
         let imgBase64 = "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg"
-        this.http.post(SERVER_PATH + `/admin/projects/ressources/${this.resourceSelected?._id}/thumbnail/`, {'name': `thumbnail_res_${this.resourceSelected?._id}`, 'image': imgBase64}).subscribe(() => {
+        this.http.post(SERVER_PATH + `/admin/projects/ressources/${this.resourceSelected?.id}/thumbnail/`, {'name': `thumbnail_res_${this.resourceSelected?.id}`, 'image': imgBase64}).subscribe(() => {
             if (this.resourceSelected) {
-                this.resourceSelected._thumbnail = imgBase64;
+                this.resourceSelected.thumbnail = imgBase64;
             }
         });
 
@@ -285,9 +309,13 @@ export class ProjectEditorComponent {
 
     selectResource(resource: Resource) {
         this.resourceSelected = resource;
-        if (this.resourceSelected._image != null) {
+        if (this.resourceSelected.imageAsset != null) {
             this.videoMod = false;
         }
+        // get the video (if exist)
+
+        // get the image (if exist)
+        // get the sound (if exist)
         this.showEditResource()
     }
 
@@ -349,25 +377,24 @@ export class ProjectEditorComponent {
     }
 
 
-    getThumbnailById(resource: Resource) {
-        console.log(resource);
-        if (resource._thumbnail_id !== undefined) {
-            this.http.get<any>(SERVER_PATH + `/public/projects/ressources/images/${resource._thumbnail_id}/`)
+    getContent(id_media: string) {
+
+        /*if (resource.thumbnail_id != null) {
+            this.http.get<any>(SERVER_PATH + `/public/projects/ressources/images/${resource.thumbnail_id}/`)
                 .pipe(
                     map((value: ResponseValue) => {
                         return value
                     })
                 )
                 .subscribe((res: ResponseValue) => {
-                    resource._thumbnail = res.value;
+                    resource.thumbnail = res.value;
                 });
         } else {
-            resource._thumbnail = DEFAULT_IMAGE;
-        }
+            resource.thumbnail = DEFAULT_IMAGE;
+        }*/
     }
 
     deleteResource() {
-
         this.exitEdition();
     }
 
