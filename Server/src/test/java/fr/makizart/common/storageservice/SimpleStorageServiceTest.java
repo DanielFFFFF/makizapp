@@ -25,7 +25,7 @@ class SimpleStorageServiceTest {
     private ProjectRepository projectRepository;
 
     @Mock
-    private ArRessourceAssetRepository arRessourceRepository;
+    private ArResourceAssetRepository arRessourceRepository;
 
     @Mock
     private ImageAssetRepository imageAssetRepository;

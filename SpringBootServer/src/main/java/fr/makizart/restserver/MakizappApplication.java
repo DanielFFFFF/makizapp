@@ -1,6 +1,6 @@
 package fr.makizart.restserver;
 
-import fr.makizart.common.database.repositories.ArRessourceAssetRepository;
+import fr.makizart.common.database.repositories.ArResourceAssetRepository;
 import fr.makizart.common.database.repositories.ImageAssetRepository;
 import fr.makizart.common.database.repositories.VideoAssetRepository;
 import fr.makizart.common.database.table.ArResource;
@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 @SpringBootApplication
 public class MakizappApplication {
 
-	private final ArRessourceAssetRepository arRessourceAssetRepository;
+	private final ArResourceAssetRepository arRessourceAssetRepository;
 
 	@Autowired
 	public ProjectRepository projectRepository;
@@ -31,7 +31,7 @@ public class MakizappApplication {
 	@Autowired
 	public VideoAssetRepository videoAssetRepository;
 
-	public MakizappApplication(ArRessourceAssetRepository arRessourceAssetRepository) {
+	public MakizappApplication(ArResourceAssetRepository arRessourceAssetRepository) {
 		this.arRessourceAssetRepository = arRessourceAssetRepository;
 	}
 

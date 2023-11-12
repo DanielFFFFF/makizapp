@@ -30,7 +30,7 @@ public class SimpleStorageService implements StorageService {
 	public static final String FS_SAVE_PATH = "";
 	public final ProjectRepository projectRepository;
 
-	public final ArRessourceAssetRepository arRessourceRepository;
+	public final ArResourceAssetRepository arResourceRepository;
 
 	public final ImageAssetRepository imageAssetRepository;
 
@@ -45,14 +45,14 @@ public class SimpleStorageService implements StorageService {
 
 	public SimpleStorageService(
 			@Autowired ProjectRepository projectRepository,
-			@Autowired ArRessourceAssetRepository arRessourceRepository,
+			@Autowired ArResourceAssetRepository arResourceRepository,
 			@Autowired MarkerAssetRepository markerAssetRepository,
 			@Autowired ImageAssetRepository imageAssetRepository,
 			@Autowired VideoAssetRepository videoAssetRepository,
 			@Autowired SoundAssetReposetory soundAssetReposetory,
 			@Autowired FileSystemManager fileSystemManager) {
 		this.projectRepository = projectRepository;
-		this.arRessourceRepository = arRessourceRepository;
+		this.arResourceRepository = arResourceRepository;
 		this.imageAssetRepository = imageAssetRepository;
 		this.videoAssetRepository = videoAssetRepository;
 		this.soundAssetReposetory = soundAssetReposetory;
@@ -76,7 +76,7 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public ArResourceDTO getResource(String resourceId) throws InvalidParameterException, NoSuchElementException {
-		throw new NotImplementedException();
+		return new ArResourceDTO(tryGetResource(resourceId));
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class SimpleStorageService implements StorageService {
 		validateName(newName);
 		ArResource resource = tryGetResource(resourceId);
 		resource.setName(newName);
-		arRessourceRepository.save(resource);
+		arResourceRepository.save(resource);
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void deleteResource(String resourceId) throws InvalidParameterException, NoSuchElementException {
-		arRessourceRepository.delete(tryGetResource(resourceId));
+		arResourceRepository.delete(tryGetResource(resourceId));
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class SimpleStorageService implements StorageService {
 	}
 	private ArResource tryGetResource(String resourceID) {
 		try {
-			return arRessourceRepository.getReferenceById(Long.valueOf(resourceID));
+			return arResourceRepository.getReferenceById(Long.valueOf(resourceID));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){
