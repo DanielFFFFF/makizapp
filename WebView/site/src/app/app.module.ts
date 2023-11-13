@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AdminComponent } from './admin/admin.component';
 import { UserComponent } from './user/user.component';
 import {RouterOutlet} from "@angular/router";
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {RouterOutlet} from "@angular/router";
         SafePipe,
         AdminComponent,
         UserComponent,
+        LoginComponent,
     ],
   imports: [
     BrowserModule,
