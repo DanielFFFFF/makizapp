@@ -9,7 +9,6 @@ import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 public interface StorageService  {
@@ -73,7 +72,7 @@ public interface StorageService  {
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void uploadMarkers(String resourceId, String name, Map<String, byte[]> markers)
+	void overrideMarkers(MarkerDTO dto)
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 
@@ -88,14 +87,25 @@ public interface StorageService  {
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void uploadSound(String resourceId, String name, byte[] sound)
+	void overrideSound(String resourceId, String name, byte[] sound)
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 	/**
 	 * Uploads video for a resource.
 	 *
 	 * @param resourceId  The ID of the project, a long int encoded as a string.
-	 * @param name       The name of the video.
+	 * @param name       The n	@Override
+	public void uploadThumbnail(String resourceId, String name, String trackedImage) throws InvalidParameterException, IOException, NameAlreadyBoundException {
+		validateName(resourceId);
+
+		ImageAsset imageAsset = tryGetImage(trackedImage);
+
+		Base64.getDecoder().decode(trackedImage);
+
+		Path path = FileSystemManager.writeImage(name,Base64.getDecoder().decode(trackedImage));
+		imageAsset.setPathToRessource(path.toUri());
+		imageAssetRepository.save(imageAsset);
+	}ame of the video.
 	 * @param url        The URL of the video.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character, or the url cannot be parsed
 	 * @throws NoSuchElementException     If the resource with the given ID is not found.
@@ -180,20 +190,8 @@ public interface StorageService  {
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
 	 */
-	void uploadImage(String resourceId, String name, byte[] image)
+	void uploadImage(String resourceId, String name, String image)
 			throws InvalidParameterException, IOException, NameAlreadyBoundException;
 
-	/**
-	 * Uploads a tracked image for a resource.
-	 *
-	 * @param resourceId   The ID of the project, a long int encoded as a string.
-	 * @param name        The name of the tracked image.
-	 * @param trackedImage The byte array representing the tracked image data.
-	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character, or the image cannot be parsed
-	 * @throws IOException               If an I/O error occurs.
-	 * @throws NameAlreadyBoundException  If the name is already exist for the image.
-	 */
-	void uploadTrackedImage(String resourceId, String name, byte[] trackedImage)
-			throws InvalidParameterException, IOException, NameAlreadyBoundException;
 
 }

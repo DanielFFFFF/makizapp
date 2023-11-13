@@ -1,4 +1,4 @@
-package fr.makizart.common.storageservice;
+package fr.makizart.common.storageservice.unitest;
 
 import fr.makizart.common.database.repositories.*;
 import fr.makizart.common.database.table.Project;

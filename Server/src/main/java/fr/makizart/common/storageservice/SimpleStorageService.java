@@ -18,6 +18,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -87,45 +88,30 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	@Transactional
-	public void uploadMarkers(String resourceId, String name, Map<String, byte[]> markers) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideMarkers(MarkerDTO markerDTO ) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		// Check 1: Is the name valid?
-		validateName(name);
+		validateName(markerDTO.name());
 
 		// Check 2: Does the resource exist?
-		if(!markerAssetRepository.existsById(Long.valueOf(resourceId))){
-			throw new NoSuchElementException();
-		}
+
 
 		// Check 3: Do we have 3 markers and are they “marker”+{1-3}
-		if(!(markers.containsKey("marker1") && markers.containsKey("marker2") && markers.containsKey("marker3")) && markers.size() != 3){
+		if(markerDTO.marker1() == null || markerDTO.marker2() == null || markerDTO.marker3() == null){
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
-
-		// List containing markers already saved to delete them if unsuccessful
-		List<Marker> savedMarkers = new ArrayList<>();
-
-		for(int i = 0 ; i<3 ; i++){
-			try{
-				Marker newMarker = new Marker();
-				newMarker.setName(name + "." + "marker"+ (i+1) );
-				byte[] marker = markers.get("marker"+ (i+1));
-				markerAssetRepository.save(newMarker);
-				FileSystemManager.writeGenericMarkers(newMarker.getId().toString(), marker);
-				savedMarkers.add(newMarker); // Adds the marker to the list of saved markers
-			} catch (Exception e) {
-				// Delete all markers that have been saved
-				for (Marker savedMarker : savedMarkers) {
-					markerAssetRepository.delete(savedMarker);
-					FileSystemManager.deleteGenericMarkers(savedMarker.getId().toString());
-				}
-				throw new IOException(e);
-			}
+		try {
+			FileSystemManager.writeGenericMarkers(markerDTO);
+		}catch (IOException e){
+			//hide error to end-user
+			throw new IOException("Write failed");
 		}
+
 	}
+
 
 	@Override
 	@Transactional
-	public void uploadSound(String resourceId, String name, byte[] sound) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideSound(String resourceId, String name, byte[] sound) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
 		try {
 			AudioFileFormat audio = AudioSystem.getAudioFileFormat(new ByteArrayInputStream(sound));
@@ -134,8 +120,10 @@ public class SimpleStorageService implements StorageService {
 			}
 			SoundAsset soundAsset = new SoundAsset();
 			soundAsset.setName(name);
+
+			Path savedPath = FileSystemManager.writeSound(soundAsset.getId().toString(),sound);
+			soundAsset.setPathToRessource(savedPath.toUri());
 			soundAssetReposetory.save(soundAsset);
-			FileSystemManager.writeSound(soundAsset.getId().toString(),sound);
 		} catch (UnsupportedAudioFileException e) {
 			throw new InvalidParameterException("audio type not supported");
 		}
@@ -192,18 +180,31 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public void uploadImage(String resourceId, String name, byte[] image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
-		throw new NotImplementedException();
+	public void uploadImage(String resourceId, String name, String image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
+		validateName(resourceId);
+
+		ImageAsset imageAsset = tryGetImage(image);
+		Base64.getDecoder().decode(image);
+
+		Path path = FileSystemManager.writeImage(name,Base64.getDecoder().decode(image));
+		imageAsset.setPathToRessource(path.toUri());
+		imageAssetRepository.save(imageAsset);
 	}
 
-	@Override
-	public void uploadTrackedImage(String resourceId, String name, byte[] trackedImage) throws InvalidParameterException, IOException, NameAlreadyBoundException {
-		throw new NotImplementedException();
-	}
 
 	private void validateName(String newName) {
 		if(invalidName.matcher(newName).find())
 			throw new InvalidParameterException();
+	}
+
+	private ImageAsset tryGetImage(String imageId) {
+		try {
+			return imageAssetRepository.getReferenceById(Long.valueOf(imageId));
+		}catch (NumberFormatException e){
+			throw new InvalidParameterException();
+		}catch (EntityNotFoundException e){
+			throw new NoSuchElementException();
+		}
 	}
 
 	private Project tryGetProject(String projectId) {

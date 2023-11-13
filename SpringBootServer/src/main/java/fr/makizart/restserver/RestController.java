@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
@@ -52,7 +51,7 @@ public class RestController {
 	public ResponseEntity<String> uploadImage(
 			@PathVariable String resource_id,
 			@RequestParam String name,
-			@RequestBody byte[] image) throws NameAlreadyBoundException, IOException {
+			@RequestBody String image) throws NameAlreadyBoundException, IOException {
 		storageService.uploadImage(resource_id, name, image);
 		return ResponseEntity.ok("Image uploaded successfully.");
 	}
@@ -61,8 +60,8 @@ public class RestController {
 	public ResponseEntity<String> uploadTrackedImage(
 			@PathVariable String resource_id,
 			@RequestParam String name,
-			@RequestBody byte[] trackedImage) throws NameAlreadyBoundException, IOException {
-		storageService.uploadTrackedImage(resource_id, name, trackedImage);
+			@RequestBody String trackedImage) throws NameAlreadyBoundException, IOException {
+		storageService.uploadThumbnail(resource_id, name, trackedImage);
 		return ResponseEntity.ok("Tracked image uploaded successfully.");
 	}
 
@@ -70,8 +69,14 @@ public class RestController {
 	public ResponseEntity<String> uploadMarkers(
 			@PathVariable String resource_id,
 			@RequestParam String name,
-			@RequestBody Map<String, byte[]> markers) throws NameAlreadyBoundException, IOException {
-		storageService.uploadMarkers(resource_id, name, markers);
+			@RequestBody Map<String, String> markers) throws NameAlreadyBoundException, IOException {
+		storageService.overrideMarkers(
+				new MarkerDTO(
+						Long.parseLong(resource_id),
+						name,
+						markers.get("marker1"),
+						markers.get("marker2"),
+						markers.get("marker3")));
 		return ResponseEntity.ok("Markers uploaded successfully.");
 	}
 
@@ -80,7 +85,7 @@ public class RestController {
 			@PathVariable String resource_id,
 			@RequestParam String name,
 			@RequestBody byte[] sound) throws NameAlreadyBoundException, IOException {
-		storageService.uploadSound(resource_id, name, sound);
+		storageService.overrideSound(resource_id, name, sound);
 		return ResponseEntity.ok("Sound uploaded successfully.");
 	}
 

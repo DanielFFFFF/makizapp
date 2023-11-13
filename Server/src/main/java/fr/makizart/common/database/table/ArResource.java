@@ -2,8 +2,6 @@ package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name="AR_RESOURCE")
 public class ArResource extends DatedEntity {
@@ -15,11 +13,7 @@ public class ArResource extends DatedEntity {
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker marker1;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker marker2;
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private Marker marker3;
+    private Markers markers;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private ImageAsset thumbnail;
@@ -75,16 +69,12 @@ public class ArResource extends DatedEntity {
         this.soundAsset = soundAsset;
     }
 
-    public Marker getMarker1() {
-        return marker1;
+    public Markers getMarkers() {
+        return markers;
     }
 
-    public Marker getMarker2() {
-        return marker2;
-    }
-
-    public Marker getMarker3() {
-        return marker3;
+    public void setMarkers(Markers markers) {
+        this.markers = markers;
     }
 
     public ImageAsset getThumbnail() {

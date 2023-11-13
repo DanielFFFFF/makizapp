@@ -1,5 +1,6 @@
 package fr.makizart.common.storageservice;
 
+import fr.makizart.common.storageservice.dto.MarkerDTO;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +38,10 @@ public class FileSystemManager {
      * @param data     The byte array representing the data to be written.
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    private static void writeFile(String id, FileType type , byte[] data) throws IOException {
+    private static Path writeFile(String id, FileType type , byte[] data) throws IOException {
         Path filePath = Paths.get(PATH, id,".",type.name() );
         Files.write(filePath, data);
+        return filePath;
     }
 
     /**
@@ -49,8 +51,8 @@ public class FileSystemManager {
      * @param imageData The byte array representing the image data.
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    public static void writeImage(String imageName, byte[] imageData) throws IOException {
-        writeFile(imageName, FileType.IMAGE , imageData);
+    public static Path writeImage(String imageName, byte[] imageData) throws IOException {
+        return writeFile(imageName, FileType.IMAGE , imageData);
     }
 
     /**
@@ -60,19 +62,37 @@ public class FileSystemManager {
      * @param soundData The byte array representing the sound data.
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    public static void writeSound(String soundName, byte[] soundData) throws IOException {
-        writeFile(soundName, FileType.SOUND , soundData);
+    public static Path writeSound(String soundName, byte[] soundData) throws IOException {
+        return writeFile(soundName, FileType.SOUND , soundData);
     }
 
     /**
      * Example usage of writing a generic file with random byte sequence.
      *
-     * @param fileName  The name of the generic file.
-     * @param fileData  The byte array representing the file data.
+     * @param dto the marker dto to write to disk
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    public static void writeGenericMarkers(String fileName, byte[] fileData) throws IOException {
-        writeFile(fileName, FileType.MARKERS , fileData);
+    public static void writeGenericMarkers(MarkerDTO dto) throws IOException {
+        try {
+            writeFile(dto.id()+ ".iset", FileType.MARKERS , dto.marker1().getBytes());
+            writeFile(dto.id() + ".fset", FileType.MARKERS , dto.marker2().getBytes());
+            writeFile(dto.id() + ".fset3", FileType.MARKERS , dto.marker3().getBytes());
+        }catch (IOException e){
+            //try to avoid half writen state
+            deleteMarker(dto);
+            throw e;
+        }
+
+    }
+
+    /**
+     * Delete a marker set
+     * @throws IOException If an I/O error occurs during the file deletion process.
+     */
+    public static void deleteMarker(MarkerDTO dto) throws IOException {
+        deleteFile(dto.id() + "iset", FileType.MARKERS);
+        deleteFile(dto.id() + "fset", FileType.MARKERS);
+        deleteFile(dto.id() + "fset3", FileType.MARKERS);
     }
 
     /**
@@ -152,15 +172,6 @@ public class FileSystemManager {
         deleteFile(soundName, FileType.SOUND);
     }
 
-    /**
-     * Example usage of deleting a generic file with random byte sequence.
-     *
-     * @param fileName The name of the generic file.
-     * @throws IOException If an I/O error occurs during the file deletion process.
-     */
-    public static void deleteGenericMarkers(String fileName) throws IOException {
-        deleteFile(fileName, FileType.MARKERS);
-    }
 
     /**
      * Returns the total and used disk space.

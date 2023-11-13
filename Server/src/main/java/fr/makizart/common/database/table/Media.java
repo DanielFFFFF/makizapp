@@ -12,17 +12,6 @@ public abstract class Media extends DatedEntity {
     @Column(name = "NAME")
     protected String name;
 
-    @Column(name = "SIZE")
-    private long sizeOnServerDisk;
-
-
-    public long getSizeOnServerDisk() {
-        return sizeOnServerDisk;
-    }
-
-    public void setSizeOnServerDisk(long sizeOnServerDisk) {
-        this.sizeOnServerDisk = sizeOnServerDisk;
-    }
 
 
     public Long getId() {
