@@ -8,14 +8,14 @@ import java.net.URI;
 
 @Entity
 @Table(name = "MARKER")
-public class Markers extends Media{
+public class ARjsMarker extends Media{
 
-	@Column(name="PATH", nullable=false)
+	@Column(name="MARKERPATH1", nullable=false)
 	private URI marker1Path;
 
-	@Column(name="PATH", nullable=false)
+	@Column(name="MARKERPATH2", nullable=false)
 	private URI marker2Path;
-	@Column(name="PATH", nullable=false)
+	@Column(name="MARKERPATH3", nullable=false)
 	private URI marker3Path;
 
 	public URI getMarker1Path() {

@@ -15,7 +15,8 @@ import java.util.Map;
 @Component
 public class FileSystemManager {
 
-    private static String PATH = "/var/lib/MAKIZART/data/";
+    //private static String PATH = "/var/lib/MAKIZART/data/";
+    private static String PATH = "/tmp/makizart";
 
     static {
         try {

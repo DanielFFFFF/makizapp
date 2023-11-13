@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 public record ArResourceDTO(
         Long id,
         LocalDateTime createdOn,
-        Long pathToMarker1Id,
-        Long pathToMarker2Id,
-        Long pathToMarker3Id,
+        Long pathToMarker,
         Long thumbnailId,
         Long imageAssetId,
         Long videoAssetId,
@@ -21,9 +19,7 @@ public record ArResourceDTO(
         this(
                 arResource.getId(),
                 arResource.getCreatedOn(),
-                arResource.getMarker1().getId(),
-                arResource.getMarker2().getId(),
-                arResource.getMarker3().getId(),
+                arResource.getMarkers().getId(),
                 arResource.getThumbnail().getId(),
                 arResource.getImageAsset() != null ? arResource.getImageAsset().getId() : null,
                 arResource.getVideoAsset() != null ? arResource.getVideoAsset().getId() : null,

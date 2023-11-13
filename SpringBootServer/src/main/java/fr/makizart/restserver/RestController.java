@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @org.springframework.web.bind.annotation.RestController
-@ComponentScan("fr.makizart")
 public class RestController {
 
 
@@ -61,7 +60,7 @@ public class RestController {
 			@PathVariable String resource_id,
 			@RequestParam String name,
 			@RequestBody String trackedImage) throws NameAlreadyBoundException, IOException {
-		storageService.uploadThumbnail(resource_id, name, trackedImage);
+		storageService.uploadImage(resource_id, name, trackedImage);
 		return ResponseEntity.ok("Tracked image uploaded successfully.");
 	}
 
