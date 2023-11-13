@@ -18,6 +18,10 @@ public class ImageAsset extends Media {
         this.pathToRessource = pathToRessource;
     }
 
+    public ImageAsset() {
+
+    }
+
     public URI getPathToRessource() {
         return pathToRessource;
     }

@@ -1,7 +1,6 @@
 package fr.makizart.common.storageservice;
 
 import fr.makizart.common.storageservice.dto.MarkerDTO;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class FileSystemManager {
 
     //private static String PATH = "/var/lib/MAKIZART/data/";
-    private static String PATH = "/tmp/makizart";
+    private static final String PATH = "/tmp/makizart";
 
     static {
         try {

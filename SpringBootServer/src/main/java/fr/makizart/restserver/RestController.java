@@ -4,7 +4,6 @@ import fr.makizart.common.database.table.Project;
 import fr.makizart.common.storageservice.SimpleStorageService;
 import fr.makizart.common.storageservice.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ import java.util.NoSuchElementException;
 public class RestController {
 
 
-	SimpleStorageService storageService;
+	final SimpleStorageService storageService;
 
 	public RestController(@Autowired SimpleStorageService storageService) {
 		this.storageService = storageService;

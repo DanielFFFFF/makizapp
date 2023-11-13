@@ -2,6 +2,7 @@ package fr.makizart.common.storageservice.unitest;
 
 import fr.makizart.common.database.repositories.*;
 import fr.makizart.common.database.table.Project;
+import fr.makizart.common.storageservice.SimpleStorageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

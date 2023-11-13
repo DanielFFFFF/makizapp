@@ -41,7 +41,7 @@ public class SimpleStorageService implements StorageService {
 	public final MarkerAssetRepository markerAssetRepository;
 
 
-	Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
+	final Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
 
 
 	public SimpleStorageService(
