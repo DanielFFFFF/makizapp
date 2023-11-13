@@ -50,7 +50,7 @@ public class RestController {
 			@PathVariable String resource_id,
 			@RequestParam String name,
 			@RequestBody String image) throws NameAlreadyBoundException, IOException {
-		storageService.uploadImage(resource_id, name, image);
+		storageService.overrideImage(resource_id, name, image);
 		return ResponseEntity.ok("Image uploaded successfully.");
 	}
 
@@ -59,7 +59,7 @@ public class RestController {
 			@PathVariable String resource_id,
 			@RequestParam String name,
 			@RequestBody String trackedImage) throws NameAlreadyBoundException, IOException {
-		storageService.uploadImage(resource_id, name, trackedImage);
+		storageService.overrideImage(resource_id, name, trackedImage);
 		return ResponseEntity.ok("Tracked image uploaded successfully.");
 	}
 
@@ -92,7 +92,7 @@ public class RestController {
 			@PathVariable String resource_id,
 			@RequestParam String name,
 			@RequestParam String url) throws NameAlreadyBoundException, IOException {
-		storageService.uploadVideo(resource_id, name, url);
+		storageService.overrideVideo(resource_id, name, url);
 		return ResponseEntity.ok("Video uploaded successfully.");
 	}
 

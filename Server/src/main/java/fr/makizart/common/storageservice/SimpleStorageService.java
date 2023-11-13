@@ -5,7 +5,6 @@ import fr.makizart.common.database.table.*;
 import fr.makizart.common.storageservice.dto.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -92,10 +91,7 @@ public class SimpleStorageService implements StorageService {
 		// Check 1: Is the name valid?
 		validateName(markerDTO.name());
 
-		// Check 2: Does the resource exist?
-
-
-		// Check 3: Do we have 3 markers and are they “marker”+{1-3}
+		// Check 2: Do we have 3 markers and are they “marker”+{1-3}
 		if(markerDTO.marker1() == null || markerDTO.marker2() == null || markerDTO.marker3() == null){
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
@@ -130,7 +126,7 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public void uploadVideo(String videoId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideVideo(String videoId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
 		try {
 			tryGetVideo(videoId).setVideoURL(URI.create(url).toURL());
@@ -176,11 +172,19 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO) throws InvalidParameterException, NameAlreadyBoundException {
-		throw new NotImplementedException();
+		ArResource resource = new ArResource();
+		resource.setName(incomingResourceDTO.name());
+		resource.setThumbnail(null);
+		resource.setMarkers(null);
+		resource.setImageAsset(null);
+		resource.setSoundAsset(null);
+		resource.setVideoAsset(null);
+
+		return new ArResourceDTO(resource);
 	}
 
 	@Override
-	public void uploadImage(String resourceId, String name, String image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
+	public void overrideImage(String resourceId, String name, String image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
 		validateName(resourceId);
 
 		ImageAsset imageAsset = tryGetImage(image);

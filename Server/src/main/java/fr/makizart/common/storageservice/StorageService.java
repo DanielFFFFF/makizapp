@@ -47,7 +47,7 @@ public interface StorageService  {
 	/**
 	 * Retrieves details of a resource by its ID.
 	 *
-	 * @param resourceId  The ID of the project, a long int encoded as a string.
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
 	 * @return An ArResourceDTO representing the resource details.
 	 * @throws InvalidParameterException If the id is not a number.
 	 * @throws NoSuchElementException    If the resource with the given ID is not found.
@@ -64,9 +64,7 @@ public interface StorageService  {
 	/**
 	 * Uploads markers for a resource.
 	 *
-	 * @param resourceId  The ID of the project, a long int encoded as a string.
-	 * @param name       The name of the markers.
-	 * @param markers    A Map containing marker data.
+	 * @param dto  The MarkerDTO that contains all markers.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character. Note that Marker are not preprocessed on this method
 	 * @throws NoSuchElementException     If the resource with the given ID is not found.
 	 * @throws IOException               If an I/O error occurs.
@@ -79,7 +77,7 @@ public interface StorageService  {
 	/**
 	 * Uploads sound for a resource.
 	 *
-	 * @param resourceId  The ID of the project, a long int encoded as a string.
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
 	 * @param name       The name of the sound.
 	 * @param sound      The byte array representing the sound data.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character, or the sound cannot be parsed
@@ -93,27 +91,15 @@ public interface StorageService  {
 	/**
 	 * Uploads video for a resource.
 	 *
-	 * @param resourceId  The ID of the project, a long int encoded as a string.
+	 * @param videoId  The ID of the project, a long int encoded as a string.
 	 * @param name       The n	@Override
-	public void uploadThumbnail(String resourceId, String name, String trackedImage) throws InvalidParameterException, IOException, NameAlreadyBoundException {
-		validateName(resourceId);
-
-		ImageAsset imageAsset = tryGetImage(trackedImage);
-
-		Base64.getDecoder().decode(trackedImage);
-
-		Path path = FileSystemManager.writeImage(name,Base64.getDecoder().decode(trackedImage));
-		imageAsset.setPathToRessource(path.toUri());
-		imageAssetRepository.save(imageAsset);
-	}ame of the video.
 	 * @param url        The URL of the video.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character, or the url cannot be parsed
 	 * @throws NoSuchElementException     If the resource with the given ID is not found.
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void uploadVideo(String resourceId, String name, String url)
-			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
+	void overrideVideo(String videoId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 	/**
 	 * Renames a project.
@@ -183,15 +169,15 @@ public interface StorageService  {
 	/**
 	 * Uploads an image for a resource.
 	 *
-	 * @param resourceId  The ID of the project, a long int encoded as a string.
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
 	 * @param name       The name of the image.
 	 * @param image      The byte array representing the image data.
 	 * @throws InvalidParameterException   If the id is not a number, the name contain invalid character, or the image cannot be parsed
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
 	 */
-	void uploadImage(String resourceId, String name, String image)
-			throws InvalidParameterException, IOException, NameAlreadyBoundException;
+	void overrideImage(String resourceId, String name, String image)
+			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 
 }
