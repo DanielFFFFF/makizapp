@@ -1,6 +1,7 @@
 package fr.makizart.common.storageservice;
 
 import fr.makizart.common.storageservice.dto.MarkerDTO;
+import fr.makizart.common.storageservice.dto.StorageInformationDTO;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class FileSystemManager {
             paths.put("marker3",writeFile(dto.id() + ".fset3", FileType.MARKERS , dto.marker3().getBytes()));
             return paths;
         }catch (IOException e){
-            //try to avoid half writen state
+            //try to avoid half written state
             deleteMarker(dto);
             throw e;
         }
@@ -183,9 +184,7 @@ public class FileSystemManager {
      * If an IOException occurs, it returns a map with "total" and "used" set to 0.
      * @return A map with the total and used disk space.
      */
-    public static Map<String,Long> getDiskSpace() {
-        HashMap<String, Long> map = new HashMap<>();
-        try {
+    public static StorageInformationDTO getDiskSpace() throws IOException {
             // Get the FileStore representing the file system
             FileStore store = Files.getFileStore(Paths.get(PATH));
 
@@ -197,16 +196,8 @@ public class FileSystemManager {
             long usedSpace = totalSpace - usableSpace;
 
             // Put the total and used space in the map
-            map.put("used", usedSpace);
-            map.put("total", totalSpace);
+            return new StorageInformationDTO(usedSpace,totalSpace);
 
-            return map;
-        } catch (IOException e) {
-            // If an IOException occurs, return a map with "total" and "used" set to 0
-            map.put("used", 0L);
-            map.put("total", 0L);
-            return map;
-        }
     }
 
 }

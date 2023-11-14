@@ -163,7 +163,7 @@ public class RestController {
 
 	@GetMapping("/public/storage/")
 	@ResponseStatus(HttpStatus.OK)
-	public StorageInformationDTO getStorageInformation() {
+	public StorageInformationDTO getStorageInformation() throws IOException {
 		return storageService.getStorageInformation();
 	}
 

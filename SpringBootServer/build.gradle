@@ -40,12 +40,15 @@ dependencies {
     //Spring boot still use older snake yaml 1.33 which has vulnerability. This force the usage of a fixed version
     implementation "org.yaml:snakeyaml:2.0"
 
-
-
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.1.5'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.1.5'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:3.1.5'
     testImplementation "org.springframework.boot:spring-boot-starter-data-jpa:3.2.4"
+
+    testImplementation platform('org.junit:junit-bom:5.9.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly "com.h2database:h2-mvstore:2.1.214"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
 
 }
 

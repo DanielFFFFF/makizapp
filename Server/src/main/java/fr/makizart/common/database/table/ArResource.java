@@ -32,7 +32,7 @@ public class ArResource extends DatedEntity {
         boolean atLeastOneAsset = getImageAsset() != null || getSoundAsset() != null || getVideoAsset() != null;
         boolean noVideoAndSoundOrImage = (getImageAsset() != null || getSoundAsset() != null) == (getVideoAsset() != null);
         if (noVideoAndSoundOrImage) {
-            throw new IllegalStateException("(ImageAsset, VideoAsset) and SoundAsset are mutually exclusive.");
+            throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
         }
         if (!atLeastOneAsset){
             throw new IllegalStateException("Cannot create resource without asset");

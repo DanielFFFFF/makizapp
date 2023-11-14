@@ -59,7 +59,7 @@ public interface StorageService  {
 	 *
 	 * @return A StorageInformationDTO containing storage-related information.
 	 */
-	StorageInformationDTO getStorageInformation();
+	StorageInformationDTO getStorageInformation() throws IOException;
 
 	/**
 	 * Uploads markers for a resource.

@@ -44,4 +44,23 @@ public class Project extends DatedEntity {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Project other = (Project) obj;
+
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", arResource=" + arResource +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

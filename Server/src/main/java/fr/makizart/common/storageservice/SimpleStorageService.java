@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 @Transactional
 public class SimpleStorageService implements StorageService {
 
-
-	public static final String FS_SAVE_PATH = "";
 	public final ProjectRepository projectRepository;
 
 	public final ArResourceAssetRepository arResourceRepository;
@@ -80,9 +78,8 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public StorageInformationDTO getStorageInformation() {
-		Map<String,Long> map = FileSystemManager.getDiskSpace();
-		return new StorageInformationDTO(map.get("used"),map.get("total"));
+	public StorageInformationDTO getStorageInformation() throws IOException {
+		return FileSystemManager.getDiskSpace();
 	}
 
 	@Override
@@ -177,11 +174,11 @@ public class SimpleStorageService implements StorageService {
 
 		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null || incomingResourceDTO.videoAsset() != null;
 		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null) == (incomingResourceDTO.videoAsset() != null);
-		if (noVideoAndSoundOrImage) {
-			throw new IllegalStateException("(ImageAsset, VideoAsset) and SoundAsset are mutually exclusive.");
-		}
-		if (!atLeastOneAsset){
+		if (atLeastOneAsset){
 			throw new IllegalStateException("Cannot create resource without asset");
+		}
+		if (noVideoAndSoundOrImage) {
+			throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
 		}
 
 		try {
