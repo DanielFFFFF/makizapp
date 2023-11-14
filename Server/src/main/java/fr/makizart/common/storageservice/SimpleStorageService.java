@@ -174,11 +174,67 @@ public class SimpleStorageService implements StorageService {
 	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO) throws InvalidParameterException, NameAlreadyBoundException {
 		ArResource resource = new ArResource();
 		resource.setName(incomingResourceDTO.name());
-		resource.setThumbnail(null);
-		resource.setMarkers(null);
-		resource.setImageAsset(null);
-		resource.setSoundAsset(null);
-		resource.setVideoAsset(null);
+
+		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null || incomingResourceDTO.videoAsset() != null;
+		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null) == (incomingResourceDTO.videoAsset() != null);
+		if (noVideoAndSoundOrImage) {
+			throw new IllegalStateException("(ImageAsset, VideoAsset) and SoundAsset are mutually exclusive.");
+		}
+		if (!atLeastOneAsset){
+			throw new IllegalStateException("Cannot create resource without asset");
+		}
+
+		try {
+			ImageAsset thumbnail = new ImageAsset();
+			imageAssetRepository.save(thumbnail);//id created
+			Path path = FileSystemManager.writeImage(thumbnail.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.thumbnail()));
+			thumbnail.setPathToRessource(path.toUri());
+			resource.setThumbnail(thumbnail);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create thumbnail");
+		}
+
+		try {
+			ARjsMarker markers = new ARjsMarker();
+			markerAssetRepository.save(markers);
+			MarkerDTO markerDTO = new MarkerDTO(markers.getId(),markers.getId().toString(),incomingResourceDTO.marker1(),incomingResourceDTO.marker2(),incomingResourceDTO.marker3()); //(Long id, String name, String marker1, String marker2, String marker3)
+			Map<String,Path> paths = FileSystemManager.writeGenericMarkers(markerDTO);
+			markers.setMarker1Path(paths.get("marker1").toUri());
+			markers.setMarker2Path(paths.get("marker2").toUri());
+			markers.setMarker3Path(paths.get("marker3").toUri());
+			resource.setMarkers(markers);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create markers");
+		}
+
+		try {
+			ImageAsset image = new ImageAsset();
+			imageAssetRepository.save(image);//id created
+			Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.imageAsset()));
+			image.setPathToRessource(path.toUri());
+			resource.setImageAsset(image);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create image");
+		}
+
+		try {
+			SoundAsset sound = new SoundAsset();
+			soundAssetReposetory.save(sound);//id created
+			Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
+			sound.setPathToRessource(path.toUri());
+			resource.setSoundAsset(sound);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create sound");
+		}
+
+		try {
+			VideoAsset video = new VideoAsset();
+			videoAssetRepository.save(video);//id created
+			video.setVideoURL(URI.create(incomingResourceDTO.videoAsset()).toURL());
+			resource.setVideoAsset(video);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create video");
+		}
 
 		return new ArResourceDTO(resource);
 	}
@@ -188,7 +244,6 @@ public class SimpleStorageService implements StorageService {
 		validateName(resourceId);
 
 		ImageAsset imageAsset = tryGetImage(image);
-		Base64.getDecoder().decode(image);
 
 		Path path = FileSystemManager.writeImage(name,Base64.getDecoder().decode(image));
 		imageAsset.setPathToRessource(path.toUri());

@@ -72,11 +72,13 @@ public class FileSystemManager {
      * @param dto the marker dto to write to disk
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    public static void writeGenericMarkers(MarkerDTO dto) throws IOException {
+    public static Map<String,Path> writeGenericMarkers(MarkerDTO dto) throws IOException {
+        Map<String,Path> paths = new HashMap<>();
         try {
-            writeFile(dto.id()+ ".iset", FileType.MARKERS , dto.marker1().getBytes());
-            writeFile(dto.id() + ".fset", FileType.MARKERS , dto.marker2().getBytes());
-            writeFile(dto.id() + ".fset3", FileType.MARKERS , dto.marker3().getBytes());
+            paths.put("marker1",writeFile(dto.id()+ ".iset", FileType.MARKERS , dto.marker1().getBytes()));
+            paths.put("marker2",writeFile(dto.id() + ".fset", FileType.MARKERS , dto.marker2().getBytes()));
+            paths.put("marker3",writeFile(dto.id() + ".fset3", FileType.MARKERS , dto.marker3().getBytes()));
+            return paths;
         }catch (IOException e){
             //try to avoid half writen state
             deleteMarker(dto);
