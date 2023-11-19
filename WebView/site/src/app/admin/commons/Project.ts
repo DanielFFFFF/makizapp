@@ -1,59 +1,87 @@
 /**
- * @class Project
+ * @class Project Represent a project
  *
- * Represents a project with an id, name, and creation date.
+ * This class represents a project with a creation date, an ID, a name, and a list of resources.
  */
-export class Project{
+export class Project {
+  /**
+   * @property {string} createdOn - Project creation date.
+   */
+  private createdOn: string;
 
   /**
-   * @property _id
-   * Represents the id of the project.
+   * @property {string} id - Project ID.
    */
-  private readonly _id : number;
+  private id: string;
 
   /**
-   * @property _name
-   * Represents the name of the project.
+   * @property {string} name - Project name.
    */
-  private _name : string;
+  private name: string;
 
   /**
-   * @property _creationDate
-   * Represents the creation date of the project.
+   * @property {string[]} arResource - List of resource IDs associated with the project.
    */
-  private readonly _creationDate : string;
+  private arResource: string[];
 
   /**
-   * @constructor
-   * Creates a new instance of the Project.
+   * Project class constructor.
+   *
+   * @param createdOn - Project creation date.
+   * @param id - Project ID.
+   * @param name - Project name.
+   * @param arResource - List of resource IDs associated with the project.
    */
-  constructor(id: number, name: string, creationDate: string) {
-    this._id = id;
-    this._name = name;
-    this._creationDate = creationDate;
+  constructor(createdOn: string, id: string, name: string, arResource: string[]) {
+    this.createdOn = createdOn;
+    this.id = id;
+    this.name = name;
+    this.arResource = arResource;
   }
 
   /**
-   * @method name
-   * Sets the name of the project.
+   * Getter for the creation date.
+   *
+   * @returns The project's creation date.
    */
-  set name(value: string) {
-    this._name = value;
+  public getCreatedOn(): string {
+    return this.createdOn;
   }
 
   /**
-   * @method id
-   * Gets the id of the project.
+   * Getter for the ID.
+   *
+   * @returns The project's ID.
    */
-  get id(): number {
-    return this._id;
+  public getId(): string {
+    return this.id;
   }
 
   /**
-   * @method name
-   * Gets the name of the project.
+   * Getter for the name.
+   *
+   * @returns The project's name.
    */
-  get name(): string {
-    return this._name;
+  public getName(): string {
+    return this.name;
+  }
+
+  /**
+   * Setter for the name.
+   *
+   * @param name - The new name for the project.
+   */
+  public setName(name: string): void {
+    this.name = name;
+  }
+
+
+  /**
+   * Getter for the list of resources.
+   *
+   * @returns The list of resource IDs associated with the project.
+   */
+  public getArResource(): string[] {
+    return this.arResource;
   }
 }

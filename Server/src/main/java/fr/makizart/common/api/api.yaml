@@ -383,15 +383,15 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
 
-  /public/projects/{page{size}:
+  /public/projects/:
     get:
       parameters:
-        - in: path
+        - in: query
           name: page
           required: true
           schema:
             type: integer
-        - in: path
+        - in: query
           name: size
           required: true
           schema:

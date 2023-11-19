@@ -1,10 +1,10 @@
 import {Project} from "../commons/Project";
 
 export class ProjectList{
-    projects : Project[];
+    content : Project[];
 
     constructor(projects: Project[]) {
-        this.projects = projects;
+        this.content = projects;
     }
 }
 

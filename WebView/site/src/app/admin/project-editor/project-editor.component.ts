@@ -32,7 +32,7 @@ export class ProjectEditorComponent {
   /**
    * @property {Resource} defaultProject - The default project when no project has been selected.
    */
-  defaultProject = new Project(-1, "Selectionnez un projet ...", "JJ/MM/AA");
+  defaultProject = new Project("", "-1", "Selectionnez un projet ...",[]);
 
   /**
    @property {Project} project - The currently edited project (initialized to a project (id = -1) to display the default text: "Select a project...").
@@ -103,7 +103,7 @@ export class ProjectEditorComponent {
   updateProjectSelected() {
     this.resources = [];
 
-    this.http.get<any>(this.SERVER_PATH + `/public/projects/${this.project.id}/resources/`).pipe(map((value: ResourceList) => {
+    this.http.get<any>(this.SERVER_PATH + `/public/projects/${this.project.getId()}/resources/`).pipe(map((value: ResourceList) => {
       return value
     })).subscribe((res: ResourceList) => {
       this.resources = res.resources;
@@ -309,7 +309,7 @@ export class ProjectEditorComponent {
     //TODO send request to server --> on sucess refresh --> on echec show popup error
     this.updator.refresh();
     //To avoid reloading project recovery
-    this.project.name = newName;
+    this.project.setName(newName);
     this.hideRenameProject();
   }
 

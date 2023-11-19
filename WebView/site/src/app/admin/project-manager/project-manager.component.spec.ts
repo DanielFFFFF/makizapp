@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectManagerComponent } from './project-manager.component';
 import {HttpClientModule} from "@angular/common/http";
-import {SERVER_PATH} from "../commons/config";
 import {StorageInformations} from "./class";
 
 describe('ProjectManagerComponent', () => {

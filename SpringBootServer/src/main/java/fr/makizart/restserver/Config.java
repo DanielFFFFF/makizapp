@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableWebSecurity
 @EnableJpaRepositories("fr.makizart")
 @EntityScan("fr.makizart")
 @EnableAutoConfiguration

@@ -6,15 +6,15 @@
 export class Created_id {
   /**
    * The newly created identifier.
-   * @type {number}
+   * @type {string}
    */
-  created_id: number;
+  created_id: string;
 
   /**
    * Constructs a new instance of the Created_id class.
-   * @param {number} created_id - The identifier generated upon resource or project creation.
+   * @param {string} created_id - The identifier generated upon resource or project creation.
    */
-  constructor(created_id: number) {
+  constructor(created_id: string) {
     this.created_id = created_id;
   }
 }

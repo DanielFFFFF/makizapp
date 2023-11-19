@@ -39,6 +39,13 @@ export class ProjectManagerComponent {
    */
   newProjectView: boolean = false;
 
+  /**
+   * @property showResponses: boolean
+   * @private
+   * Is used for show in console the response of all requests to server.
+   */
+  private showResponses: boolean = true;
+
   constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient, private config: AppConfigService) {
   }
 
@@ -64,28 +71,14 @@ export class ProjectManagerComponent {
    * Updates the application by fetching the latest projects from the server and updating the `projects` property.
    */
   updateApp() {
-    this.projects = [];
 
     /*
     for(let i = 0;i<20;i++){
       this.projects.push(new Project(i,"toto","to"));
     }
      */
-
-    this.http.get<any>(this.SERVER_PATH + "/public/projects/").pipe(map((value: ProjectList) => {
-      return value
-    })).subscribe((res: ProjectList) => {
-      console.log(res);
-      this.projects = res.projects;
-    });
-
-    this.http.get<any>(this.SERVER_PATH + "/public/storage/").pipe(map((value: StorageInformations) => {
-      return value
-    })).subscribe((res: StorageInformations) => {
-      this.storage[0] = res.used;
-      this.storage[1] = res.total;
-    });
-
+  this.updateProjects();
+  this.updateStorage();
 
   }
 
@@ -105,13 +98,38 @@ export class ProjectManagerComponent {
    */
   createNewProject(name: string) {
     // @ts-ignore
-    this.http.post(SERVER_PATH + "/admin/projects/create/project/", {'name': name}).subscribe((data: Created_id) => {
-      //Refresh the list of project with the new project for get the new
-      //this.updator.refresh();
-      //Or create temporaly the new project
-      this.projects.push(new Project(data.created_id, name, new Date().toString()));
+    this.http.post(this.SERVER_PATH + "/admin/projects/create/project/",  {"name":name}).subscribe((data: Created_id) => {
+      if(this.showResponses) console.log("/admin/projects/create/project/");
+      if(this.showResponses)console.log(data);
+      this.updateProjects();
       this.hideNewProject();
     })
+  }
+
+  /**
+   *
+   */
+  updateProjects(){
+    this.projects = [];
+
+    this.http.get<any>(this.SERVER_PATH + "/public/projects/", {params:{"page":0,"size":50}}).pipe(map((value: ProjectList) => {
+      return value.content.map((project: any) => new Project(project.createdOn, project.id, project.name, project.arResource));
+    })).subscribe((res: Project[]) => {
+      if(this.showResponses) console.log("/public/projects/");
+      if(this.showResponses) console.log(res);
+      this.projects = res===undefined?[]:res;
+    });
+  }
+
+  updateStorage(){
+    this.http.get<any>(this.SERVER_PATH + "/public/storage/").pipe(map((value: StorageInformations) => {
+      return value
+    })).subscribe((res: StorageInformations) => {
+      if(this.showResponses) console.log("/public/storage/");
+      if(this.showResponses)console.log(res);
+      this.storage[0] = Number((res.used/Math.pow(1024,3)).toFixed(2));
+      this.storage[1] = Number((res.total/Math.pow(1024,3)).toFixed(2));
+    });
   }
 
   /**
