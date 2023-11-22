@@ -8,7 +8,7 @@ import java.net.URL;
 @Table(name="VIDEOASSET")
 public class VideoAsset extends Media {
 
-    @Column(name = "URL", nullable=false)
+    @Column(name = "URL")
     private URL videoURL;
 
     public URL getVideoURL() {

@@ -10,12 +10,12 @@ import java.net.URI;
 @Table(name = "MARKER")
 public class ARjsMarker extends Media{
 
-	@Column(name="MARKERPATH1", nullable=false)
+	@Column(name="MARKERPATH1")
 	private URI marker1Path;
 
-	@Column(name="MARKERPATH2", nullable=false)
+	@Column(name="MARKERPATH2")
 	private URI marker2Path;
-	@Column(name="MARKERPATH3", nullable=false)
+	@Column(name="MARKERPATH3")
 	private URI marker3Path;
 
 	public URI getMarker1Path() {

@@ -74,14 +74,4 @@ export class Project {
   public setName(name: string): void {
     this.name = name;
   }
-
-
-  /**
-   * Getter for the list of resources.
-   *
-   * @returns The list of resource IDs associated with the project.
-   */
-  public getArResource(): string[] {
-    return this.arResource;
-  }
 }

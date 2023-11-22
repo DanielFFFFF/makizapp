@@ -38,11 +38,11 @@ public interface StorageService  {
 	 * Retrieves a list of resource names in a project.
 	 *
 	 * @param projectId The ID of the project.
-	 * @return A List of resource names.
+	 * @return A List of resource .
 	 * @throws InvalidParameterException If the id is not a number.
 	 * @throws NoSuchElementException    If the project with the given ID is not found.
 	 */
-	List<String> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException;
+	List<ArResourceDTO> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException;
 
 	/**
 	 * Retrieves details of a resource by its ID.

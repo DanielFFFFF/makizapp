@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+SpringBootServer/.DS_Store
+SpringBootServer/src/.DS_Store
+SpringBootServer/src/main/.DS_Store
+SpringBootServer/src/main/java/.DS_Store
+SpringBootServer/src/main/java/fr/.DS_Store
+SpringBootServer/src/main/java/fr/makizart/.DS_Store
+.DS_Store

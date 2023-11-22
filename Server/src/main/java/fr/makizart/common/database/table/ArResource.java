@@ -27,6 +27,11 @@ public class ArResource extends DatedEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private SoundAsset soundAsset;
 
+    @ManyToOne(targetEntity = Project.class)
+    @JoinColumn(name = "projectId")
+    private Project project;
+
+
     @PrePersist
     public void validate() {
         boolean atLeastOneAsset = getImageAsset() != null || getSoundAsset() != null || getVideoAsset() != null;
@@ -93,4 +98,9 @@ public class ArResource extends DatedEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setProject(Project p){this.project = p;}
+
+    public Project getProject(){return this.project;}
+
 }

@@ -11,8 +11,8 @@
           <div class="mt-2 d-flex flex-column">
             <span>Nom :</span><input class="mb-2" #resourceName>
             <span>Image à capturer :</span><input class="mb-2 form-control" type="file" #resourceThumbnail>
-            <span>Son :</span><input class="mb-2 form-control" type="file" #resourceSound>
             <span>Vidéo (url):</span><input class="mb-2 form-control" value="https://player.vimeo.com/video/879891554?h=fba301cac0" #resourceVideo>
+            <span>Son :</span><input class="mb-2 form-control" type="file" #resourceSound>
             <span class="me-3">Image à afficher : </span><input class="mb-2 form-control" type="file" #resourceImage>
           </div>
           <p class="text-justify mb-2">Note : Après capture d'une image, affiche soit la vidéo (url) soit une image. Il est inutile de remplir les 2 champs.</p>
@@ -193,7 +193,7 @@
               <div class="color-component rounded p-2 blocEditing">
                 <div class="d-flex justify-content-center">
                   <div class="flex-column">
-                    <h1 class="mt-2 text-center">{{resourceSelected?.name}}</h1>
+                    <input class="mt-2 text-center" value="{{resourceSelected?.name}}">
                     <div class="d-flex flex-column colorFont">
                       <h6><b>Créé le</b> : {{resourceSelected?.creationDate}}</h6>
                       <h6><b>Nb d'accès</b> : {{resourceSelected?.accessCount}}</h6>

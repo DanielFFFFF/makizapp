@@ -8,7 +8,7 @@ import java.net.URI;
 @Table(name = "SOUNDASSET")
 public class SoundAsset extends Media {
 
-    @Column(name="PATH", nullable=false)
+    @Column(name="PATH")
     private URI pathToRessource;
 
     public URI getPathToRessource() {

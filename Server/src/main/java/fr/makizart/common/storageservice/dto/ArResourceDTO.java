@@ -5,9 +5,10 @@ import fr.makizart.common.database.table.ArResource;
 import java.time.LocalDateTime;
 
 public record ArResourceDTO(
+        String name,
         Long id,
         LocalDateTime createdOn,
-        Long pathToMarker,
+        Long markersId,
         Long thumbnailId,
         Long imageAssetId,
         Long videoAssetId,
@@ -17,6 +18,7 @@ public record ArResourceDTO(
     // Copy constructor
     public ArResourceDTO(ArResource arResource) {
         this(
+                arResource.getName(),
                 arResource.getId(),
                 arResource.getCreatedOn(),
                 arResource.getMarkers().getId(),

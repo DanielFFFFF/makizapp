@@ -261,7 +261,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
         
-  /public/projects/{project_id}/rename/:
+  /public/projects/{project_id}/rename:
     put:
       summary: Rename a project
       description: Rename a project by specifying the new project id.
@@ -293,7 +293,7 @@ paths:
         - SpringOAuth2: [ admin ]
         
         
-  /public/projects/resources/{resource_id}/rename/:
+  /public/projects/resources/{resource_id}/rename:
     put:
       summary: Rename a resource
       description: Rename a resource by specifying the new resource id.
@@ -320,7 +320,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
 
-  /admin/projects/resources/medias/{media_id}/rename/:
+  /admin/projects/resources/medias/{media_id}/rename:
     put:
       summary: Rename media
       description: Rename a media by specifying the media ID.
@@ -341,7 +341,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
         
-  /public/projects/{project_id}/delete/:
+  /public/projects/{project_id}/delete:
     delete:
       summary: Delete a project
       description: Delete a project by specifying the project id.
@@ -362,7 +362,7 @@ paths:
       security:
         - SpringOAuth2: [ admin ]
         
-  /public/projects/resources/{resource_id}/delete/:
+  /public/projects/resources/{resource_id}/delete:
     delete:
       summary: Delete a resource
       description: Delete a resource by specifying the resource id.
@@ -449,9 +449,21 @@ paths:
                             type: string
                           creationDate:
                             type: string
-                          thumbnail_id:
+                          thumbnailId:
                             description: "id of thumbnail image"
-                            type: integer
+                            type: string
+                          markersId:
+                            description: "id of markers"
+                            type: string
+                          imageAssetId:
+                            description: "id of image asset"
+                            type: string
+                          videoAssetId:
+                            description: "id of video asset"
+                            type: string
+                          soundAssetId:
+                            description: "id of soundAssetId"
+                            type: string
           404:
             description: Project not found
             

@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
 import {ProjectList, StorageInformations} from "./class";
 import {Created_id} from "../commons/Created_id";
-import {AppConfigService} from "../commons/app.config.service";
+import {AppConfigService} from "../../config/app.config.service";
 
 /**
  * @class ProjectManagerComponent

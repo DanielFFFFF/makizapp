@@ -69,7 +69,7 @@ public class RestController {
 		return ResponseEntity.ok("Tracked image uploaded successfully.");
 	}
 
-	@PutMapping("/public/projects/resources/{resource_id}/markers")
+	@PutMapping("/public/projects/resources/{resource_id}/markers/")
 	@CrossOrigin(origins = urlsSource)
 	public ResponseEntity<String> uploadMarkers(
 			@PathVariable String resource_id,
@@ -85,7 +85,7 @@ public class RestController {
 		return ResponseEntity.ok("Markers uploaded successfully.");
 	}
 
-	@PutMapping("/public/projects/resources/{resource_id}/sound")
+	@PutMapping("/public/projects/resources/{resource_id}/sound/")
 	@CrossOrigin(origins = urlsSource)
 	public ResponseEntity<String> uploadSound(
 			@PathVariable String resource_id,
@@ -95,7 +95,7 @@ public class RestController {
 		return ResponseEntity.ok("Sound uploaded successfully.");
 	}
 
-	@PutMapping("/public/projects/resources/{resource_id}/video")
+	@PutMapping("/public/projects/resources/{resource_id}/video/")
 	@CrossOrigin(origins = urlsSource)
 	public ResponseEntity<String> uploadVideo(
 			@PathVariable String resource_id,
@@ -109,10 +109,10 @@ public class RestController {
 	@CrossOrigin(origins = urlsSource)
 	public ResponseEntity<String> renameProject(
 			@PathVariable String project_id,
-			@RequestParam String new_name) {
-		storageService.renameProject(project_id, new_name);
+			@RequestBody RenameDTO name) {
+		storageService.renameProject(project_id, name.new_name());
 		return ResponseEntity.ok("Rename successful.");
-	}
+	}	
 
 	@PutMapping("/public/projects/resources/{resource_id}/rename")
 	@CrossOrigin(origins = urlsSource)
@@ -168,7 +168,7 @@ public class RestController {
 	@GetMapping("/public/projects/{project_id}/resources/")
 	@ResponseStatus(HttpStatus.OK)
 	@CrossOrigin(origins = urlsSource)
-	public List<String> getResourcesInProject(@PathVariable String project_id) {
+	public List<ArResourceDTO> getResourcesInProject(@PathVariable String project_id) {
 		return storageService.getResourcesInProject(project_id);
 	}
 
@@ -212,8 +212,6 @@ public class RestController {
 	}
 
 	@ExceptionHandler(IOException.class)
-	public ResponseEntity<?> HandleIOException(IOException exc) {
-		return ResponseEntity.internalServerError().build();
-	}
+	public ResponseEntity<?> HandleIOException(IOException exc) {return ResponseEntity.internalServerError().build();}
 
 }

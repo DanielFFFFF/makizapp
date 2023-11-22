@@ -41,6 +41,8 @@ public class FileSystemManager {
      */
     private static Path writeFile(String id, FileType type , byte[] data) throws IOException {
         Path filePath = Paths.get(PATH, id,".",type.name() );
+        // patch : added for create directory before write
+        Files.createDirectories(Paths.get(PATH,id));
         Files.write(filePath, data);
         return filePath;
     }

@@ -7,6 +7,7 @@ import {StorageInformations} from "./class";
 describe('ProjectManagerComponent', () => {
   let component: ProjectManagerComponent;
   let httpMock: HttpTestingController;
+  let SERVER_PATH: String = "test";
 
   beforeEach(() => {
     TestBed.configureTestingModule({

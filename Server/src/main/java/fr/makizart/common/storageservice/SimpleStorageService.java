@@ -68,8 +68,12 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public List<String> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException {
-		return tryGetProject(projectId).getArResource().stream().map(Objects::toString).toList();
+	public List<ArResourceDTO> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException {
+		List<ArResourceDTO> list = new ArrayList<>();
+		for(ArResource rs : tryGetProject(projectId).getArResource()){
+			list.add(new ArResourceDTO(rs));
+		}
+		return list;
 	}
 
 	@Override
@@ -134,6 +138,7 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void renameProject(String projectId, String newName) throws InvalidParameterException, NoSuchElementException {
+		System.out.println(newName);
 		validateName(newName);
 		Project project = tryGetProject(projectId);
 		project.setName(newName);
@@ -156,7 +161,9 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void deleteResource(String resourceId) throws InvalidParameterException, NoSuchElementException {
-		arResourceRepository.delete(tryGetResource(resourceId));
+		ArResource res = tryGetResource(resourceId);
+		res.getProject().removeResource(res);
+		projectRepository.save(res.getProject());
 	}
 
 	@Override
@@ -172,8 +179,8 @@ public class SimpleStorageService implements StorageService {
 		ArResource resource = new ArResource();
 		resource.setName(incomingResourceDTO.name());
 
-		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null || incomingResourceDTO.videoAsset() != null;
-		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null) == (incomingResourceDTO.videoAsset() != null);
+		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() == null && incomingResourceDTO.soundAsset() == null && incomingResourceDTO.videoAsset() == null;
+		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null) && (incomingResourceDTO.videoAsset() != null);
 		if (atLeastOneAsset){
 			throw new IllegalStateException("Cannot create resource without asset");
 		}
@@ -204,35 +211,39 @@ public class SimpleStorageService implements StorageService {
 			throw new InvalidParameterException("Can't create markers");
 		}
 
-		try {
-			ImageAsset image = new ImageAsset();
-			imageAssetRepository.save(image);//id created
-			Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.imageAsset()));
-			image.setPathToRessource(path.toUri());
-			resource.setImageAsset(image);
-		}catch(IOException e){
-			throw new InvalidParameterException("Can't create image");
+		if(incomingResourceDTO.videoAsset() == null) {
+			try {
+				ImageAsset image = new ImageAsset();
+				imageAssetRepository.save(image);//id created
+				Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.imageAsset()));
+				image.setPathToRessource(path.toUri());
+				resource.setImageAsset(image);
+			} catch (IOException e) {
+				throw new InvalidParameterException("Can't create image");
+			}
+
+			try {
+				SoundAsset sound = new SoundAsset();
+				soundAssetReposetory.save(sound);//id created
+				Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
+				sound.setPathToRessource(path.toUri());
+				resource.setSoundAsset(sound);
+			} catch (IOException e) {
+				throw new InvalidParameterException("Can't create sound");
+			}
+		} else {
+			try {
+				VideoAsset video = new VideoAsset();
+				videoAssetRepository.save(video);//id created
+				video.setVideoURL(URI.create(incomingResourceDTO.videoAsset()).toURL());
+				resource.setVideoAsset(video);
+			} catch (IOException e) {
+				throw new InvalidParameterException("Can't create video");
+			}
 		}
 
-		try {
-			SoundAsset sound = new SoundAsset();
-			soundAssetReposetory.save(sound);//id created
-			Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
-			sound.setPathToRessource(path.toUri());
-			resource.setSoundAsset(sound);
-		}catch(IOException e){
-			throw new InvalidParameterException("Can't create sound");
-		}
-
-		try {
-			VideoAsset video = new VideoAsset();
-			videoAssetRepository.save(video);//id created
-			video.setVideoURL(URI.create(incomingResourceDTO.videoAsset()).toURL());
-			resource.setVideoAsset(video);
-		}catch(IOException e){
-			throw new InvalidParameterException("Can't create video");
-		}
-
+		resource.setProject(tryGetProject(projectId));
+		arResourceRepository.save(resource);
 		return new ArResourceDTO(resource);
 	}
 

@@ -10,7 +10,7 @@ import java.net.URI;
 public class ImageAsset extends Media {
 
 
-    @Column(name="PATH", nullable=false)
+    @Column(name="PATH")
     private URI pathToRessource;
 
 

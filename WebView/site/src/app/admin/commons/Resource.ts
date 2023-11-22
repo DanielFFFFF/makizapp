@@ -29,28 +29,28 @@ export class Resource {
   public readonly creationDate: string;
 
   /**
-   * @property _thumbnail
+   * @property thumbnailId
    * Represents the id of the media where stocked tracked image of the resource.
    */
-  public thumbnail_id: string;
+  public thumbnailId: string;
 
   /**
-   * @property video
+   * @property videoAssetId
    * The video media ID of this resource.
    */
-  public video_id: string;
+  public videoAssetId: string;
 
   /**
-   * @property image
+   * @property imageAssetId
    * The image media id of this resource.
    */
-  public image_id: string;
+  public imageAssetId: string;
 
   /**
-   * @property audio
+   * @property soundAssetId
    * The audio media id of this resource.
    */
-  public audio_id: string;
+  public soundAssetId: string;
 
   /**
    * @property thumbnail
@@ -105,15 +105,15 @@ export class Resource {
    * Creates a new instance of the Resource.
    */
 
-  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnail_id: string, video_id: string, image_id: string, audio_id: string, thumbnail: string, videoAsset: string, imageAsset: string, audioAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
+  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnailId: string, videoAssetId: string, imageAssetId: string, soundAssetId: string, thumbnail: string, videoAsset: string, imageAsset: string, audioAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
     this.id = id;
     this.accessCount = accessCount;
     this.name = name;
     this.creationDate = creationDate;
-    this.thumbnail_id = thumbnail_id;
-    this.video_id = video_id;
-    this.image_id = image_id;
-    this.audio_id = audio_id;
+    this.thumbnailId = thumbnailId;
+    this.videoAssetId = videoAssetId;
+    this.imageAssetId = imageAssetId;
+    this.soundAssetId = soundAssetId;
     this.thumbnail = thumbnail;
     this.videoAsset = videoAsset;
     this.imageAsset = imageAsset;
