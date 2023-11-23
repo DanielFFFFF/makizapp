@@ -141,10 +141,10 @@ public class RestController {
 		return ResponseEntity.ok("Delete successful.");
 	}
 
-	@DeleteMapping("/public/projects/resources/{resource_id}/delete")
+	@DeleteMapping("/public/projects/{project_id}/resources/{resource_id}/delete")
 	@CrossOrigin(origins = urlsSource)
-	public ResponseEntity<String> deleteResource(@PathVariable String resource_id) {
-		storageService.deleteResource(resource_id);
+	public ResponseEntity<String> deleteResource(@PathVariable String project_id, @PathVariable String resource_id) {
+		storageService.deleteResource(project_id, resource_id);
 		return ResponseEntity.ok("Delete successful.");
 	}
 

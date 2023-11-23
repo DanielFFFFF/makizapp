@@ -138,12 +138,10 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void renameProject(String projectId, String newName) throws InvalidParameterException, NoSuchElementException {
-		System.out.println(newName);
 		validateName(newName);
 		Project project = tryGetProject(projectId);
 		project.setName(newName);
 		projectRepository.save(project);
-
 	}
 
 	@Override
@@ -160,10 +158,11 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public void deleteResource(String resourceId) throws InvalidParameterException, NoSuchElementException {
+	public void deleteResource(String projectId, String resourceId) throws InvalidParameterException, NoSuchElementException {
 		ArResource res = tryGetResource(resourceId);
-		res.getProject().removeResource(res);
-		projectRepository.save(res.getProject());
+		Project p = tryGetProject(projectId);
+		p.removeResource(res);
+		projectRepository.save(p);
 	}
 
 	@Override
@@ -242,8 +241,10 @@ public class SimpleStorageService implements StorageService {
 			}
 		}
 
-		resource.setProject(tryGetProject(projectId));
-		arResourceRepository.save(resource);
+		Project p = tryGetProject(projectId);
+		p.addResource(resource);
+		projectRepository.save(p);
+		//arResourceRepository.save(resource);
 		return new ArResourceDTO(resource);
 	}
 

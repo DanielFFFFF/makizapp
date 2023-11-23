@@ -141,7 +141,7 @@ public interface StorageService  {
 	 * @throws InvalidParameterException  If the id is not a number.
 	 * @throws NoSuchElementException     If the resource with the given ID is not found.
 	 */
-	void deleteResource(String resourceId)
+	void deleteResource(String projectId, String resourceId)
 			throws InvalidParameterException, NoSuchElementException;
 
 	/**

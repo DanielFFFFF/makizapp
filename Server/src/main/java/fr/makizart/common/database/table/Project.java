@@ -19,7 +19,7 @@ public class Project extends DatedEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(mappedBy = "project", targetEntity = ArResource.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(targetEntity = ArResource.class, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArResource> arResource;
 
     @Column(name="NAME", nullable = false)
@@ -66,5 +66,9 @@ public class Project extends DatedEntity {
 
     public void removeResource(ArResource res) {
         this.arResource.remove(res);
+    }
+
+    public void addResource(ArResource res) {
+        this.arResource.add(res);
     }
 }

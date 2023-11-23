@@ -435,8 +435,8 @@ export class ProjectEditorComponent {
 
     deleteResource() {
         if (this.resourceSelected != null) {
-            this.http.delete(this.SERVER_PATH + `/public/projects/resources/${this.resourceSelected.id}/delete`, {responseType: 'text'}).subscribe((res: any) => {
-                if (this.showResponses) console.log(`/public/projects/resources/${this.resourceSelected?.id}/delete`);
+            this.http.delete(this.SERVER_PATH + `/public/projects/${this.project.getId()}/resources/${this.resourceSelected.id}/delete`, {responseType: 'text'}).subscribe((res: any) => {
+                if (this.showResponses) console.log(`/public/projects/${this.project.getId()}/resources/${this.resourceSelected?.id}/delete`);
                 if (this.showResponses) console.log(res);
                 this.resources = this.resources.filter(resource => resource.id !== this.resourceSelected?.id);
                 this.filterList();
