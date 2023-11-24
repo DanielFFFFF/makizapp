@@ -65,167 +65,127 @@
   </div>
 </div>
 
-
 <!-- Editing resources. This section is only visible when the user selects an resource -->
 
-<div *ngIf="editResourceView" class="d-flex align-items-center popup">
+<div *ngIf="editResourceView" class="d-flex align-items-center justify-content-center popup">
   <button type="button"
           class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
           (click)="exitEdition()">close
   </button>
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-12 row justify-content-center content rounded">
-        <div class="col-xl-3 col-5 pe-1">
-          <div class="row">
+  <div class="d-flex">
+    <div class="d-flex flex-column">
+      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Base}" (click)="ongletSelected=Onglet.Base">
+        filter_vintage
+      </div>
+      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Thumbnail}" (click)="ongletSelected=Onglet.Thumbnail">
+        video_stable
+      </div>
+      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Video}" (click)="ongletSelected=Onglet.Video">
+        video_file
+      </div>
+      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Image}" (click)="ongletSelected=Onglet.Image">
+        add_photo_alternate
+      </div>
+      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Sound}" (click)="ongletSelected=Onglet.Sound">
+        audio_file
+      </div>
+    </div>
+    <div class="d-flex color-component p-2">
+      <div class="colorBack d-flex justify-content-center" style="width: 25rem; height: 25rem;">
+        <div *ngIf="ongletSelected==Onglet.Base" >
+          <div class="flex-column justify-content-center">
+            <h4 class="mt-2 text-center" contenteditable="true" style="width: 20rem;" #resourceNewName (input)="changeNewName(resourceNewName.textContent)">{{resourceSelected?.name}}</h4>
+            <div class="d-flex flex-column colorFont">
+              <h6><b>Créé le</b> : {{resourceSelected?.creationDate}}</h6>
 
+              <hr class="hr mb-1 mt-1"/>
 
-            <div class="col-12">
-              <div class="color-component rounded p-2 blocEditing">
-                <div class="d-flex justify-content-center">
-                  <div class="flex-column">
-                    <h4 class="mt-2 text-center">Image à scanner</h4>
-                    <div class="border colorBack square mb-3 position-relative hidden ">
-                      <img class="img-fluid" src="{{resourceSelected?.thumbnail}}">
-                      <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail)"/>
-                      <button type="button"
-                              class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                              (click)="NewThumbnail.click()" data-toggle="tooltip"
-                              title="Upload une nouvelle image">upload
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <div class="d-flex justify-content-center mt-2">
+                <button type="button" class="btn " (click)="deleteResource()">
+                  Supprimer {{resourceSelected?.name}}</button>
               </div>
-            </div>
-
-            <div class="col-12 vh-1"></div>
-
-            <div class="col-12 toto">
-
-
-              <div *ngIf="videoMod;else imageFace" class="position-relative">
-                <div class="color-component rounded p-2 blocEditing">
-                  <div class="d-flex justify-content-center">
-                    <div class="flex-column">
-                      <h4 class="mt-2 text-center">Vidéo</h4>
-                      <div class="d-flex border colorBack square mb-1">
-                        <iframe class="mw-100 mh-100" [src]="resourceSelected?.videoAsset | safe"
-                                allow="autoplay; fullscreen; image-in-image" allowfullscreen></iframe>
-                      </div>
-                      <div class="d-flex border colorBack mb-3">
-                        <input type="text" class="form-control form-control-custom" placeholder="Url..."
-                               value="{{resourceSelected?.videoAsset}}">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button type="button"
-                        class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                        (click)="videoMod = false" data-toggle="tooltip" title="Mode image">image
+              <div class="d-flex justify-content-center mt-2">
+                <button *ngIf="newName!=''" type="button" class="btn" (click)="renameResource()">Renommer
                 </button>
               </div>
-
-              <ng-template #imageFace>
-                <div class="image-Face position-relative">
-                  <div class="color-component rounded p-2 blocEditing">
-                    <div class="d-flex justify-content-center">
-                      <div class="flex-column">
-                        <h4 class="mt-2 text-center">Image</h4>
-                        <div class="d-flex border colorBack square mb-3 position-relative hidden">
-                          <img class="mh-100 mw-100" src="{{resourceSelected?.imageAsset}}">
-                          <input type="file" style="display: none;" #uploadNewImage/>
-                          <button type="button"
-                                  class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                                  (click)="uploadNewImage.click()" data-toggle="tooltip" title="Upload une nouvelle image">
-                            upload
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button type="button"
-                          class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-                          (click)="videoMod = true" data-toggle="tooltip" title="Mode vidéo">smart_display
-                  </button>
-                </div>
-              </ng-template>
             </div>
           </div>
         </div>
-
-        <div class="col-xl-3 col-5 pe-1">
-          <div class="row">
-            <div class="col-12">
-              <div class="color-component rounded p-2 blocEditing">
-                <div class="d-flex justify-content-center">
-                  <div class="flex-column">
-                    <div>
-                      <h4 class="mt-2 text-center">Son</h4>
-                      <figure>
-                        <audio controls src="{{resourceSelected?.audioAsset}}"></audio>
-                      </figure>
-                      <div class="d-flex justify-content-center">
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="uploadNewAudio()"
-                                data-toggle="tooltip" title="Upload un nouveau son">upload
-                        </button>
-                      </div>
-                    </div>
-
-                    <hr class="hr mb-1 mt-1"/>
-
-                    <div>
-                      <h4 class="mt-2 text-center">Marker</h4>
-                      <div class="d-flex justify-content-center">
-                        <button type="button" class="p-1 btn material-symbols-outlined" (click)="reloadMarker()"
-                                data-toggle="tooltip" title="Créer / re-créer le marker">frame_reload
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <div *ngIf="ongletSelected==Onglet.Thumbnail">
+          <div class="flex-column justify-content-center">
+            <h4 class="mt-2 text-center">Image à scanner</h4>
+            <div class="border colorBack square mb-3 position-relative ">
+              <img class="img-fluid" src="{{resourceSelected?.thumbnail}}">
+              <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail)"/>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="button"
+                      class="m-1 p-1 btn cursor-pointer user-select-none"
+                      (click)="NewThumbnail.click()">Modifier
+              </button>
+            </div>
+            <div class="d-flex flex-column justify-content-center">
+              <h6 class="text-center">Markers</h6>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">100%</div>
               </div>
             </div>
 
-            <div class="col-12 vh-1"></div>
+          </div>
+        </div>
+        <div *ngIf="ongletSelected==Onglet.Video">
+          <div class="flex-column justify-content-center">
+            <h4 class="mt-2 text-center">Vidéo</h4>
+            <div class="d-flex border colorBack square mb-1">
+              <iframe class="mw-100 mh-100" [src]="resourceSelected?.videoAsset | safe"
+                      allow="autoplay; fullscreen; image-in-image" allowfullscreen></iframe>
+            </div>
+            <div class="d-flex border colorBack mb-3">
+              <input type="text" class="form-control form-control-custom" placeholder="Url..."
+                     value="{{resourceSelected?.videoAsset}}" #NewVideoUrl>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="button"
+                      class="m-1 p-1 btn cursor-pointer user-select-none"
+                      (click)="uploadNewVideo(NewVideoUrl)">Modifier
+              </button>
+            </div>
 
-            <div class="col-12">
-              <div class="color-component rounded p-2 blocEditing">
-                <div class="d-flex justify-content-center">
-                  <div class="flex-column">
-                    <input class="mt-2 text-center" value="{{resourceSelected?.name}}">
-                    <div class="d-flex flex-column colorFont">
-                      <h6><b>Créé le</b> : {{resourceSelected?.creationDate}}</h6>
-                      <h6><b>Nb d'accès</b> : {{resourceSelected?.accessCount}}</h6>
+          </div>
+        </div>
+        <div *ngIf="ongletSelected==Onglet.Image">
+          <div class="flex-column justify-content-center">
+            <h4 class="mt-2 text-center">Image à afficher</h4>
+            <div class="border colorBack square mb-3 position-relative ">
+              <img class="mh-100 mw-100" src="{{resourceSelected?.imageAsset}}">
+              <input type="file" style="display: none;" #NewImage (change)="uploadNewImage(NewImage)"/>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="button"
+                      class="m-1 p-1 btn cursor-pointer user-select-none"
+                      (click)="NewImage.click()">Modifier
+              </button>
+            </div>
 
-                      <hr class="hr mb-1 mt-1"/>
-
-                      <h6><b>Image à scanner</b> : {{resourceSelected?.thumbnail_size}}Mb</h6>
-                      <h6><b>Son</b> : {{resourceSelected?.audio_size}}Mb</h6>
-
-                      <div *ngIf="!videoMod">
-                        <h6><b>Image</b> : {{resourceSelected?.image_size}Mb</h6>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex flex-column mt-4">
-                  <div class="d-flex justify-content-center">
-                    <button type="button" class="btn w-50" (click)="deleteResource()">
-                      Supprimer {{resourceSelected?.name}}</button>
-                  </div>
-                  <div class="d-flex justify-content-center mt-2">
-                    <button type="button" class="btn w-50" (click)="saveEdition()">Enregistrer les modifications
-                    </button>
-                  </div>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div *ngIf="ongletSelected==Onglet.Sound">
+          <div class="flex-column justify-content-center">
+            <h4 class="mt-2 text-center">Son</h4>
+            <figure>
+              <audio controls src="{{resourceSelected?.audioAsset}}"></audio>
+            </figure>
+            <input type="file" style="display: none;" #NewAudio (change)="uploadNewAudio(NewAudio)"/>
+            <div class="d-flex justify-content-end">
+              <button type="button"
+                      class="m-1 p-1 btn cursor-pointer user-select-none"
+                      (click)="NewAudio.click()">Modifier
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
   </div>
 </div>
 

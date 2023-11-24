@@ -118,8 +118,8 @@ public class RestController {
 	@CrossOrigin(origins = urlsSource)
 	public ResponseEntity<String> renameResource(
 			@PathVariable String resource_id,
-			@RequestParam String new_name) {
-		storageService.renameResource(resource_id, new_name);
+			@RequestBody RenameDTO name) {
+		storageService.renameResource(resource_id, name.new_name());
 		return ResponseEntity.ok("Rename successful.");
 	}
 

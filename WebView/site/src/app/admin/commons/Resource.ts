@@ -20,7 +20,7 @@ export class Resource {
    * @property name
    * Represents the name of the resource.
    */
-  public readonly name: string;
+  public name: string;
 
   /**
    * @property creationDate
