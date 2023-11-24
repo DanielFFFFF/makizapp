@@ -47,10 +47,10 @@ export class Resource {
   public imageAssetId: string;
 
   /**
-   * @property soundAssetId
+   * @property audioAssetId
    * The audio media id of this resource.
    */
-  public soundAssetId: string;
+  public audioAssetId: string;
 
   /**
    * @property thumbnail
@@ -105,7 +105,7 @@ export class Resource {
    * Creates a new instance of the Resource.
    */
 
-  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnailId: string, videoAssetId: string, imageAssetId: string, soundAssetId: string, thumbnail: string, videoAsset: string, imageAsset: string, audioAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
+  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnailId: string, videoAssetId: string, imageAssetId: string, audioAssetId: string, thumbnail: string, videoAsset: string, imageAsset: string, audioAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
     this.id = id;
     this.accessCount = accessCount;
     this.name = name;
@@ -113,7 +113,7 @@ export class Resource {
     this.thumbnailId = thumbnailId;
     this.videoAssetId = videoAssetId;
     this.imageAssetId = imageAssetId;
-    this.soundAssetId = soundAssetId;
+    this.audioAssetId = audioAssetId;
     this.thumbnail = thumbnail;
     this.videoAsset = videoAsset;
     this.imageAsset = imageAsset;

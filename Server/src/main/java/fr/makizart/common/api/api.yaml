@@ -70,14 +70,12 @@ paths:
           schema:
             type: integer
           description: The ID of the project where to upload the image.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
+          name:
+            schema:
+              type: string
           image/jpeg:
             schema:
               type: string
@@ -98,7 +96,7 @@ paths:
       security:
         - SpringOAuth2: [admin]
 
-  /admin/projects/resources/{resource_id}/trackedImage/:
+  /admin/projects/resources/{resource_id}/thumbnail/:
     put:
       summary: Upload a tracked image on a resource
       description: Upload an tracked image on a resource, override if already exist.
@@ -109,14 +107,12 @@ paths:
           schema:
             type: integer
           description: The ID of the resource where to upload the tracked image.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
+          name:
+            schema:
+              type: string
           image/jpeg:
             schema:
               type: string
@@ -148,14 +144,12 @@ paths:
           schema:
             type: integer
           description: The ID of the resource where to upload the markers.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
+          name:
+            schema:
+              type: string
           marker1/iset:
             schema:
               type: string
@@ -195,14 +189,12 @@ paths:
           schema:
             type: string
           description: The ID of the resource where to upload the sound.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
+          name:
+            schema:
+              type: string
           audio/mp3:
             schema:
               type: string
@@ -235,16 +227,12 @@ paths:
           schema:
             type: string
           description: The ID of the resource where to upload the video.
-        - in: query
-          name: name
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: url
-          required: true
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          url:
+            schema:
+              type: string
       responses:
         200:
           content:

@@ -115,7 +115,7 @@
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Image à scanner</h4>
             <div class="border colorBack square mb-3 position-relative ">
-              <img class="img-fluid" src="{{resourceSelected?.thumbnail}}">
+              <img class="img-fluid" src="data:image/png;base64, {{resourceSelected?.thumbnail}}">
               <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail)"/>
             </div>
             <div class="d-flex justify-content-end">
@@ -141,7 +141,7 @@
                       allow="autoplay; fullscreen; image-in-image" allowfullscreen></iframe>
             </div>
             <div class="d-flex border colorBack mb-3">
-              <input type="text" class="form-control form-control-custom" placeholder="Url..."
+              <input type="text" class="form-control form-control-custom color-component" placeholder="Url..."
                      value="{{resourceSelected?.videoAsset}}" #NewVideoUrl>
             </div>
             <div class="d-flex justify-content-end">
@@ -157,7 +157,7 @@
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Image à afficher</h4>
             <div class="border colorBack square mb-3 position-relative ">
-              <img class="mh-100 mw-100" src="{{resourceSelected?.imageAsset}}">
+              <img class="mh-100 mw-100" src="data:image/png;base64, {{resourceSelected?.imageAsset}}">
               <input type="file" style="display: none;" #NewImage (change)="uploadNewImage(NewImage)"/>
             </div>
             <div class="d-flex justify-content-end">

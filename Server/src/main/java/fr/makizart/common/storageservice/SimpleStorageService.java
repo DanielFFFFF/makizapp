@@ -88,16 +88,37 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	@Transactional
-	public void overrideMarkers(MarkerDTO markerDTO ) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideThumbnail(String resourceId, String name, String thumbnail) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+		validateName(name);
+		ArResource resource = tryGetResource(resourceId);
+		try {
+			ImageAsset image = new ImageAsset();
+			imageAssetRepository.save(image);//id created
+			Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(thumbnail));
+			image.setPathToRessource(path.toUri());
+			resource.setThumbnail(image);
+			arResourceRepository.save(resource);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create thumbnail");
+		}
+	}
+
+
+
+	@Override
+	@Transactional
+	public void overrideMarkers(String resourceId, String name, String marker1, String marker2, String marker3) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		// Check 1: Is the name valid?
-		validateName(markerDTO.name());
+		validateName(name);
+
+		ArResource resource = tryGetResource(resourceId);
 
 		// Check 2: Do we have 3 markers and are they “marker”+{1-3}
-		if(markerDTO.marker1() == null || markerDTO.marker2() == null || markerDTO.marker3() == null){
+		if(marker1 == null || marker2 == null || marker3 == null){
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
 		try {
-			FileSystemManager.writeGenericMarkers(markerDTO);
+			FileSystemManager.writeGenericMarkers(new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
 		}catch (IOException e){
 			//hide error to end-user
 			throw new IOException("Write failed");
@@ -108,29 +129,28 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	@Transactional
-	public void overrideSound(String resourceId, String name, byte[] sound) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideSound(String resourceId, String name, String sound) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
+		ArResource resource = tryGetResource(resourceId);
 		try {
-			AudioFileFormat audio = AudioSystem.getAudioFileFormat(new ByteArrayInputStream(sound));
-			if(!soundAssetReposetory.existsById(Long.valueOf(resourceId))){
-				throw new  NoSuchElementException();
-			}
-			SoundAsset soundAsset = new SoundAsset();
-			soundAsset.setName(name);
-
-			Path savedPath = FileSystemManager.writeSound(soundAsset.getId().toString(),sound);
-			soundAsset.setPathToRessource(savedPath.toUri());
-			soundAssetReposetory.save(soundAsset);
-		} catch (UnsupportedAudioFileException e) {
-			throw new InvalidParameterException("audio type not supported");
+			SoundAsset audio = new SoundAsset();
+			soundAssetReposetory.save(audio);//id created
+			Path path = FileSystemManager.writeImage(audio.getId().toString(), Base64.getDecoder().decode(sound));
+			audio.setPathToRessource(path.toUri());
+			resource.setSoundAsset(audio);
+			arResourceRepository.save(resource);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create sound");
 		}
 	}
 
 	@Override
-	public void overrideVideo(String videoId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
+	public void overrideVideo(String resourceId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
+		ArResource res = tryGetResource(resourceId);
 		try {
-			tryGetVideo(videoId).setVideoURL(URI.create(url).toURL());
+			res.getVideoAsset().setVideoURL(URI.create(url).toURL());
+			arResourceRepository.save(res);
 		}catch (IllegalArgumentException e){
 			throw new InvalidParameterException();
 		}
@@ -244,19 +264,23 @@ public class SimpleStorageService implements StorageService {
 		Project p = tryGetProject(projectId);
 		p.addResource(resource);
 		projectRepository.save(p);
-		//arResourceRepository.save(resource);
 		return new ArResourceDTO(resource);
 	}
 
 	@Override
 	public void overrideImage(String resourceId, String name, String image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
-		validateName(resourceId);
-
-		ImageAsset imageAsset = tryGetImage(image);
-
-		Path path = FileSystemManager.writeImage(name,Base64.getDecoder().decode(image));
-		imageAsset.setPathToRessource(path.toUri());
-		imageAssetRepository.save(imageAsset);
+		validateName(name);
+		ArResource resource = tryGetResource(resourceId);
+		try {
+			ImageAsset img = new ImageAsset();
+			imageAssetRepository.save(img);//id created
+			Path path = FileSystemManager.writeImage(img.getId().toString(), Base64.getDecoder().decode(image));
+			img.setPathToRessource(path.toUri());
+			resource.setThumbnail(img);
+			arResourceRepository.save(resource);
+		}catch(IOException e){
+			throw new InvalidParameterException("Can't create image");
+		}
 	}
 
 

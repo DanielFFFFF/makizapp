@@ -64,13 +64,16 @@ public interface StorageService  {
 	/**
 	 * Uploads markers for a resource.
 	 *
-	 * @param dto  The MarkerDTO that contains all markers.
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
+	 * @param marker1	The marker 1 of the resource.
+	 * @param marker2	The marker 2 of the resource.
+	 * @param marker3	The marker 3 of the resource.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character. Note that Marker are not preprocessed on this method
 	 * @throws NoSuchElementException     If the resource with the given ID is not found.
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void overrideMarkers(MarkerDTO dto)
+	void overrideMarkers(String resourceId, String name, String marker1, String marker2, String marker3)
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 
@@ -85,13 +88,13 @@ public interface StorageService  {
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void overrideSound(String resourceId, String name, byte[] sound)
+	void overrideSound(String resourceId, String name, String sound)
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 	/**
 	 * Uploads video for a resource.
 	 *
-	 * @param videoId  The ID of the project, a long int encoded as a string.
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
 	 * @param name       The n	@Override
 	 * @param url        The URL of the video.
 	 * @throws InvalidParameterException  If the id is not a number, the name contain invalid character, or the url cannot be parsed
@@ -99,7 +102,7 @@ public interface StorageService  {
 	 * @throws IOException               If an I/O error occurs.
 	 * @throws NameAlreadyBoundException  If the name is already bound.
 	 */
-	void overrideVideo(String videoId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
+	void overrideVideo(String resourceId, String name, String url) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 	/**
 	 * Renames a project.
@@ -177,6 +180,19 @@ public interface StorageService  {
 	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
 	 */
 	void overrideImage(String resourceId, String name, String image)
+			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
+
+	/**
+	 * Uploads an thumbnail for a resource.
+	 *
+	 * @param resourceId  The ID of the resource, a long int encoded as a string.
+	 * @param name       The name of the thumbnail.
+	 * @param thumbnail      The byte array representing the thumbnail data.
+	 * @throws InvalidParameterException   If the id is not a number, the name contain invalid character, or the image cannot be parsed
+	 * @throws IOException               If an I/O error occurs.
+	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
+	 */
+	void overrideThumbnail(String resourceId, String name, String thumbnail)
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 
