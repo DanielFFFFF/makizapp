@@ -107,7 +107,8 @@ export class ProjectManagerComponent {
   }
 
   /**
-   *
+   * @method updateProjects()
+   * Method for updating the list of projects
    */
   updateProjects(){
     this.projects = [];
@@ -121,6 +122,10 @@ export class ProjectManagerComponent {
     });
   }
 
+  /**
+   * @method updateStorage()
+   * Method for updating storage information
+   */
   updateStorage(){
     this.http.get<any>(this.SERVER_PATH + "/public/storage/").pipe(map((value: StorageInformations) => {
       return value
