@@ -32,9 +32,8 @@ export class ProjectEditorComponent {
 
   /**
    * @property {string} SERVER_PATH - Constant containing the server path.
-   * @private
    */
-  private SERVER_PATH: string = ""
+  SERVER_PATH: string = ""
 
   /**
    * @property {ElementRef | null} filterResource - Reference to the HTML element for filtering resources.
@@ -91,19 +90,18 @@ export class ProjectEditorComponent {
   /**
    * @property {Onglet} ongletSelected - The selected tab.
    */
-  private ongletSelected: Onglet = Onglet.Base;
+  ongletSelected: Onglet = Onglet.Base;
 
   /**
    * @property {Onglet} Onglet - Variable containing the enumeration. This allows it to be used within the class.
-   * @private
    */
-  private Onglet = Onglet;
+  Onglet = Onglet;
 
   /**
    * @property {string} newName - When editing a resource, this variable allows you to modify the name later.
    * @private
    */
-  private newName: string = "";
+  newName: string = "";
 
 
   constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient, private config: AppConfigService) {
