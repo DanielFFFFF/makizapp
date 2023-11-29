@@ -97,7 +97,7 @@ public class RestController {
         return ResponseEntity.ok("Video uploaded successfully.");
     }
 
-    @PutMapping("/public/projects/{project_id}/rename")
+    @PutMapping("/admin/projects/{project_id}/rename")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> renameProject(
             @PathVariable String project_id,
@@ -106,7 +106,7 @@ public class RestController {
         return ResponseEntity.ok("Rename successful.");
     }
 
-    @PutMapping("/public/projects/resources/{resource_id}/rename")
+    @PutMapping("/admin/projects/resources/{resource_id}/rename")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> renameResource(
             @PathVariable String resource_id,
@@ -115,7 +115,7 @@ public class RestController {
         return ResponseEntity.ok("Rename successful.");
     }
 
-    @PutMapping("/public/projects/medias/{media_id}/rename")
+    @PutMapping("/admin/projects/medias/{media_id}/rename")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> renameMedia(
             @PathVariable String media_id,
@@ -126,14 +126,14 @@ public class RestController {
 
 
     //Delete-----------------
-    @DeleteMapping("/public/projects/{project_id}/delete")
+    @DeleteMapping("/admin/projects/{project_id}/delete")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> deleteProject(@PathVariable String project_id) {
         storageService.deleteProject(project_id);
         return ResponseEntity.ok("Delete successful.");
     }
 
-    @DeleteMapping("/public/projects/{project_id}/resources/{resource_id}/delete")
+    @DeleteMapping("/admin/projects/{project_id}/resources/{resource_id}/delete")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> deleteResource(@PathVariable String project_id, @PathVariable String resource_id) {
         storageService.deleteResource(project_id, resource_id);

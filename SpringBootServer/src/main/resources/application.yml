@@ -1,4 +1,11 @@
 spring:
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:9001
+
   datasource:
     url: jdbc:postgresql://localhost:5432/makizapp
     username: admin

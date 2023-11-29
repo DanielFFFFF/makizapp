@@ -5,11 +5,13 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -27,8 +29,10 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -39,30 +43,6 @@ import java.util.UUID;
 @Import(OAuth2AuthorizationServerConfiguration.class)
 @EnableWebSecurity
 public class AuthorizationServerConfig {
-
-/*	@Bean
-	@Order(1)
-	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-			throws Exception {
-		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-				.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-		http
-				// Redirect to the login page when not authenticated from the
-				// authorization endpoint
-				.exceptionHandling((exceptions) -> exceptions
-						.defaultAuthenticationEntryPointFor(
-								new LoginUrlAuthenticationEntryPoint("/login"),
-								new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-						)
-				)
-				// Accept access tokens for User Info and/or Client Registration
-				.oauth2ResourceServer((resourceServer) -> resourceServer
-						.jwt(Customizer.withDefaults()));
-
-		return http.build();
-	}*/
-
 
 
 	@Bean
@@ -84,9 +64,10 @@ public class AuthorizationServerConfig {
 	public UserDetailsService userDetailsService() {
 		UserDetails userDetails = User.builder().passwordEncoder(new BCryptPasswordEncoder()::encode)
 				.username("makizart")
-				.password("ENCODED_PASSWORD")
+				.password("{bcrypt}$2a$10$PhD9krclE/ileLlCZXJcGuGq4qj0Y20/R9UeoqaN0eClJEzl9py5q")
 				.roles("ADMIN")
 				.build();
+
 
 		return new InMemoryUserDetailsManager(userDetails);
 	}
@@ -123,16 +104,14 @@ public class AuthorizationServerConfig {
 	}
 
 	private static KeyPair generateRsaKey() {
-		KeyPair keyPair;
 		try {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(2048);
-			keyPair = keyPairGenerator.generateKeyPair();
+            return keyPairGenerator.generateKeyPair();
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
-		return keyPair;
 	}
 
 	@Bean

@@ -27,3 +27,7 @@ spring:
                 - "openid"
                 - "profile"
             require-authorization-consent: true
+  #datasource:
+   # url: jdbc:postgresql://localhost:5432/makizapp
+   # username: admin
+   # password: password
