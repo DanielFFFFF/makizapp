@@ -1,3 +1,0 @@
-FROM openjdk:21
-VOLUME /tmp
-EXPOSE 8080
