@@ -28,7 +28,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["src/assets/NFT-Marker-Creator/app.js"]
           },
           "configurations": {
             "production": {
@@ -87,7 +87,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": ["src/assets/NFT-Marker-Creator/app.js"],
             "karmaConfig": "karma.conf.js"
           }
         }

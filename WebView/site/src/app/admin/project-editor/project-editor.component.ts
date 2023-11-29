@@ -16,7 +16,7 @@ import {AppConfigService} from "../../config/app.config.service";
 enum Onglet {
   Base, Thumbnail, Video, Sound, Image,
 }
-
+declare function testAPINFT() : void;
 @Component({
   selector: 'project-editor',
   templateUrl: './project-editor.component.html',
@@ -285,7 +285,7 @@ export class ProjectEditorComponent {
     }
 
     //Todo générer les markers
-
+    testAPINFT();
 
     // Execute and send the request POST to create the resource
     // Will be executed when all promises have been delivered
