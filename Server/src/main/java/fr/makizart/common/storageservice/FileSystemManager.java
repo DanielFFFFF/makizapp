@@ -16,7 +16,7 @@ import java.util.Map;
 public class FileSystemManager {
 
     //private static String PATH = "/var/lib/MAKIZART/data/";
-    private static final String PATH = "/tmp/makizart";
+    public static final String PATH = System.getProperty("user.home")+"/.makizart";
 
     static {
         try {

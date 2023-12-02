@@ -13,19 +13,13 @@ spring:
           oidc-client:
             registration:
               client-id: "makizart"
-              client-secret: "{noop}secret"
+              client-secret: "{bcrypt}$2a$10$PhD9krclE/ileLlCZXJcGuGq4qj0Y20/R9UeoqaN0eClJEzl9py5q"
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
-                - "authorization_code"
-                - "refresh_token"
-              redirect-uris:
-                - "http://127.0.0.1:8080/login/oauth2/admin"
-              post-logout-redirect-uris:
-                - "http://127.0.0.1:8080/#/admin"
+                - "client_credentials"
               scopes:
-                - "openid"
-                - "profile"
+                - "admin"
             require-authorization-consent: true
   #datasource:
    # url: jdbc:postgresql://localhost:5432/makizapp

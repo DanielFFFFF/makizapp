@@ -127,10 +127,10 @@ export class ProjectManagerComponent {
    * Method for updating storage information
    */
   updateStorage(){
-    this.http.get<any>(this.SERVER_PATH + "/public/storage/").pipe(map((value: StorageInformations) => {
+    this.http.get<any>(this.SERVER_PATH + "/admin/storage/").pipe(map((value: StorageInformations) => {
       return value
     })).subscribe((res: StorageInformations) => {
-      if(this.showResponses) console.log("/public/storage/");
+      if(this.showResponses) console.log("/admin/storage/");
       if(this.showResponses)console.log(res);
       this.storage[0] = Number((res.used/Math.pow(1024,3)).toFixed(2));
       this.storage[1] = Number((res.total/Math.pow(1024,3)).toFixed(2));

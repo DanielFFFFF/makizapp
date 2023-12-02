@@ -279,8 +279,8 @@ paths:
           description: Unexpected error
       security:
         - SpringOAuth2: [ admin ]
-        
-        
+
+
   /public/projects/resources/{resource_id}/rename:
     put:
       summary: Rename a resource
@@ -349,7 +349,7 @@ paths:
           description: Unexpected error
       security:
         - SpringOAuth2: [ admin ]
-        
+
   /public/projects/resources/{resource_id}/delete:
     delete:
       summary: Delete a resource
@@ -454,7 +454,7 @@ paths:
                             type: string
           404:
             description: Project not found
-            
+
   /public/projects/resources/{resource_id}/:
     get:
       summary: Get a resource
@@ -500,7 +500,7 @@ paths:
 
 
 
-  /public/storage/:
+  /admin/storage/:
     get:
       summary: Get storage information
       description: Get the free space and max space on the disk (in Mb)
