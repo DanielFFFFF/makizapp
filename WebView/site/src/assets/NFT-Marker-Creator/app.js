@@ -266,6 +266,19 @@ Module.onRuntimeInitialized = async function(){
     process.exit(0);
 }
 
+
+
+
+async function runAPII( srcImagee) {
+  process.argv[0] = 'node';
+  process.argv[1] = 'app.js';
+  process.argv[2] = '-i';
+  process.argv[3] = srcImagee;
+  onRuntimeInitialized();
+}
+
+
+
 async function useJPG(buf) {
 
     inkjet.decode(buf, function (err, decoded) {

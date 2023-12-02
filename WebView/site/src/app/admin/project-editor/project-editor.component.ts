@@ -16,7 +16,7 @@ import {AppConfigService} from "../../config/app.config.service";
 enum Onglet {
   Base, Thumbnail, Video, Sound, Image,
 }
-declare function testAPINFT() : void;
+declare function runAPI(jpg: string): void;
 @Component({
   selector: 'project-editor',
   templateUrl: './project-editor.component.html',
@@ -241,12 +241,31 @@ export class ProjectEditorComponent {
         reader.onload = () => {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
-
           //TODO a retirer !!!! et faire la création de marker
-          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          //body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          //body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          //body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
+
+
+          //run NFT-Marker-Creator with path of the image in parameter
+          runAPI(image.name);
+
+          //The 3 local output files are located in the "output" folder of the NFT-Marker-Creator folder
+          var srcOutput = "../../../assets/NFT-Marker-Creator/output/";
+          var imgIset = srcOutput+image.name+".iset";
+          var imgFset = srcOutput+image.name+".fset";
+          var imgFset3 = srcOutput+image.name+".fset3";
+
+          body["marker1"] = imgIset;
+          body["marker2"] = imgFset;
+          body["marker3"] = imgFset3;
+
+          //Delete the 3 local output files
+          var fs = require('fs');
+          fs.unlinkSync(imgIset);
+          fs.unlinkSync(imgFset);
+          fs.unlinkSync(imgFset3);
 
           resolve(true);
         };
@@ -284,9 +303,6 @@ export class ProjectEditorComponent {
       promises.push(p);
     }
 
-    //Todo générer les markers
-    testAPINFT();
-
     // Execute and send the request POST to create the resource
     // Will be executed when all promises have been delivered
     // @ts-ignore
@@ -313,11 +329,27 @@ export class ProjectEditorComponent {
       reader.onload = () => {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
         //Todo crééer les markers
+
+        var srcImage = `markers_${this.resourceSelected?.name}`;
+
+        //run NFT-Marker-Creator with path of the image in parameter
+        runAPI(`markers_${this.resourceSelected?.id}`);
+
+        //The 3 local output files are located in the "output" folder of the NFT-Marker-Creator folder
+        var srcOutput = "../../../assets/NFT-Marker-Creator/output/";
+        var imgIset = srcOutput+srcImage+".iset";
+        var imgFset = srcOutput+srcImage+".fset";
+        var imgFset3 = srcOutput+srcImage+".fset3";
+
         let bodyMarkers: { [key: string]: any } = {};
         bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
-        bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-        bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-        bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+        bodyMarkers["marker1"] = imgIset;
+        bodyMarkers["marker2"] = imgFset;
+        bodyMarkers["marker3"] = imgFset3;
+
+        //bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+        //bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+        //bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
         this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`, {
           "name": `thumbnail_${this.resourceSelected?.id}`,
@@ -336,6 +368,11 @@ export class ProjectEditorComponent {
           if (this.showResponses) console.log(res);
         });
 
+        //Delete the 3 local output files
+        var fs = require('fs');
+        fs.unlinkSync(imgIset);
+        fs.unlinkSync(imgFset);
+        fs.unlinkSync(imgFset3);
       };
     }
 
