@@ -1,10 +1,10 @@
 spring:
-
   security:
     oauth2:
+
       resourceserver:
         jwt:
-          issuer-uri: http://auth-server:9001
+          issuer-uri: http://127.0.0.1:8080/
 
   datasource:
     url: jdbc:postgresql://localhost:5432/makizapp
@@ -12,7 +12,7 @@ spring:
     password: password
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

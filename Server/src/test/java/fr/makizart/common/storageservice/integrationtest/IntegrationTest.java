@@ -81,10 +81,7 @@ class IntegrationTest {
             projects[i] = projectRepository.save(projects[i]);
         }
 
-        var page = simpleStorageService.getProjects(0,1);
-        Assertions.assertEquals(page.getSize(),1);
-        Assertions.assertArrayEquals(new Object[]{Arrays.stream(projects).toArray()[0]},page.getContent().toArray());
-
-
+        var page = simpleStorageService.getProjects(0,10);
+        Assertions.assertArrayEquals(projects,page.getContent().toArray());
     }
 }
