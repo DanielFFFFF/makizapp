@@ -242,9 +242,9 @@ export class ProjectEditorComponent {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
           //TODO a retirer !!!! et faire la création de marker
-          //body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          //body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          //body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
 
 
@@ -346,6 +346,7 @@ export class ProjectEditorComponent {
         bodyMarkers["marker1"] = imgIset;
         bodyMarkers["marker2"] = imgFset;
         bodyMarkers["marker3"] = imgFset3;
+
 
         //bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
         //bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
