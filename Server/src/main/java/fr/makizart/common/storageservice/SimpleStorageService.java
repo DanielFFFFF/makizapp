@@ -26,16 +26,16 @@ import java.util.regex.Pattern;
 @Transactional
 public class SimpleStorageService implements StorageService {
 
-	public final ProjectRepository projectRepository;
+	private final ProjectRepository projectRepository;
 
-	public final ArResourceAssetRepository arResourceRepository;
+	private final ArResourceAssetRepository arResourceRepository;
 
-	public final ImageAssetRepository imageAssetRepository;
+	private final ImageAssetRepository imageAssetRepository;
 
-	public final VideoAssetRepository videoAssetRepository;
-	public final SoundAssetReposetory soundAssetReposetory;
+	private final VideoAssetRepository videoAssetRepository;
+	private final SoundAssetReposetory soundAssetReposetory;
 
-	public final MarkerAssetRepository markerAssetRepository;
+	private final MarkerAssetRepository markerAssetRepository;
 
 
 	final Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
@@ -87,22 +87,30 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
+	public String getVideoURL(Long id) {
+		return videoAssetRepository.getReferenceById(id).getVideoURL().toString();
+	}
+
+	@Override
 	@Transactional
 	public void overrideThumbnail(String resourceId, String name, String thumbnail) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
 		try {
-			ImageAsset image = new ImageAsset();
-			imageAssetRepository.save(image);//id created
-			Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(thumbnail));
-			image.setPathToRessource(path.toUri());
-			resource.setThumbnail(image);
-			arResourceRepository.save(resource);
+			saveImage(thumbnail, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create thumbnail");
 		}
 	}
 
+	private void saveImage(String thumbnail, ArResource resource) throws IOException {
+		ImageAsset image = new ImageAsset();
+		imageAssetRepository.save(image);//id created
+		Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(thumbnail));
+		image.setPathToRessource(path.toUri());
+		resource.setThumbnail(image);
+		arResourceRepository.save(resource);
+	}
 
 
 	@Override
@@ -272,12 +280,7 @@ public class SimpleStorageService implements StorageService {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
 		try {
-			ImageAsset img = new ImageAsset();
-			imageAssetRepository.save(img);//id created
-			Path path = FileSystemManager.writeImage(img.getId().toString(), Base64.getDecoder().decode(image));
-			img.setPathToRessource(path.toUri());
-			resource.setThumbnail(img);
-			arResourceRepository.save(resource);
+			saveImage(image, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create image");
 		}

@@ -516,6 +516,19 @@ paths:
                     type: integer
                   total:
                     type: integer
+  /public/video/:
+    get:
+      summary: Get video url stored in db
+      parameters:
+        - name: video_id
+          in: path
+          description: ID of the video to be accessed
+          required: true
+      responses:
+        200:
+          description: Video url as a string
+          content:
+            String:
 
 components:
   schemas:

@@ -28,8 +28,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": ["src/assets/NFT-Marker-Creator/app.js",
-              "node_modules/aframe/dist/aframe-master.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -88,8 +87,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": ["src/assets/NFT-Marker-Creator/app.js",
-              "node_modules/aframe/dist/aframe-master.js"],
+            "scripts": [
+              {
+                "input": "lib/aframe-ar-nft.js",
+                "inject": false,
+                "bundleName": "arjs"
+              }],
             "karmaConfig": "karma.conf.js"
           }
         }

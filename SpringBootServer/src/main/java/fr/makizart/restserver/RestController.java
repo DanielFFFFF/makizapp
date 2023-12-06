@@ -80,6 +80,8 @@ public class RestController {
         return ResponseEntity.ok("Markers uploaded successfully.");
     }
 
+
+
     @PutMapping("/admin/projects/resources/{resource_id}/sound/")
     @CrossOrigin(origins = urlsSource)
     public ResponseEntity<String> uploadSound(
@@ -177,6 +179,13 @@ public class RestController {
     @CrossOrigin(origins = urlsSource)
     public StorageInformationDTO getStorageInformation() throws IOException {
         return storageService.getStorageInformation();
+    }
+
+    @GetMapping("/public/video/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin(origins = urlsSource)
+    public ResponseEntity<String> getStorageInformation(@PathVariable Long id) throws IOException {
+        return new ResponseEntity<>(storageService.getVideoURL(id), HttpStatus.OK);
     }
 
 /*

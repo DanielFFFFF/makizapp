@@ -62,6 +62,13 @@ public interface StorageService  {
 	StorageInformationDTO getStorageInformation() throws IOException;
 
 	/**
+	 * Return a video stored in database by its id
+	 * @param id the id of the video
+	 * @return The video url
+	 */
+	String getVideoURL(Long id);
+
+	/**
 	 * Uploads markers for a resource.
 	 *
 	 * @param resourceId  The ID of the resource, a long int encoded as a string.
