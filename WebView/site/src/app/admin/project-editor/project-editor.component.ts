@@ -261,12 +261,6 @@ export class ProjectEditorComponent {
           body["marker2"] = imgFset;
           body["marker3"] = imgFset3;
 
-          //Delete the 3 local output files
-          var fs = require('fs');
-          fs.unlinkSync(imgIset);
-          fs.unlinkSync(imgFset);
-          fs.unlinkSync(imgFset3);
-
           resolve(true);
         };
       });
@@ -369,11 +363,6 @@ export class ProjectEditorComponent {
           if (this.showResponses) console.log(res);
         });
 
-        //Delete the 3 local output files
-        var fs = require('fs');
-        fs.unlinkSync(imgIset);
-        fs.unlinkSync(imgFset);
-        fs.unlinkSync(imgFset3);
       };
     }
 
