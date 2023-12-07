@@ -32,14 +32,14 @@ public class RestController {
 
     //POST------
     @PostMapping("/admin/projects/create/project/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<IdDTO> createProject(
             @RequestBody ProjectDTO project) throws NameAlreadyBoundException {
         return new ResponseEntity<>(storageService.createProject(project.name()), HttpStatus.CREATED);
     }
 
     @PostMapping("/admin/projects/{project_id}/create/resource/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<ArResourceDTO> createResource(
             @PathVariable String project_id,
             @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException {
@@ -49,7 +49,7 @@ public class RestController {
     //PUT--------
 
     @PutMapping("/admin/projects/resources/{resource_id}/image/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> uploadImage(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -58,7 +58,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/thumbnail/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> uploadThumbnail(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -67,7 +67,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/markers/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> uploadMarkers(
             @PathVariable String resource_id,
             @RequestBody IncomingMarkerDTO body) throws NameAlreadyBoundException, IOException {
@@ -83,7 +83,7 @@ public class RestController {
 
 
     @PutMapping("/admin/projects/resources/{resource_id}/sound/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> uploadSound(
             @PathVariable String resource_id,
 			@RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -92,7 +92,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/video/")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> uploadVideo(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -101,7 +101,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/{project_id}/rename")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> renameProject(
             @PathVariable String project_id,
             @RequestBody RenameDTO name) {
@@ -110,7 +110,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/rename")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> renameResource(
             @PathVariable String resource_id,
             @RequestBody RenameDTO name) {
@@ -119,7 +119,7 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/medias/{media_id}/rename")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> renameMedia(
             @PathVariable String media_id,
             @RequestParam String new_name) {
@@ -130,14 +130,14 @@ public class RestController {
 
     //Delete-----------------
     @DeleteMapping("/admin/projects/{project_id}/delete")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> deleteProject(@PathVariable String project_id) {
         storageService.deleteProject(project_id);
         return ResponseEntity.ok("Delete successful.");
     }
 
     @DeleteMapping("/admin/projects/{project_id}/resources/{resource_id}/delete")
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> deleteResource(@PathVariable String project_id, @PathVariable String resource_id) {
         storageService.deleteResource(project_id, resource_id);
         return ResponseEntity.ok("Delete successful.");
@@ -148,42 +148,42 @@ public class RestController {
 
     @GetMapping("/public/projects/")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
         return storageService.getProjects(page, size);
     }
 
     @GetMapping("/public/projects/{project_id}/")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public ProjectDTO getProject(@PathVariable String project_id) {
         return storageService.getProject(project_id);
     }
 
     @GetMapping("/public/projects/{project_id}/resources/")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public List<ArResourceDTO> getResourcesInProject(@PathVariable String project_id) {
         return storageService.getResourcesInProject(project_id);
     }
 
     @GetMapping("/public/projects/resources/{resource_id}/")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public ArResourceDTO getResource(@PathVariable String resource_id) {
         return storageService.getResource(resource_id);
     }
 
     @GetMapping("/admin/storage/")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public StorageInformationDTO getStorageInformation() throws IOException {
         return storageService.getStorageInformation();
     }
 
     @GetMapping("/public/video/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = urlsSource)
+
     public ResponseEntity<String> getStorageInformation(@PathVariable Long id) throws IOException {
         return new ResponseEntity<>(storageService.getVideoURL(id), HttpStatus.OK);
     }
