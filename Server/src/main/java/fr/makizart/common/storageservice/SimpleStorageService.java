@@ -215,6 +215,12 @@ public class SimpleStorageService implements StorageService {
 			throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
 		}
 
+		Objects.requireNonNull(incomingResourceDTO.marker1(), "Maker1 must not be null");
+		Objects.requireNonNull(incomingResourceDTO.marker2(), "Maker2 must not be null");
+		Objects.requireNonNull(incomingResourceDTO.marker3(), "Maker3 must not be null");
+
+		Project project = tryGetProject(projectId);
+
 		try {
 			ImageAsset thumbnail = new ImageAsset();
 			imageAssetRepository.save(thumbnail);//id created
@@ -225,6 +231,8 @@ public class SimpleStorageService implements StorageService {
 			throw new InvalidParameterException("Can't create thumbnail");
 		}
 
+
+		//save data that must always be present
 		try {
 			ARjsMarker markers = new ARjsMarker();
 			markerAssetRepository.save(markers);
@@ -238,6 +246,7 @@ public class SimpleStorageService implements StorageService {
 			throw new InvalidParameterException("Can't create markers");
 		}
 
+		//handle case where image or sound is present
 		if(incomingResourceDTO.videoAsset() == null) {
 			try {
 				ImageAsset image = new ImageAsset();
@@ -248,16 +257,18 @@ public class SimpleStorageService implements StorageService {
 			} catch (IOException e) {
 				throw new InvalidParameterException("Can't create image");
 			}
-
-			try {
-				SoundAsset sound = new SoundAsset();
-				soundAssetReposetory.save(sound);//id created
-				Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
-				sound.setPathToRessource(path.toUri());
-				resource.setSoundAsset(sound);
-			} catch (IOException e) {
-				throw new InvalidParameterException("Can't create sound");
+			if(incomingResourceDTO.soundAsset() != null) {
+				try {
+					SoundAsset sound = new SoundAsset();
+					soundAssetReposetory.save(sound);//id created
+					Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
+					sound.setPathToRessource(path.toUri());
+					resource.setSoundAsset(sound);
+				} catch (IOException e) {
+					throw new InvalidParameterException("Can't create sound");
+				}
 			}
+		//save video
 		} else {
 			try {
 				VideoAsset video = new VideoAsset();
@@ -269,9 +280,8 @@ public class SimpleStorageService implements StorageService {
 			}
 		}
 
-		Project p = tryGetProject(projectId);
-		p.addResource(resource);
-		projectRepository.save(p);
+		project.addResource(resource);
+		projectRepository.save(project);
 		return new ArResourceDTO(resource);
 	}
 
@@ -280,6 +290,7 @@ public class SimpleStorageService implements StorageService {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
 		try {
+
 			saveImage(image, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create image");

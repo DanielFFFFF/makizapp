@@ -11,9 +11,14 @@
           <div class="mt-2 d-flex flex-column">
             <span>Nom :</span><input class="mb-2" #resourceName>
             <span>Image à capturer :</span><input class="mb-2 form-control" type="file" #resourceThumbnail>
-            <span>Vidéo (url):</span><input class="mb-2 form-control" value="https://player.vimeo.com/video/879891554?h=fba301cac0" #resourceVideo>
+            <span>fset :</span><input class="mb-2 form-control" type="file" #fset>
+            <span>fset3 :</span><input class="mb-2 form-control" type="file" #fset3>
+            <span>iset :</span><input class="mb-2 form-control" type="file" #iset>
+            <span>Vidéo (url):</span><input class="mb-2 form-control" placeholder="https://player.vimeo.com/video/879891554?h=fba301cac0" #resourceVideo>
             <span>Son :</span><input class="mb-2 form-control" type="file" #resourceSound>
+
             <span class="me-3">Image à afficher : </span><input class="mb-2 form-control" type="file" #resourceImage>
+
           </div>
           <p class="text-justify mb-2">Note : Après capture d'une image, affiche soit la vidéo (url) soit une image. Il est inutile de remplir les 2 champs.</p>
         </div>
@@ -24,7 +29,7 @@
           </button>
           <button type="button"
                   class="m-1 p-1 btn cursor-pointer user-select-none"
-                  (click)="createNewResource(resourceName,resourceThumbnail,resourceVideo,resourceSound,resourceImage)">
+                  (click)="createNewResource(resourceName,resourceThumbnail,resourceVideo,resourceSound,resourceImage,fset,fset3,iset)">
             Enregistrer
           </button>
         </div>
@@ -116,7 +121,7 @@
             <h4 class="mt-2 text-center">Image à scanner</h4>
             <div class="border colorBack square mb-3 position-relative ">
               <img class="img-fluid" src="data:image/png;base64, {{resourceSelected?.thumbnail}}">
-              <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail)"/>
+              <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail, NewThumbnail,NewThumbnail,NewThumbnail)"/>
             </div>
             <div class="d-flex justify-content-end">
               <button type="button"

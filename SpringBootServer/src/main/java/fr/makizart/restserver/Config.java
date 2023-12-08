@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("fr.makizart")
@@ -21,7 +25,7 @@ public class Config implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler(FileSystemManager.PATH);
+            registry.addResourceHandler("/**")
+                    .addResourceLocations("file:" +FileSystemManager.PATH);
     }
 }

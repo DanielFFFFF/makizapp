@@ -16,7 +16,7 @@ import java.util.Map;
 public class FileSystemManager {
 
     //private static String PATH = "/var/lib/MAKIZART/data/";
-    public static final String PATH = System.getProperty("user.home")+"/"+".makizart";
+    public static final String PATH = System.getProperty("user.home")+"/"+".makizart/resources";
 
     static {
         try {
@@ -40,11 +40,16 @@ public class FileSystemManager {
      * @throws IOException If an I/O error occurs during the file writing process.
      */
     private static Path writeFile(String id, FileType type , byte[] data) throws IOException {
-        Path filePath = Paths.get(PATH, id,".",type.name() );
+        Path filePath = Paths.get(PATH, type.name());
         // patch : added for create directory before write
-        Files.createDirectories(Paths.get(PATH,id));
-        Files.write(filePath, data);
+        Files.createDirectories(filePath);
+        Files.write(Path.of(String.valueOf(filePath),id), data);
         return filePath;
+    }
+
+    private static void deleteFile(String id, FileType type) throws IOException {
+        Path filePath = Paths.get(PATH, type.name());
+        Files.delete(Path.of(String.valueOf(filePath),id));
     }
 
     /**
@@ -101,61 +106,11 @@ public class FileSystemManager {
     }
 
     /**
-     * Reads data from a file.
-     *
-     * @param id   The id of the resource.
-     * @param type The type of the file (e.g., IMAGE, SOUND, MARKERS).
-     * @return The byte array representing the data read from the file.
-     * @throws IOException If an I/O error occurs during the file reading process.
-     */
-    private static byte[] readFile(String id, FileType type) throws IOException {
-        Path filePath = Paths.get(PATH, id + "." + type.name());
-        return Files.readAllBytes(filePath);
-    }
-
-    /**
-     * Example usage of reading an image file.
-     *
-     * @param imageName The name of the image file.
-     * @return The byte array representing the image data.
-     * @throws IOException If an I/O error occurs during the file reading process.
-     */
-    public static byte[] readImage(String imageName) throws IOException {
-        return readFile(imageName, FileType.IMAGE);
-    }
-
-    /**
-     * Example usage of reading a sound file.
-     *
-     * @param soundName The name of the sound file.
-     * @return The byte array representing the sound data.
-     * @throws IOException If an I/O error occurs during the file reading process.
-     */
-    public static byte[] readSound(String soundName) throws IOException {
-        return readFile(soundName, FileType.SOUND);
-    }
-
-    /**
-     * Example usage of reading a generic file with random byte sequence.
-     *
-     * @param fileName The name of the generic file.
-     * @return The byte array representing the file data.
-     * @throws IOException If an I/O error occurs during the file reading process.
-     */
-    public static byte[] readGenericMarkers(String fileName) throws IOException {
-        return readFile(fileName, FileType.MARKERS);
-    }
-
-    /**
      * Deletes a file.
      *
      * @param id The id of the saved resource.
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
-    private static void deleteFile(String id, FileType type) throws IOException {
-        Path filePath = Paths.get(PATH, id + "." + type.name());
-        Files.delete(filePath);
-    }
 
     /**
      * Example usage of deleting an image file.

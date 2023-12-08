@@ -1,7 +1,9 @@
 package fr.makizart.common.storageservice.dto;
 
 import fr.makizart.common.database.table.ArResource;
+import jakarta.persistence.Embeddable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record ArResourceDTO(
@@ -28,4 +30,6 @@ public record ArResourceDTO(
                 arResource.getSoundAsset() != null ? arResource.getSoundAsset().getId() : null
         );
     }
+
+
 }

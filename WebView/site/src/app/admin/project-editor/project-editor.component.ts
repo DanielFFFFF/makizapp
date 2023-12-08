@@ -130,10 +130,8 @@ export class ProjectEditorComponent {
    * Update the list of resources in the project.
    */
   updateProjectSelected() {
-    this.resources = [];
 
-
-    this.http.get<any>(this.SERVER_PATH + `/public/projects/${this.project.getId()}/resources/`).pipe(map((value: Resource[]) => {
+    this.http.get<any>(`${this.SERVER_PATH}/public/projects/${this.project.getId()}/resources/`).pipe(map((value: Resource[]) => {
       return value
     })).subscribe((res: Resource[]) => {
       if (this.showResponses) console.log("/public/projects/resources/${id}/");
@@ -143,10 +141,10 @@ export class ProjectEditorComponent {
 
       this.resources.map(resource => {
         // For each resource, we send a request to the server to get the thumbnail
-        this.http.get<any>(this.SERVER_PATH + `/path/to/server/static/to/get/thumbnail/`).pipe(map((value: any) => {
+        this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.thumbnailId}`).pipe(map((value: any) => {
           return value
         })).subscribe((res) => {
-          if (this.showResponses) console.log("/path/to/server/static/to/get/thumbnail/");
+          if (this.showResponses) console.log(this.SERVER_PATH + `resources/IMAGE/${resource.thumbnailId}`);
           if (this.showResponses) console.log(res);
           //Update the list
           //TODO : Replace filterList call with update resource if it is in filterList
@@ -154,26 +152,6 @@ export class ProjectEditorComponent {
         });
       });
     });
-    /*
-      this.project.getArResource().map(id =>{
-          // For each id, we send a request to the server
-          this.http.get<any>(this.SERVER_PATH + `/public/projects/resources/${id}/`).pipe(map((value: any) => {
-              return value
-          })).subscribe((res: StorageInformations) => {
-              if (this.showResponses) console.log("/public/projects/resources/${id}/");
-              if (this.showResponses) console.log(res);
-          });
-      });
-
-     */
-
-
-    /*
-    for (let i = 0; i < this.project.id; i++) {
-      const resource = new Resource(1, "toto", `Entité ${i}`, "https://cdn.pixabay.com/photo/2023/10/14/23/27/airplane-8315886_1280.jpg", Math.trunc(Math.random() * 100), "https://player.vimeo.com/video/879891554?h=fba301cac0", Math.trunc(Math.random() * 100), null, Math.trunc(Math.random() * 100), "https://lasonotheque.org/UPLOAD/mp3/0001.mp3", Math.trunc(Math.random() * 100), 0, Math.trunc(Math.random() * 100), this.formatDate(new Date()));
-      this.resources.push(resource);
-    }
-     */
   }
 
   /**
@@ -212,8 +190,13 @@ export class ProjectEditorComponent {
    * @param {HTMLInputElement} video - The video element associated with the new resource.
    * @param {HTMLInputElement} sound - The sound element associated with the new resource.
    * @param {HTMLInputElement} image - The image element associated with the new resource.
+   * @param {HTMLInputElement} fset Ar js marker file
+   * @param {HTMLInputElement} fset3 Ar js marker file
+   * @param {HTMLInputElement} iset Ar js marker file
    */
-  createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement, video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
+  createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
+                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement,
+                    fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
     //Create the request body
     const body: { [key: string]: any } = {};
     body["name"] = name.value;
@@ -223,11 +206,19 @@ export class ProjectEditorComponent {
       return;
     }
 
+    let isImagePresent = image.files != null && image.files.length >= 0
+    let isSoundPresent  = sound.files != null && sound.files.length >= 0
+    let isVideoPresent = video.value != ""
 
-    if (video.value != "") {
+    if((isImagePresent || isSoundPresent) == (isVideoPresent)){
+      alert("Impossible d'avoir du son ou une image en meme temps qu'une video")
+    }
+
+
+    if (isVideoPresent) {
       body["videoAsset"] = video.value;
-    } else if (!image.files || image.files.length == 0 || !sound.files || sound.files.length == 0) {
-      alert("Il manque soit la vidéo soit (audio et image) !");
+    } else if (!isSoundPresent || !isImagePresent) {
+      alert("Aucun media a jouer en AR choisit");
       return;
     }
 
@@ -241,25 +232,9 @@ export class ProjectEditorComponent {
         reader.onload = () => {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
-          //TODO a retirer !!!! et faire la création de marker
-          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-
-
-
-          //run NFT-Marker-Creator with path of the image in parameter
-          runAPI(image.name);
-
-          //The 3 local output files are located in the "output" folder of the NFT-Marker-Creator folder
-          var srcOutput = "../../../assets/NFT-Marker-Creator/output/";
-          var imgIset = srcOutput+image.name+".iset";
-          var imgFset = srcOutput+image.name+".fset";
-          var imgFset3 = srcOutput+image.name+".fset3";
-
-          body["marker1"] = imgIset;
-          body["marker2"] = imgFset;
-          body["marker3"] = imgFset3;
+          body["marker1"] = fset.value;
+          body["marker2"] = fset3.value;
+          body["marker3"] = iset.value;
 
           resolve(true);
         };
@@ -316,18 +291,15 @@ export class ProjectEditorComponent {
    * Uploads a new thumbnail for the selected resource.
    * @param {HTMLInputElement} thumbnail - The thumbnail element associated with the new resource.
    */
-  uploadNewThumbnail(thumbnail: HTMLInputElement) {
+  uploadNewThumbnail(thumbnail: HTMLInputElement,  fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
     if (thumbnail.files != null) {
       const reader = new FileReader();
       reader.readAsDataURL(thumbnail.files[0]);
       reader.onload = () => {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-        //Todo crééer les markers
 
         var srcImage = `markers_${this.resourceSelected?.name}`;
 
-        //run NFT-Marker-Creator with path of the image in parameter
-        runAPI(`markers_${this.resourceSelected?.id}`);
 
         //The 3 local output files are located in the "output" folder of the NFT-Marker-Creator folder
         var srcOutput = "../../../assets/NFT-Marker-Creator/output/";
@@ -337,14 +309,10 @@ export class ProjectEditorComponent {
 
         let bodyMarkers: { [key: string]: any } = {};
         bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
-        bodyMarkers["marker1"] = imgIset;
-        bodyMarkers["marker2"] = imgFset;
-        bodyMarkers["marker3"] = imgFset3;
+        bodyMarkers["marker1"] = fset.value;
+        bodyMarkers["marker2"] = fset3.value;
+        bodyMarkers["marker3"] = iset.value;
 
-
-        //bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-        //bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-        //bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
         this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`, {
           "name": `thumbnail_${this.resourceSelected?.id}`,
@@ -428,8 +396,8 @@ export class ProjectEditorComponent {
    * Delete the project.
    */
   deleteProject() {
-    this.http.delete(this.SERVER_PATH + `/public/projects/${this.project.getId()}/delete`, {responseType: 'text'}).subscribe((res: any) => {
-      if (this.showResponses) console.log(`/public/projects/${this.project.getId()}/delete`);
+    this.http.delete(this.SERVER_PATH + `/admin/projects/${this.project.getId()}/delete`, {responseType: 'text'}).subscribe((res: any) => {
+      if (this.showResponses) console.log(`/admin/projects/${this.project.getId()}/delete`);
       if (this.showResponses) console.log(res);
       this.updator.refresh();
       //Set the default project to indicate (select a project)
@@ -443,8 +411,8 @@ export class ProjectEditorComponent {
    * Rename the project.
    */
   renameProject(newName: string) {
-    this.http.put(this.SERVER_PATH + `/public/projects/${this.project.getId()}/rename`, {'new_name': newName}, {responseType: 'text'}).subscribe((res: any) => {
-      if (this.showResponses) console.log(`/public/projects/${this.project.getId()}/rename`);
+    this.http.put(this.SERVER_PATH + `/admin/projects/${this.project.getId()}/rename`, {'new_name': newName}, {responseType: 'text'}).subscribe((res: any) => {
+      if (this.showResponses) console.log(`/admin/projects/${this.project.getId()}/rename`);
       if (this.showResponses) console.log(res);
       this.project.setName(newName);
       this.updator.refresh();
@@ -462,7 +430,7 @@ export class ProjectEditorComponent {
     //Select the resource
     this.resourceSelected = resource;
     //Get the data of the resource (video or (image an sound))
-    this.getContentOfResource();
+    this.getContentOfResource(resource);
     this.showEditResource()
   }
 
@@ -529,8 +497,8 @@ export class ProjectEditorComponent {
    */
   deleteResource() {
     if (this.resourceSelected != null) {
-      this.http.delete(this.SERVER_PATH + `/public/projects/${this.project.getId()}/resources/${this.resourceSelected.id}/delete`, {responseType: 'text'}).subscribe((res: any) => {
-        if (this.showResponses) console.log(`/public/projects/${this.project.getId()}/resources/${this.resourceSelected?.id}/delete`);
+      this.http.delete(this.SERVER_PATH + `/admin/projects/${this.project.getId()}/resources/${this.resourceSelected.id}/delete`, {responseType: 'text'}).subscribe((res: any) => {
+        if (this.showResponses) console.log(`/admin/projects/${this.project.getId()}/resources/${this.resourceSelected?.id}/delete`);
         if (this.showResponses) console.log(res);
         this.resources = this.resources.filter(resource => resource.id !== this.resourceSelected?.id);
         this.filterList();
@@ -544,8 +512,8 @@ export class ProjectEditorComponent {
    * Used to rename a resource.
    */
   renameResource() {
-    this.http.put(this.SERVER_PATH + `/public/projects/resources/${this.resourceSelected?.id}/rename`, {'new_name': this.newName}, {responseType: 'text'}).subscribe((res: any) => {
-      if (this.showResponses) console.log(`/public/projects/resources/${this.resourceSelected?.id}/rename`);
+    this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/rename`, {'new_name': this.newName}, {responseType: 'text'}).subscribe((res: any) => {
+      if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/rename`);
       if (this.showResponses) console.log(res);
       // @ts-ignore
       this.resourceSelected.name = this.newName;
@@ -571,33 +539,24 @@ export class ProjectEditorComponent {
    * Method used to obtain all the content of the selected resource to be able to edit it.
    * Recovery of image, sound or video.
    */
-  getContentOfResource() {
-    this.http.get<any>(this.SERVER_PATH + `/path/to/server/static/to/get/video/`).pipe(map((value: any) => {
-      return value
-    })).subscribe((res) => {
-      if (this.showResponses) console.log("/path/to/server/static/to/get/video/");
-      if (this.showResponses) console.log(res);
-      //this.resourceSelected?.videoAsset = res.value;
-      if (this.resourceSelected?.videoAsset != null) {
-        //If it is not null then there is no image and sound
-        return;
-      }
-    });
+  getContentOfResource(resource:Resource) {
 
-    this.http.get<any>(this.SERVER_PATH + `/path/to/server/static/to/get/sound/`).pipe(map((value: any) => {
-      return value
-    })).subscribe((res) => {
-      if (this.showResponses) console.log("/path/to/server/static/to/get/sound/");
-      if (this.showResponses) console.log(res);
-      //this.resourceSelected?.audioAsset = res.value;
-    });
+    if (resource.videoAssetId != null) {
+      this.http.get<any>(`/${this.SERVER_PATH}/video/${resource.videoAssetId}`).pipe(map((value: any) => {
+        return value
+      }))
+    }
 
-    this.http.get<any>(this.SERVER_PATH + `/path/to/server/static/to/get/image/`).pipe(map((value: any) => {
+    if (resource.audioAssetId != null) {
+    this.http.get<any>(`${this.SERVER_PATH}/resources/AUDIO/${resource.audioAssetId}`).pipe(map((value: any) => {
       return value
-    })).subscribe((res) => {
-      if (this.showResponses) console.log("/path/to/server/static/to/get/image/");
-      if (this.showResponses) console.log(res);
-      //this.resourceSelected?.imageAsset = res.value;
-    });
+    }))
+    }
+
+    if (resource.imageAssetId != null) {
+      this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.imageAssetId}`).pipe(map((value: any) => {
+        return value
+      }))
+    }
   }
 }
