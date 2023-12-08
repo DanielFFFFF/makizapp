@@ -1,5 +1,6 @@
 package fr.makizart.common.database.table;
 
+import fr.makizart.common.storageservice.dto.MarkerDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -94,6 +95,8 @@ public class ArResource extends DatedEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+
 
 
 }

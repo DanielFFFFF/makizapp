@@ -97,6 +97,7 @@ public class SimpleStorageService implements StorageService {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
 		try {
+			FileSystemManager.deleteImage(resource.getImageAsset().getId().toString());
 			saveImage(thumbnail, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create thumbnail");
@@ -126,11 +127,13 @@ public class SimpleStorageService implements StorageService {
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
 		try {
+			FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
 			FileSystemManager.writeGenericMarkers(new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
 		}catch (IOException e){
 			//hide error to end-user
 			throw new IOException("Write failed");
 		}
+
 
 	}
 
@@ -143,7 +146,8 @@ public class SimpleStorageService implements StorageService {
 		try {
 			SoundAsset audio = new SoundAsset();
 			soundAssetReposetory.save(audio);//id created
-			Path path = FileSystemManager.writeImage(audio.getId().toString(), Base64.getDecoder().decode(sound));
+			FileSystemManager.deleteSound(resource.getSoundAsset().getId().toString());
+			Path path = FileSystemManager.writeSound(audio.getId().toString(), Base64.getDecoder().decode(sound));
 			audio.setPathToRessource(path.toUri());
 			resource.setSoundAsset(audio);
 			arResourceRepository.save(resource);

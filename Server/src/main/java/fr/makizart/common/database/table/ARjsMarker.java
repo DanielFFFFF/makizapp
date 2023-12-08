@@ -1,7 +1,9 @@
 package fr.makizart.common.database.table;
 
+import fr.makizart.common.storageservice.dto.MarkerDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.net.URI;
@@ -17,6 +19,7 @@ public class ARjsMarker extends Media{
 	private URI marker2Path;
 	@Column(name="MARKERPATH3")
 	private URI marker3Path;
+
 
 	public URI getMarker1Path() {
 		return marker1Path;
@@ -41,4 +44,5 @@ public class ARjsMarker extends Media{
 	public void setMarker3Path(URI marker3Path) {
 		this.marker3Path = marker3Path;
 	}
+
 }

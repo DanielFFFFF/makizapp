@@ -89,7 +89,7 @@ public class FileSystemManager {
             return paths;
         }catch (IOException e){
             //try to avoid half written state
-            deleteMarker(dto);
+            deleteMarker(String.valueOf(dto.id()));
             throw e;
         }
 
@@ -99,10 +99,10 @@ public class FileSystemManager {
      * Delete a marker set
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
-    public static void deleteMarker(MarkerDTO dto) throws IOException {
-        deleteFile(dto.id() + "iset", FileType.MARKERS);
-        deleteFile(dto.id() + "fset", FileType.MARKERS);
-        deleteFile(dto.id() + "fset3", FileType.MARKERS);
+    public static void deleteMarker(String id) throws IOException {
+        deleteFile(id + "iset", FileType.MARKERS);
+        deleteFile(id+ "fset", FileType.MARKERS);
+        deleteFile(id + "fset3", FileType.MARKERS);
     }
 
     /**
