@@ -141,15 +141,20 @@ export class ProjectEditorComponent {
 
       this.resources.map(resource => {
         // For each resource, we send a request to the server to get the thumbnail
-        this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.thumbnailId}`).pipe(map((value: any) => {
-          return value
-        })).subscribe((res) => {
-          if (this.showResponses) console.log(this.SERVER_PATH + `resources/IMAGE/${resource.thumbnailId}`);
-          if (this.showResponses) console.log(res);
-          //Update the list
-          //TODO : Replace filterList call with update resource if it is in filterList
-          this.filterList();
-        });
+
+        this.http.get(`${this.SERVER_PATH}/resources/IMAGE/${resource.thumbnailId}`, {responseType: 'blob'})
+          .subscribe((res) => {
+            let reader = new FileReader();
+            reader.addEventListener("loadend", () => {
+              if (this.showResponses) console.log(this.SERVER_PATH + `resources/IMAGE/${resource.thumbnailId}`);
+              if (this.showResponses) console.log(res);
+              resource.thumbnail = (reader.result as string);
+            });
+            if (res) {
+              reader.readAsDataURL(res);
+            }
+          });
+
       });
     });
   }
@@ -206,8 +211,8 @@ export class ProjectEditorComponent {
       return;
     }
 
-    let isImagePresent = image.files != null && image.files.length >= 0
-    let isSoundPresent  = sound.files != null && sound.files.length >= 0
+    let isImagePresent = image.files != null && image.files.length > 0
+    let isSoundPresent  = sound.files != null && sound.files.length > 0
     let isVideoPresent = video.value != ""
 
     if((isImagePresent || isSoundPresent) == (isVideoPresent)){
@@ -218,9 +223,11 @@ export class ProjectEditorComponent {
     if (isVideoPresent) {
       body["videoAsset"] = video.value;
     } else if (!isSoundPresent || !isImagePresent) {
-      alert("Aucun media a jouer en AR choisit");
+      alert("Aucun media à jouer en AR choisit");
       return;
     }
+
+
 
     // Array containing promises to execute the post query only when all data has been retrieved
     let promises = [];
@@ -544,19 +551,26 @@ export class ProjectEditorComponent {
     if (resource.videoAssetId != null) {
       this.http.get<any>(`/${this.SERVER_PATH}/video/${resource.videoAssetId}`).pipe(map((value: any) => {
         return value
-      }))
+      })).subscribe((res: any) => {
+        console.log(res);
+        resource.videoAsset = res.value;
+      });
     }
 
     if (resource.audioAssetId != null) {
     this.http.get<any>(`${this.SERVER_PATH}/resources/AUDIO/${resource.audioAssetId}`).pipe(map((value: any) => {
       return value
-    }))
+    })).subscribe((res: any) => {
+
+    });
     }
 
     if (resource.imageAssetId != null) {
       this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.imageAssetId}`).pipe(map((value: any) => {
         return value
-      }))
+      })).subscribe((res: any) => {
+
+      });
     }
   }
 }

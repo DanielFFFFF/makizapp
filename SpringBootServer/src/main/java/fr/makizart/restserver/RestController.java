@@ -20,8 +20,6 @@ import java.util.NoSuchElementException;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    final String urlsSource = "http://localhost:4200";
-
 
     final SimpleStorageService storageService;
 
