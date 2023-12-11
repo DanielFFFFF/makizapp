@@ -549,12 +549,11 @@ export class ProjectEditorComponent {
   getContentOfResource(resource:Resource) {
 
     if (resource.videoAssetId != null) {
-      this.http.get<any>(`/${this.SERVER_PATH}/public/video/${resource.videoAssetId}`).pipe(map((value: any) => {
-        return value
-      })).subscribe((res: any) => {
-        console.log(res);
-        resource.videoAsset = res.value;
-      });
+      this.http.get(`${this.SERVER_PATH}/public/video/${resource.videoAssetId}`, {responseType: 'text'})
+        .subscribe((res: any) => {
+          console.log(res);
+          resource.videoAsset = res;
+        });
     }
 
     if (resource.audioAssetId != null) {
