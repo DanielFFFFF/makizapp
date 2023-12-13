@@ -35,7 +35,8 @@ public interface StorageService  {
 	 */
 	ProjectDTO getProject(String projectId) throws NoSuchElementException, InvalidParameterException;
 
-	/**
+
+    /**
 	 * Retrieves a list of resource names in a project.
 	 *
 	 * @param projectId The ID of the project.

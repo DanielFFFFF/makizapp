@@ -1,6 +1,5 @@
 package fr.makizart.common.database.table;
 
-import fr.makizart.common.storageservice.dto.MarkerDTO;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -9,7 +8,6 @@ import java.util.UUID;
 @Table(name="AR_RESOURCE")
 public class ArResource extends DatedEntity {
     @Id
-    @GeneratedValue
     private UUID id;
 
     @Column(name = "name")
@@ -48,6 +46,9 @@ public class ArResource extends DatedEntity {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public ImageAsset getImageAsset() {
         return imageAsset;

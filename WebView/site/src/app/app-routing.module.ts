@@ -1,13 +1,12 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {AdminComponent} from "./admin/admin.component";
-import {UserComponent} from "./user/user.component";
+import {ClientComponent} from "./client/client.component";
 import {authGuard} from "./Auth/auth.guard";
 
 const routes: Routes = [
-  {path: "", redirectTo: "admin", pathMatch: 'full'},
   {path: "admin", component: AdminComponent, canActivate:[authGuard]},
-  {path: "user/:name", component: UserComponent}
+  {path: ":id", component: ClientComponent}
 ];
 
 @NgModule({

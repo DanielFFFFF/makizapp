@@ -63,6 +63,8 @@ public class SimpleStorageService implements StorageService {
 		return new ProjectDTO(tryGetProject(projectId));
 	}
 
+
+
 	@Override
 	public List<ArResourceDTO> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException {
 		List<ArResourceDTO> list = new ArrayList<>();
@@ -124,7 +126,7 @@ public class SimpleStorageService implements StorageService {
 		}
 		try {
 			FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
-			FileSystemManager.writeGenericMarkers(new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
+			FileSystemManager.writeGenericMarkers(resourceId, new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
 		}catch (IOException e){
 			//hide error to end-user
 			throw new IOException("Write failed");
@@ -204,6 +206,8 @@ public class SimpleStorageService implements StorageService {
 	@Override
 	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO) throws InvalidParameterException, NameAlreadyBoundException {
 		ArResource resource = new ArResource();
+		UUID id = UUID.randomUUID();
+		resource.setId(id);
 		resource.setName(incomingResourceDTO.name());
 
 		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() == null && incomingResourceDTO.soundAsset() == null && incomingResourceDTO.videoAsset() == null;
@@ -237,7 +241,7 @@ public class SimpleStorageService implements StorageService {
 			ARjsMarker markers = new ARjsMarker();
 			markerAssetRepository.save(markers);
 			MarkerDTO markerDTO = new MarkerDTO(markers.getId(),markers.getId().toString(),incomingResourceDTO.marker1(),incomingResourceDTO.marker2(),incomingResourceDTO.marker3()); //(Long id, String name, String marker1, String marker2, String marker3)
-			Map<String,Path> paths = FileSystemManager.writeGenericMarkers(markerDTO);
+			Map<String,Path> paths = FileSystemManager.writeGenericMarkers(id.toString(), markerDTO);
 			markers.setMarker1Path(paths.get("marker1").toUri());
 			markers.setMarker2Path(paths.get("marker2").toUri());
 			markers.setMarker3Path(paths.get("marker3").toUri());
@@ -315,7 +319,7 @@ public class SimpleStorageService implements StorageService {
 
 	private Project tryGetProject(String projectId) {
 		try {
-			return projectRepository.getReferenceById(UUID.fromString(projectId));
+            return projectRepository.getReferenceById(UUID.fromString(projectId));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){

@@ -148,12 +148,12 @@ public class RestController {
         return storageService.getProjects(page, size);
     }
 
-    @GetMapping("/public/projects/{project_id}/")
+    @GetMapping("/public/projects/{project_id}")
     @ResponseStatus(HttpStatus.OK)
-
     public ProjectDTO getProject(@PathVariable String project_id) {
         return storageService.getProject(project_id);
     }
+
 
     @GetMapping("/public/projects/{project_id}/resources/")
     @ResponseStatus(HttpStatus.OK)

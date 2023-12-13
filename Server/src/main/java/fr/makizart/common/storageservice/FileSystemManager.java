@@ -4,11 +4,13 @@ import fr.makizart.common.storageservice.dto.MarkerDTO;
 import fr.makizart.common.storageservice.dto.StorageInformationDTO;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.FileStore;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,12 @@ public class FileSystemManager {
     static {
         try {
             Files.createDirectories(Paths.get(PATH));
+
+            for(FileType type : FileType.values()){
+                Path filePath = Paths.get(PATH, type.name());
+                Files.createDirectories(filePath);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,19 +43,33 @@ public class FileSystemManager {
     /**
      * Writes data to a file.
      *
-     * @param id The id of the saved resource.
+     * @param fileName The fileName of the saved resource.
      * @param data     The byte array representing the data to be written.
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    private static Path writeFile(String id, FileType type , byte[] data) throws IOException {
+    private static Path writeFile(String fileName, FileType type , byte[] data) throws IOException {
         Path filePath = Paths.get(PATH, type.name());
-        // patch : added for create directory before write
-        Files.createDirectories(filePath);
-        Files.write(Path.of(String.valueOf(filePath),id), data);
+        Files.write(Path.of(String.valueOf(filePath),fileName), data);
         return filePath;
     }
 
-    private static void deleteFile(String id, FileType type) throws IOException {
+    private static Path writeFile(String directory,String fileName, FileType type , byte[] data) throws IOException {
+        Path dirPath = Paths.get(PATH, type.name(),directory);
+        Files.createDirectories(dirPath);
+        Files.write(Path.of(String.valueOf(dirPath),fileName), data);
+        return dirPath;
+    }
+
+    private static void deleteAllFileInDir(String directory, String id, FileType type) throws IOException {
+        Path filePath = Paths.get(PATH, type.name(),directory);
+        Files.walk(filePath)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        Files.delete(filePath);
+    }
+
+    private static void deleteAllFileInDir(String id, FileType type) throws IOException {
         Path filePath = Paths.get(PATH, type.name());
         Files.delete(Path.of(String.valueOf(filePath),id));
     }
@@ -77,19 +99,21 @@ public class FileSystemManager {
     /**
      * Example usage of writing a generic file with random byte sequence.
      *
-     * @param dto the marker dto to write to disk
+     * @param resourceId
+     * @param dto        the marker dto to write to disk
      * @throws IOException If an I/O error occurs during the file writing process.
      */
-    public static Map<String,Path> writeGenericMarkers(MarkerDTO dto) throws IOException {
+    public static Map<String,Path> writeGenericMarkers(String resourceId, MarkerDTO dto) throws IOException {
         Map<String,Path> paths = new HashMap<>();
         try {
-            paths.put("marker1",writeFile(dto.id()+ ".iset", FileType.MARKERS , dto.marker1().getBytes()));
-            paths.put("marker2",writeFile(dto.id() + ".fset", FileType.MARKERS , dto.marker2().getBytes()));
-            paths.put("marker3",writeFile(dto.id() + ".fset3", FileType.MARKERS , dto.marker3().getBytes()));
+            paths.put("marker1",writeFile(  resourceId,"m.iset", FileType.MARKERS , dto.marker1().getBytes()));
+            paths.put("marker2",writeFile(resourceId,"m.fset", FileType.MARKERS , dto.marker2().getBytes()));
+            paths.put("marker3",writeFile(resourceId,"m.fset3", FileType.MARKERS , dto.marker3().getBytes()));
             return paths;
         }catch (IOException e){
-            //try to avoid half written state
-            deleteMarker(String.valueOf(dto.id()));
+            //try to avoid half written state by deleting all the markers
+
+            deleteMarker(resourceId);
             throw e;
         }
 
@@ -99,10 +123,8 @@ public class FileSystemManager {
      * Delete a marker set
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
-    public static void deleteMarker(String id) throws IOException {
-        deleteFile(id + "iset", FileType.MARKERS);
-        deleteFile(id+ "fset", FileType.MARKERS);
-        deleteFile(id + "fset3", FileType.MARKERS);
+    public static void deleteMarker(String resourceId) throws IOException {
+        deleteAllFileInDir(resourceId, FileType.MARKERS);
     }
 
     /**
@@ -119,7 +141,7 @@ public class FileSystemManager {
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
     public static void deleteImage(String imageName) throws IOException {
-        deleteFile(imageName, FileType.IMAGE);
+        deleteAllFileInDir(imageName, FileType.IMAGE);
     }
 
     /**
@@ -129,7 +151,7 @@ public class FileSystemManager {
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
     public static void deleteSound(String soundName) throws IOException {
-        deleteFile(soundName, FileType.SOUND);
+        deleteAllFileInDir(soundName, FileType.SOUND);
     }
 
 

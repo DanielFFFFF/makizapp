@@ -24,11 +24,11 @@
         </div>
         <div class="d-flex justify-content-between mt-2">
           <button type="button"
-                  class="m-1 p-1 btn cursor-pointer user-select-none material-symbols-outlined"
+                  class="m-1 p-1 btn cursor-pointer  material-symbols-outlined"
                   (click)="hideNewResource()">close
           </button>
           <button type="button"
-                  class="m-1 p-1 btn cursor-pointer user-select-none"
+                  class="m-1 p-1 btn cursor-pointer "
                   (click)="createNewResource(resourceName,resourceThumbnail,resourceVideo,resourceSound,resourceImage,fset,fset3,iset)">
             Enregistrer
           </button>
@@ -54,11 +54,11 @@
           </div>
           <div class="d-flex justify-content-between mt-2">
             <button type="button"
-                    class="m-1 p-1 btn cursor-pointer user-select-none material-symbols-outlined"
+                    class="m-1 p-1 btn cursor-pointer  material-symbols-outlined"
                     (click)="hideRenameProject()">close
             </button>
             <button type="button"
-                    class="m-1 p-1 btn cursor-pointer user-select-none"
+                    class="m-1 p-1 btn cursor-pointer "
                     (click)="renameProject(newName.value)">Enregistrer
             </button>
           </div>
@@ -72,63 +72,56 @@
 
 <!-- Editing resources. This section is only visible when the user selects an resource -->
 
-<div *ngIf="editResourceView" class="d-flex align-items-center justify-content-center popup">
-  <button type="button"
-          class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer user-select-none"
-          (click)="exitEdition()">close
-  </button>
+<div *ngIf="editResourceView" class="d-flex flex-grow-1 align-items-center justify-content-center popup flex-lg-column">
+
   <div class="d-flex">
     <div class="d-flex flex-column">
-      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Base}" (click)="ongletSelected=Onglet.Base">
-        filter_vintage
-      </div>
-      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Thumbnail}" (click)="ongletSelected=Onglet.Thumbnail">
+      <div class="material-symbols-outlined rounded-start color-component p-2 " [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Thumbnail}" (click)="ongletSelected=Onglet.Thumbnail">
         video_stable
       </div>
-      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Video}" (click)="ongletSelected=Onglet.Video">
+      <div class="material-symbols-outlined rounded-start color-component p-2 mt-1 " [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Video}" (click)="ongletSelected=Onglet.Video">
         video_file
       </div>
-      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Image}" (click)="ongletSelected=Onglet.Image">
+      <div class="material-symbols-outlined rounded-start color-component p-2 mt-1 " [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Image}" (click)="ongletSelected=Onglet.Image">
         add_photo_alternate
       </div>
-      <div type="button" class="material-symbols-outlined rounded-start color-component p-2 mt-1 user-select-none" [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Sound}" (click)="ongletSelected=Onglet.Sound">
+      <div class="material-symbols-outlined rounded-start color-component p-2 mt-1 " [ngClass]="{'colorBack-Item': ongletSelected!=Onglet.Sound}" (click)="ongletSelected=Onglet.Sound">
         audio_file
       </div>
+      <div class="material-symbols-outlined rounded-start color-component p-2 mt-1  colorRed-Item"
+           (click)="confirmDelete()">
+        <mat-icon>clear</mat-icon>
+      </div>
+
     </div>
     <div class="d-flex color-component p-2">
-      <div class="colorBack d-flex justify-content-center" style="width: 25rem; height: 25rem;">
-        <div *ngIf="ongletSelected==Onglet.Base" >
-          <div class="flex-column justify-content-center">
-            <h4 class="mt-2 text-center" contenteditable="true" style="width: 20rem;" #resourceNewName (input)="changeNewName(resourceNewName.textContent)">{{resourceSelected?.name}}</h4>
-            <div class="d-flex flex-column colorFont">
-              <h6><b>Créé le</b> : {{resourceSelected?.creationDate}}</h6>
+      <button type="button"
+              class="m-1 p-1 btn material-symbols-outlined position-absolute top-0 end-0 cursor-pointer "
+              (click)="exitEdition()">close
+      </button>
 
-              <hr class="hr mb-1 mt-1"/>
+      <div class="colorBack d-flex flex-grow-1 justify-content-center" style="width: 25rem; height: 40rem;">
 
-              <div class="d-flex justify-content-center mt-2">
-                <button type="button" class="btn " (click)="deleteResource()">
-                  Supprimer {{resourceSelected?.name}}</button>
-              </div>
-              <div class="d-flex justify-content-center mt-2">
-                <button *ngIf="newName!=''" type="button" class="btn" (click)="renameResource()">Renommer
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
         <div *ngIf="ongletSelected==Onglet.Thumbnail">
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Image à scanner</h4>
             <div class="border colorBack square mb-3 position-relative ">
               <img class="img-fluid square" src="{{resourceSelected?.thumbnail}}">
-              <input type="file" style="display: none;" #NewThumbnail (change)="uploadNewThumbnail(NewThumbnail, NewThumbnail,NewThumbnail,NewThumbnail)"/>
+
+              <div class="mt-2 d-flex flex-column">
+                <span class="d-flex">Image à capturer :</span><input class="mb-2 form-control" type="file" #newResourceThumbnail>
+                <span class="d-flex">fset :</span><input class="mb-2 form-control" type="file" #fset>
+                <span class="d-flex">fset3 :</span><input class="mb-2 form-control" type="file" #fset3>
+                <span class="d-flex">iset :</span><input class="mb-2 form-control" type="file" #iset>
+                </div>
+              <div class="d-flex">
+                <button type="button"
+                        class="m-1 p-1 btn cursor-pointer"
+                        (click)="uploadNewThumbnail(newResourceThumbnail, fset,fset3,iset)">Modifier
+                </button>
+              </div>
             </div>
-            <div class="d-flex justify-content-end">
-              <button type="button"
-                      class="m-1 p-1 btn cursor-pointer user-select-none"
-                      (click)="NewThumbnail.click()">Modifier
-              </button>
-            </div>
+
             <!--div class="d-flex flex-column justify-content-center">
               <h6 class="text-center">Markers</h6>
               <div class="progress">
@@ -138,53 +131,66 @@
 
           </div>
         </div>
+
         <div *ngIf="ongletSelected==Onglet.Video">
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Vidéo</h4>
             <div class="d-flex border colorBack square mb-1">
-              <iframe class="mw-100 mh-100" [src]="resourceSelected?.videoAsset | safe"
+              <iframe *ngIf="resourceSelected?.videoAsset != null; else novideo" class="mw-100 mh-100" [src]="resourceSelected?.videoAsset | safe"
                       allow="autoplay; fullscreen; image-in-image" allowfullscreen></iframe>
+              <ng-template #novideo>
+                <p> no video</p>
+              </ng-template>
             </div>
             <div class="d-flex border colorBack mb-3">
-              <input type="text" class="form-control form-control-custom color-component" placeholder="Url..."
+              <input type="text" class="form-control form-control-custom color-component" placeholder="Enter a new video url here"
                      value="{{resourceSelected?.videoAsset}}" #NewVideoUrl>
             </div>
             <div class="d-flex justify-content-end">
               <button type="button"
-                      class="m-1 p-1 btn cursor-pointer user-select-none"
-                      (click)="uploadNewVideo(NewVideoUrl)">Modifier
+                      class="m-1 p-1 btn cursor-pointer "
+                      (click)="uploadNewVideo(NewVideoUrl)">Edit
               </button>
             </div>
 
           </div>
         </div>
         <div *ngIf="ongletSelected==Onglet.Image">
+          <ng-template #noimage>
+            <p>No image</p>
+          </ng-template>
           <div class="flex-column justify-content-center">
-            <h4 class="mt-2 text-center">Image à afficher</h4>
+            <h4 class="mt-2 text-center">Displayed image</h4>
             <div class="border colorBack square mb-3 position-relative ">
-              <img class="img-fluid square" src="data:image/png;base64, {{resourceSelected?.imageAsset}}">
+              <img *ngIf="resourceSelected?.videoAsset != null; else noimage" class="img-fluid square" src="data:image/png;base64, {{resourceSelected?.imageAsset}}">
+
               <input type="file" style="display: none;" #NewImage (change)="uploadNewImage(NewImage)"/>
             </div>
             <div class="d-flex justify-content-end">
               <button type="button"
-                      class="m-1 p-1 btn cursor-pointer user-select-none"
-                      (click)="NewImage.click()">Modifier
+                      class="m-1 p-1 btn cursor-pointer "
+                      (click)="NewImage.click()">Edit
               </button>
             </div>
 
           </div>
         </div>
+
         <div *ngIf="ongletSelected==Onglet.Sound">
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Son</h4>
             <figure>
-              <audio controls src="{{resourceSelected?.audioAsset}}"></audio>
+              <audio *ngIf="resourceSelected?.videoAsset != null; else nosound" controls src="{{resourceSelected?.audioAsset}}"></audio>
+              <ng-template #nosound>
+                <p>No sound</p>
+              </ng-template>
             </figure>
+
             <input type="file" style="display: none;" #NewAudio (change)="uploadNewAudio(NewAudio)"/>
             <div class="d-flex justify-content-end">
               <button type="button"
-                      class="m-1 p-1 btn cursor-pointer user-select-none"
-                      (click)="NewAudio.click()">Modifier
+                      class="m-1 p-1 btn cursor-pointer "
+                      (click)="NewAudio.click()">Edit
               </button>
             </div>
           </div>
@@ -200,17 +206,17 @@
     <div class="d-flex justify-content-between col-12 me-0 ms-0 pe-2 ps-2" id="research">
       <div class="col-lg-3 col-xl-2 col-sm-6 col-md-3 mt-4 colorBack rounded">
         <div class="custom-form colorFont">
-          <span class="material-symbols-outlined ms-2">search</span>
+          <span class="material-symbols-outlined ms-2">Search</span>
           <input class="form-control form-control-custom" type="search" placeholder="Rechercher ..." (change)="filterList()"
                  (input)="filterList()" #filterResource>
         </div>
       </div>
       <div class="mt-4 colorBack rounded">
-        <div class="dropdown user-select-none cursor-pointer">
+        <div class="dropdown  cursor-pointer">
           <button type="button" class="btn material-symbols-outlined" [disabled]="project.getId() == '-1'">Settings</button>
           <div class="dropdown-content" *ngIf="project.getId() != '-1'">
-            <a (click)="showRenameProject()">Renommer</a>
-            <a (click)="deleteProject()">Supprimer</a>
+            <a (click)="showRenameProject()">Rename</a>
+            <a (click)="deleteProject()">Delete</a>
           </div>
         </div>
       </div>
@@ -223,7 +229,7 @@
         </div>
         <div class="d-flex align-items-center mt-2 mb-2">
           <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="showNewResource()"
-                  [disabled]="project.getId() == '-1'">+ Créer nouveau
+                  [disabled]="project.getId() == '-1'">+ Create new project
           </button>
         </div>
       </div>

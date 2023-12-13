@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, signal, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
 import {Resource} from "../commons/Resource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
@@ -8,15 +8,14 @@ import {HttpClient} from "@angular/common/http";
 import {Created_id} from "../commons/Created_id";
 import {AppConfigService} from "../../config/app.config.service";
 
-
 /**
  * @enum Onglet
  * Enumeration representing the list of tabs for modifying a resource.
  */
 enum Onglet {
-  Base, Thumbnail, Video, Sound, Image,
+  Thumbnail, Video, Sound, Image,
 }
-declare function runAPI(jpg: string): void;
+
 @Component({
   selector: 'project-editor',
   templateUrl: './project-editor.component.html',
@@ -90,7 +89,7 @@ export class ProjectEditorComponent {
   /**
    * @property {Onglet} ongletSelected - The selected tab.
    */
-  ongletSelected: Onglet = Onglet.Base;
+  ongletSelected: Onglet = Onglet.Thumbnail;
 
   /**
    * @property {Onglet} Onglet - Variable containing the enumeration. This allows it to be used within the class.
@@ -102,6 +101,12 @@ export class ProjectEditorComponent {
    * @private
    */
   newName: string = "";
+
+  confirmDelete(): void {
+    if(confirm("Are you sure wo want to delete this resource?")) {
+      this.deleteResource()
+    }
+  }
 
 
   constructor(private projectSelected: ProjectSelectorService, private updator: UpdatorService, private http: HttpClient, private config: AppConfigService) {
@@ -306,13 +311,6 @@ export class ProjectEditorComponent {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
         var srcImage = `markers_${this.resourceSelected?.name}`;
-
-
-        //The 3 local output files are located in the "output" folder of the NFT-Marker-Creator folder
-        var srcOutput = "../../../assets/NFT-Marker-Creator/output/";
-        var imgIset = srcOutput+srcImage+".iset";
-        var imgFset = srcOutput+srcImage+".fset";
-        var imgFset3 = srcOutput+srcImage+".fset3";
 
         let bodyMarkers: { [key: string]: any } = {};
         bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
@@ -559,17 +557,13 @@ export class ProjectEditorComponent {
     if (resource.audioAssetId != null) {
     this.http.get<any>(`${this.SERVER_PATH}/resources/AUDIO/${resource.audioAssetId}`).pipe(map((value: any) => {
       return value
-    })).subscribe((res: any) => {
-
-    });
+    }));
     }
 
     if (resource.imageAssetId != null) {
       this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.imageAssetId}`).pipe(map((value: any) => {
         return value
-      })).subscribe((res: any) => {
-
-      });
+      }));
     }
   }
 }

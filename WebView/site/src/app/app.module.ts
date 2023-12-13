@@ -1,4 +1,4 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -11,8 +11,9 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {AppRoutingModule} from './app-routing.module';
 import {AdminComponent} from './admin/admin.component';
-import {UserComponent} from './user/user.component';
+import {ClientComponent} from './client/client.component';
 import {RouterModule, RouterOutlet} from "@angular/router";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -23,17 +24,18 @@ import {RouterModule, RouterOutlet} from "@angular/router";
     TopBarComponent,
     SafePipe,
     AdminComponent,
-    UserComponent,
+    ClientComponent,
   ],
-  imports: [
-    BrowserModule,
-    NgbModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    RouterModule,
-    RouterOutlet,
-  ],
+    imports: [
+        BrowserModule,
+        NgbModule,
+        FormsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        RouterModule,
+        RouterOutlet,
+        MatIconModule,
+    ],
   providers: [],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
