@@ -5,16 +5,17 @@ import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record ArResourceDTO(
         String name,
-        Long id,
+        UUID id,
         LocalDateTime createdOn,
-        Long markersId,
-        Long thumbnailId,
-        Long imageAssetId,
-        Long videoAssetId,
-        Long soundAssetId
+        UUID markersId,
+        UUID thumbnailId,
+        UUID imageAssetId,
+        UUID videoAssetId,
+        UUID soundAssetId
 ) {
 
     // Copy constructor

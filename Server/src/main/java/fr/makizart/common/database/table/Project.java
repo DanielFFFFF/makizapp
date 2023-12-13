@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "PROJECT")
@@ -17,7 +18,7 @@ public class Project extends DatedEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @OneToMany(targetEntity = ArResource.class, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArResource> arResource;
@@ -41,7 +42,7 @@ public class Project extends DatedEntity {
         this.name = name;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

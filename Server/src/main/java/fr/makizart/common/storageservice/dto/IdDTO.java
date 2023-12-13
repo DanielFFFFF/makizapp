@@ -1,4 +1,6 @@
 package fr.makizart.common.storageservice.dto;
 
-public record IdDTO(String id) {
+import java.util.UUID;
+
+public record IdDTO(UUID id) {
 }

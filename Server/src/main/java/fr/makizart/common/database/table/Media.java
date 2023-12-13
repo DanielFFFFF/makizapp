@@ -2,23 +2,24 @@ package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @MappedSuperclass
 public abstract class Media extends DatedEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @Column(name = "NAME")
     protected String name;
 
 
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

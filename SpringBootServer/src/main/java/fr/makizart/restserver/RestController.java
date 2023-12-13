@@ -7,15 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -182,7 +179,7 @@ public class RestController {
     @GetMapping("/public/video/{id}")
     @ResponseStatus(HttpStatus.OK)
 
-    public ResponseEntity<String> getStorageInformation(@PathVariable Long id) throws IOException {
+    public ResponseEntity<String> getStorageInformation(@PathVariable UUID id) throws IOException {
         return new ResponseEntity<>(storageService.getVideoURL(id), HttpStatus.OK);
     }
 

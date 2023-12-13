@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VideoAssetRepository extends JpaRepository<VideoAsset, Long> {
+public interface VideoAssetRepository extends JpaRepository<VideoAsset, java.util.UUID> {
 }

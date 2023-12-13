@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public interface StorageService  {
 
@@ -66,7 +67,7 @@ public interface StorageService  {
 	 * @param id the id of the video
 	 * @return The video url
 	 */
-	String getVideoURL(Long id);
+	String getVideoURL(UUID id);
 
 	/**
 	 * Uploads markers for a resource.

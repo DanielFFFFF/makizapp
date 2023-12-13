@@ -3,12 +3,14 @@ package fr.makizart.common.database.table;
 import fr.makizart.common.storageservice.dto.MarkerDTO;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name="AR_RESOURCE")
 public class ArResource extends DatedEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @Column(name = "name")
     private String name;
@@ -42,7 +44,7 @@ public class ArResource extends DatedEntity {
     }
 
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

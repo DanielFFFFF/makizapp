@@ -11,10 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import javax.naming.NameAlreadyBoundException;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -87,7 +83,7 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public String getVideoURL(Long id) {
+	public String getVideoURL(UUID id) {
 		return videoAssetRepository.getReferenceById(id).getVideoURL().toString();
 	}
 
@@ -202,7 +198,7 @@ public class SimpleStorageService implements StorageService {
 		validateName(name);
 		Project project = new Project(name);
 		projectRepository.save(project);
-		return new IdDTO(project.getId().toString());
+		return new IdDTO(project.getId());
 	}
 
 	@Override
@@ -309,7 +305,7 @@ public class SimpleStorageService implements StorageService {
 
 	private ImageAsset tryGetImage(String imageId) {
 		try {
-			return imageAssetRepository.getReferenceById(Long.valueOf(imageId));
+			return imageAssetRepository.getReferenceById(UUID.fromString(imageId));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){
@@ -319,7 +315,7 @@ public class SimpleStorageService implements StorageService {
 
 	private Project tryGetProject(String projectId) {
 		try {
-			return projectRepository.getReferenceById(Long.valueOf(projectId));
+			return projectRepository.getReferenceById(UUID.fromString(projectId));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){
@@ -328,7 +324,7 @@ public class SimpleStorageService implements StorageService {
 	}
 	private ArResource tryGetResource(String resourceID) {
 		try {
-			return arResourceRepository.getReferenceById(Long.valueOf(resourceID));
+			return arResourceRepository.getReferenceById(UUID.fromString(resourceID));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){
@@ -337,7 +333,7 @@ public class SimpleStorageService implements StorageService {
 	}
 	private VideoAsset tryGetVideo(String resourceID) {
 		try {
-			return videoAssetRepository.getReferenceById(Long.valueOf(resourceID));
+			return videoAssetRepository.getReferenceById(UUID.fromString(resourceID));
 		}catch (NumberFormatException e){
 			throw new InvalidParameterException();
 		}catch (EntityNotFoundException e){
