@@ -162,7 +162,7 @@ public class RestController {
         return storageService.getResourcesInProject(project_id);
     }
 
-    @GetMapping("/public/projects/resources/{resource_id}/")
+    @GetMapping("/public/projects/resources/{resource_id}")
     @ResponseStatus(HttpStatus.OK)
 
     public ArResourceDTO getResource(@PathVariable String resource_id) {
