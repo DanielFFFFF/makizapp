@@ -1,0 +1,10 @@
+server:
+  ssl:
+    key-store-type: PKCS12
+    keyAlias: makizart
+    trust-store-password: makizart
+    key-store: classpath:keystore.p12
+  error:
+    include-exception: false
+    include-message: never
+    include-stacktrace: never

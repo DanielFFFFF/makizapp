@@ -26,9 +26,4 @@ spring:
 
 server:
 
-  ssl:
-    key-store-type: PKCS12
-  error:
-    include-exception: false
-    include-message: never
-    include-stacktrace: never
+
