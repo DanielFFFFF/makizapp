@@ -1,12 +1,15 @@
 
 
 spring:
+
+  profiles:
+    active: development
+
   security:
     oauth2:
-
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8080/
+          issuer-uri: http://127.0.0.1:8080/jwt
 
   datasource:
     url: jdbc:postgresql://localhost:5432/makizapp
@@ -14,9 +17,18 @@ spring:
     password: password
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     default-property-inclusion: non_null
+
+server:
+
+  ssl:
+    key-store-type: PKCS12
+  error:
+    include-exception: false
+    include-message: never
+    include-stacktrace: never
