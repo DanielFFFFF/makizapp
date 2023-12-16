@@ -151,7 +151,7 @@ export class ProjectEditorComponent {
           .subscribe((res) => {
             let reader = new FileReader();
             reader.addEventListener("loadend", () => {
-              if (this.showResponses) console.log(this.SERVER_PATH + `resources/IMAGE/${resource.thumbnailId}`);
+              if (this.showResponses) console.log(this.SERVER_PATH + `/resources/IMAGE/${resource.thumbnailId}`);
               if (this.showResponses) console.log(res);
               resource.thumbnail = (reader.result as string);
             });
@@ -545,6 +545,7 @@ export class ProjectEditorComponent {
    * Recovery of image, sound or video.
    */
   getContentOfResource(resource:Resource) {
+    console.log(resource);
 
     if (resource.videoAssetId != null) {
       this.http.get(`${this.SERVER_PATH}/public/video/${resource.videoAssetId}`, {responseType: 'text'})
@@ -554,16 +555,27 @@ export class ProjectEditorComponent {
         });
     }
 
-    if (resource.audioAssetId != null) {
-    this.http.get<any>(`${this.SERVER_PATH}/resources/AUDIO/${resource.audioAssetId}`).pipe(map((value: any) => {
-      return value
-    }));
+    if (resource.soundAssetId != null) {
+    this.http.get(`${this.SERVER_PATH}/resources/SOUND/${resource.soundAssetId}`, {responseType: 'blob'})
+      .subscribe((res) => {
+        resource.soundAsset = URL.createObjectURL(res);
+      });
     }
 
     if (resource.imageAssetId != null) {
-      this.http.get<any>(`${this.SERVER_PATH}/resources/IMAGE/${resource.imageAssetId}`).pipe(map((value: any) => {
-        return value
-      }));
+      this.http.get(`${this.SERVER_PATH}/resources/IMAGE/${resource.imageAssetId}`, {responseType: 'blob'})
+        .subscribe((res) => {
+          let reader = new FileReader();
+          reader.addEventListener("loadend", () => {
+            if (this.showResponses) console.log(this.SERVER_PATH + `/resources/IMAGE/${resource.imageAssetId}`);
+            if (this.showResponses) console.log(res);
+            resource.imageAsset = (reader.result as string);
+          });
+          if (res) {
+            reader.readAsDataURL(res);
+          }
+        });
     }
   }
+
 }

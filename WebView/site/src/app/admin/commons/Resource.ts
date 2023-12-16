@@ -47,10 +47,10 @@ export class Resource {
   public imageAssetId: string;
 
   /**
-   * @property audioAssetId
+   * @property soundAssetId
    * The audio media id of this resource.
    */
-  public audioAssetId: string;
+  public soundAssetId: string;
 
   /**
    * @property thumbnail
@@ -71,10 +71,10 @@ export class Resource {
   public imageAsset: string;
 
   /**
-   * @property audioAsset
+   * @property soundAsset
    * Represents the audio to listen to, it is in base64 form.
    */
-  public audioAsset: string;
+  public soundAsset: string;
 
   /**
    * @property thumbnail_size
@@ -105,7 +105,7 @@ export class Resource {
    * Creates a new instance of the Resource.
    */
 
-  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnailId: string, videoAssetId: string, imageAssetId: string, audioAssetId: string, thumbnail: string, videoAsset: string, imageAsset: string, audioAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
+  constructor(id: string, accessCount: number, name: string, creationDate: string, thumbnailId: string, videoAssetId: string, imageAssetId: string, soundAssetId: string, thumbnail: string, videoAsset: string, imageAsset: string, soundAsset: string, thumbnail_size: number, image_size: number, audio_size: number, markers_size: number) {
     this.id = id;
     this.accessCount = accessCount;
     this.name = name;
@@ -113,11 +113,11 @@ export class Resource {
     this.thumbnailId = thumbnailId;
     this.videoAssetId = videoAssetId;
     this.imageAssetId = imageAssetId;
-    this.audioAssetId = audioAssetId;
+    this.soundAssetId = soundAssetId;
     this.thumbnail = thumbnail;
     this.videoAsset = videoAsset;
     this.imageAsset = imageAsset;
-    this.audioAsset = audioAsset;
+    this.soundAsset = soundAsset;
     this.thumbnail_size = thumbnail_size;
     this.image_size = image_size;
     this.audio_size = audio_size;

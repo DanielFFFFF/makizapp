@@ -179,9 +179,10 @@ public class RestController {
     @GetMapping("/public/video/{id}")
     @ResponseStatus(HttpStatus.OK)
 
-    public ResponseEntity<String> getStorageInformation(@PathVariable UUID id) throws IOException {
+    public ResponseEntity<String> getVideo(@PathVariable UUID id) throws IOException {
         return new ResponseEntity<>(storageService.getVideoURL(id), HttpStatus.OK);
     }
+
 
 /*
     @ExceptionHandler(InvalidParameterException.class)
