@@ -14,6 +14,7 @@ import {AdminComponent} from './admin/admin.component';
 import {ClientComponent} from './client/client.component';
 import {RouterModule, RouterOutlet} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
+import { BaseComponent } from './Base/base.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {MatIconModule} from "@angular/material/icon";
     SafePipe,
     AdminComponent,
     ClientComponent,
+    BaseComponent,
   ],
     imports: [
         BrowserModule,

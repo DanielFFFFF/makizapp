@@ -29,7 +29,10 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/libs/aframe-master.min.js",
+              "src/libs/aframe-ar-nft.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -90,11 +93,9 @@
               "src/styles.css"
             ],
             "scripts": [
-              {
-                "input": "lib/aframe-ar-nft.js",
-                "inject": false,
-                "bundleName": "arjs"
-              }],
+              "src/libs/aframe-master.min.js",
+              "src/libs/aframe-ar-nft.js"
+            ],
             "karmaConfig": "karma.conf.js"
           }
         }
