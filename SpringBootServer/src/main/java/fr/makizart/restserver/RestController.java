@@ -155,7 +155,7 @@ public class RestController {
     }
 
 
-    @GetMapping("/public/projects/{project_id}/resources/")
+    @GetMapping("/public/projects/{project_id}/resources")
     @ResponseStatus(HttpStatus.OK)
 
     public List<ArResourceDTO> getResourcesInProject(@PathVariable String project_id) {
