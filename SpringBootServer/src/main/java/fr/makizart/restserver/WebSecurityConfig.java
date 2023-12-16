@@ -52,6 +52,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("IMAGE/**", "MARKER/**", "SOUND/**").permitAll();
                     auth.requestMatchers("/public/**").permitAll();
                     auth.requestMatchers("/admin/**").access((authentication, context) ->
                             new AuthorizationDecision(localIpMatcher.matches(context.getRequest())));

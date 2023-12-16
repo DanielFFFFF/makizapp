@@ -20,7 +20,7 @@ public class Config implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("IMAGE/**", "MARKER/**", "SOUND/**")
+            registry.addResourceHandler("/resources/**")
                     .addResourceLocations("file:" +FileSystemManager.PATH);
     }
 }
