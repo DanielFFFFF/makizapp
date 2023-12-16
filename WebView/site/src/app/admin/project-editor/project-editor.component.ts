@@ -244,10 +244,6 @@ export class ProjectEditorComponent {
         reader.onload = () => {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
-          body["marker1"] = fset.value;
-          body["marker2"] = fset3.value;
-          body["marker3"] = iset.value;
-
           resolve(true);
         };
       });
@@ -356,14 +352,6 @@ export class ProjectEditorComponent {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
         var srcImage = `markers_${this.resourceSelected?.name}`;
-
-        let bodyMarkers: { [key: string]: any } = {};
-        bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
-        bodyMarkers["marker1"] = fset.value;
-        bodyMarkers["marker2"] = fset3.value;
-        bodyMarkers["marker3"] = iset.value;
-
-
         this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`, {
           "name": `thumbnail_${this.resourceSelected?.id}`,
           "media": thumbnail_file
@@ -375,16 +363,70 @@ export class ProjectEditorComponent {
           }
 
         });
-
-        this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/markers/`, bodyMarkers, {responseType: 'text'}).subscribe((res) => {
-          if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/markers/`);
-          if (this.showResponses) console.log(res);
-        });
-
       };
     }
 
+    let promises = [];
+
+    let bodyMarkers: { [key: string]: any } = {};
+    bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
+
+    if (fset.files != null && fset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset !");
+      return;
+    }
+
+    if (fset3.files != null && fset3.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset3.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset3 !");
+      return;
+    }
+
+    if (iset.files != null && iset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(iset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker iset !");
+      return;
+    }
+
+    Promise.all(promises).then(() => {
+      // @ts-ignore
+      this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/markers/`, bodyMarkers, {responseType: 'text'}).subscribe((res) => {
+        if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/markers/`);
+        if (this.showResponses) console.log(res);
+      });
+    });
+
+
   }
+
 
   /**
    * @method uploadNewVideo(video: HTMLInputElement)
