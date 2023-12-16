@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
 import {Resource} from "../commons/Resource";
 import {AppConfigService} from "../config/app.config.service";
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user',
@@ -21,7 +22,7 @@ export class ClientComponent {
   ngOnInit() {
     this.config.getConfig().subscribe(data => {
       this.SERVER_PATH = data["SERVER_PATH"];
-      this.MARKERS = `${this.SERVER_PATH}/resource/MARKERS/`;
+      this.MARKERS = `${this.SERVER_PATH}/resources/MARKERS`;
 
 
       this.getResources();
@@ -29,13 +30,17 @@ export class ClientComponent {
 
   }
 
-  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService) {
+  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private sanitizer: DomSanitizer) {
     this.projectId = (route.snapshot.paramMap.get("projectID") as string);
     if(this.projectId == null){
       alert("Project not found")
       throw new Error("Project is is invalid")
     }
   }
+
+    sanitizeUrl(url: string) {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
 
   getResources(){
       this.http.get<any>( `${this.SERVER_PATH}/public/projects/${this.projectId}/resources`).pipe(map((value: Resource[]) => {

@@ -258,6 +258,51 @@ export class ProjectEditorComponent {
       return;
     }
 
+    if (fset.files != null && fset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset !");
+      return;
+    }
+
+    if (fset3.files != null && fset3.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset3.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset3 !");
+      return;
+    }
+
+    if (iset.files != null && iset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(iset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker iset !");
+      return;
+    }
+
     //Add to the body the image if exist (sets by the user)
     if (image.files != null && image.files.length != 0) {
       const reader = new FileReader();
