@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
-import {Resource} from "../commons/Resource";
+import {Resource} from "../../commons/Resource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
 import {UpdatorService} from "../commons/Updator.service";
 import {map} from "rxjs";
@@ -136,7 +136,7 @@ export class ProjectEditorComponent {
    */
   updateProjectSelected() {
 
-    this.http.get<any>(`${this.SERVER_PATH}/public/projects/${this.project.getId()}/resources/`).pipe(map((value: Resource[]) => {
+    this.http.get<any>(`${this.SERVER_PATH}/public/projects/${this.project.getId()}/resources`).pipe(map((value: Resource[]) => {
       return value
     })).subscribe((res: Resource[]) => {
       if (this.showResponses) console.log("/public/projects/resources/${id}/");

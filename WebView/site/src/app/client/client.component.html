@@ -31,35 +31,28 @@
   embedded
   arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
 >
-  <!-- a-nft is the anchor that defines an Image Tracking entity -->
-  <!-- on 'url' use the path to the Image Descriptors created before. -->
-  <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
-  <a-nft
+  <div *ngFor="let resource of resources">
+  <a-asset>
+    <img *ngIf="resource.imageAsset !=''" src="{{resource.imageAsset}}" id="img_{{resource.id}}"/>
+    <audio *ngIf="resource.soundAsset !=''" src="{{resource.soundAsset}}" id="snd_{{resource.id}}"></audio>
+    <video *ngIf="resource.videoAsset !=''" src="{{resource.videoAsset}}" id="video_{{resource.id}}"></video>
+  </a-asset>
+
+    <a-nft
     type="nft"
-    url="assets/1"
+    url="{{MARKERS}}{{resource.id}}/m"
     smooth="true"
     smoothCount="10"
     smoothTolerance=".01"
     smoothThreshold="5"
   >
-    <!-- as a child of the a-nft entity, you can define the content to show. here's a GLTF model entity -->
-    <a-video src="assets/asset.mp4" width="50" height="50" rotation="-90 0 0" position="75 0 -50" auto></a-video>
+      <a-entity position="0 0 0" sound="snd_{{resource.id}}">
+        <a-video *ngIf="resource.videoAsset !=''" src="#video_{{resource.id}}" width="50" height="50" rotation="-90 0 0" position="75 0 -50"></a-video>
+        <a-image src="#img_{{resource.id}}"  width="50" height="50" position="0 0 0" rotation="-90 0 0"></a-image>
+      </a-entity>
 
   </a-nft>
+  </div>
 
-  <a-nft
-    type="nft"
-    url="assets/2"
-    smooth="true"
-    smoothCount="10"
-    smoothTolerance=".01"
-    smoothThreshold="5"
-  >
-    <!-- as a child of the a-nft entity, you can define the content to show. here's a GLTF model entity -->
-    <a-video src="assets/asset.mp4" width="50" height="50" rotation="-90 0 0" position="75 0 -50"></a-video>
-
-  </a-nft>
-  <!-- static camera that moves according to the device movemenents -->
-  <a-entity camera></a-entity>
 </a-scene>
 
