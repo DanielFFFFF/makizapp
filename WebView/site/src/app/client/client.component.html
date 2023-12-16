@@ -31,28 +31,42 @@
   embedded
   arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
 >
-  <div *ngFor="let resource of resources">
+  <a-container *ngFor="let resource of resources">
   <a-asset>
-    <img *ngIf="resource.imageAsset !=''" src="{{resource.imageAsset}}" id="img_{{resource.id}}"/>
-    <audio *ngIf="resource.soundAsset !=''" src="{{resource.soundAsset}}" id="snd_{{resource.id}}"></audio>
-    <video *ngIf="resource.videoAsset !=''" src="{{resource.videoAsset}}" id="video_{{resource.id}}"></video>
+    <img *ngIf="resource.imageAsset !=undefined" src="{{resource.imageAsset}}" id="img_{{resource.id}}"/>
+    <audio *ngIf="resource.soundAsset !=undefined" src="{{resource.soundAsset}}" id="snd_{{resource.id}}"></audio>
+    <video *ngIf="resource.videoAsset !=undefined" src="{{resource.videoAsset}}" id="video_{{resource.id}}"></video>
   </a-asset>
 
     <a-nft
     type="nft"
-    url="{{MARKERS}}{{resource.id}}/m"
+    url="{{MARKERS}}/{{resource.id}}/m"
     smooth="true"
     smoothCount="10"
     smoothTolerance=".01"
     smoothThreshold="5"
   >
       <a-entity position="0 0 0" sound="snd_{{resource.id}}">
-        <a-video *ngIf="resource.videoAsset !=''" src="#video_{{resource.id}}" width="50" height="50" rotation="-90 0 0" position="75 0 -50"></a-video>
-        <a-image src="#img_{{resource.id}}"  width="50" height="50" position="0 0 0" rotation="-90 0 0"></a-image>
+        <a-video *ngIf="resource.videoAsset !=undefined" src="#video_{{resource.id}}" width="50" height="50" rotation="-90 0 0" position="75 0 -50"></a-video>
+        <a-image *ngIf="resource.imageAsset !=undefined" src="#img_{{resource.id}}"  width="50" height="50" position="0 0 0" rotation="-90 0 0"></a-image>
       </a-entity>
 
   </a-nft>
-  </div>
+  </a-container>
+
+  <a-nft
+          type="nft"
+          url="http://127.0.0.1:8080/resources/MARKERS/bd027a01-9533-42fe-97d4-686429876d98/m"
+          smooth="true"
+          smoothCount="10"
+          smoothTolerance=".01"
+          smoothThreshold="5"
+  >
+    <a-entity position="0 0 0">
+      <a-video src="assets/asset.mp4" width="50" height="50"></a-video>
+    </a-entity>
+
+  </a-nft>
 
 </a-scene>
 

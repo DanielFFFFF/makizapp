@@ -21,7 +21,7 @@ export class ClientComponent {
   ngOnInit() {
     this.config.getConfig().subscribe(data => {
       this.SERVER_PATH = data["SERVER_PATH"];
-      this.MARKERS = `${this.SERVER_PATH}/resource/MARKERS/`;
+      this.MARKERS = `${this.SERVER_PATH}/resources/MARKERS`;
 
 
       this.getResources();
