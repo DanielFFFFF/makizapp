@@ -3,6 +3,7 @@ package fr.makizart.common.storageservice;
 import fr.makizart.common.storageservice.dto.MarkerDTO;
 import fr.makizart.common.storageservice.dto.StorageInformationDTO;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +53,12 @@ public class FileSystemManager {
         return filePath;
     }
 
+    private static Path deleteFile(String fileName, FileType type) throws IOException {
+        Path filePath = Paths.get(PATH, type.name());
+        Files.delete(Path.of(String.valueOf(filePath),fileName));
+        return filePath;
+    }
+
     private static Path writeFile(String directory,String fileName, FileType type , byte[] data) throws IOException {
         Path dirPath = Paths.get(PATH, type.name(),directory);
         Files.createDirectories(dirPath);
@@ -60,18 +66,10 @@ public class FileSystemManager {
         return dirPath;
     }
 
-    private static void deleteAllFileInDir(String directory, String id, FileType type) throws IOException {
-        Path filePath = Paths.get(PATH, type.name(),directory);
-        Files.walk(filePath)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
-        Files.delete(filePath);
-    }
 
     private static void deleteAllFileInDir(String id, FileType type) throws IOException {
-        Path filePath = Paths.get(PATH, type.name());
-        Files.delete(Path.of(String.valueOf(filePath),id));
+        File dirToNuke = Paths.get(PATH, type.name()).toFile();
+        FileSystemUtils.deleteRecursively(dirToNuke);
     }
 
     /**
@@ -141,7 +139,7 @@ public class FileSystemManager {
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
     public static void deleteImage(String imageName) throws IOException {
-        deleteAllFileInDir(imageName, FileType.IMAGE);
+        deleteFile(imageName, FileType.IMAGE);
     }
 
     /**
@@ -151,7 +149,7 @@ public class FileSystemManager {
      * @throws IOException If an I/O error occurs during the file deletion process.
      */
     public static void deleteSound(String soundName) throws IOException {
-        deleteAllFileInDir(soundName, FileType.SOUND);
+        deleteFile(soundName, FileType.SOUND);
     }
 
 

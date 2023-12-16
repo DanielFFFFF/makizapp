@@ -1,3 +1,4 @@
+/*
 package fr.makizart.restserver;
 
 import com.nimbusds.jose.jwk.JWKSet;
@@ -140,3 +141,4 @@ public class WebSecurityConfig {
     }
 
 }
+*/

@@ -5,11 +5,11 @@ spring:
   profiles:
     active: development
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://127.0.0.1:8080/jwt
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://127.0.0.1:8080/jwt
 
   datasource:
     url: jdbc:postgresql://localhost:5432/makizapp

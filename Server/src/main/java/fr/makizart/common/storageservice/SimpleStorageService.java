@@ -3,7 +3,6 @@ package fr.makizart.common.storageservice;
 import fr.makizart.common.database.repositories.*;
 import fr.makizart.common.database.table.*;
 import fr.makizart.common.storageservice.dto.*;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -94,8 +93,10 @@ public class SimpleStorageService implements StorageService {
 	public void overrideThumbnail(String resourceId, String name, String thumbnail) throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
+		Objects.requireNonNull(resource.getThumbnail());
+		//Override file system content, nothing to change in db
 		try {
-			FileSystemManager.deleteImage(resource.getImageAsset().getId().toString());
+			FileSystemManager.deleteImage(resource.getThumbnail().getId().toString());
 			saveImage(thumbnail, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create thumbnail");
@@ -120,19 +121,14 @@ public class SimpleStorageService implements StorageService {
 
 		ArResource resource = tryGetResource(resourceId);
 
+		var decoder=Base64.getDecoder();
+
 		// Check 2: Do we have 3 markers and are they “marker”+{1-3}
 		if(marker1 == null || marker2 == null || marker3 == null){
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
-		try {
 			FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
 			FileSystemManager.writeGenericMarkers(resourceId, new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
-		}catch (IOException e){
-			//hide error to end-user
-			throw new IOException("Write failed");
-		}
-
-
 	}
 
 
@@ -301,48 +297,19 @@ public class SimpleStorageService implements StorageService {
 		}
 	}
 
-
 	private void validateName(String newName) {
 		if(invalidName.matcher(newName).find())
 			throw new InvalidParameterException();
 	}
 
-	private ImageAsset tryGetImage(String imageId) {
-		try {
-			return imageAssetRepository.getReferenceById(UUID.fromString(imageId));
-		}catch (NumberFormatException e){
-			throw new InvalidParameterException();
-		}catch (EntityNotFoundException e){
-			throw new NoSuchElementException();
-		}
-	}
-
 	private Project tryGetProject(String projectId) {
-		try {
-            return projectRepository.getReferenceById(UUID.fromString(projectId));
-		}catch (NumberFormatException e){
-			throw new InvalidParameterException();
-		}catch (EntityNotFoundException e){
-			throw new NoSuchElementException();
-		}
+			return projectRepository.findById(UUID.fromString(projectId)).orElseThrow();
 	}
 	private ArResource tryGetResource(String resourceID) {
-		try {
-			return arResourceRepository.getReferenceById(UUID.fromString(resourceID));
-		}catch (NumberFormatException e){
-			throw new InvalidParameterException();
-		}catch (EntityNotFoundException e){
-			throw new NoSuchElementException();
-		}
+			return arResourceRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}
 	private VideoAsset tryGetVideo(String resourceID) {
-		try {
-			return videoAssetRepository.getReferenceById(UUID.fromString(resourceID));
-		}catch (NumberFormatException e){
-			throw new InvalidParameterException();
-		}catch (EntityNotFoundException e){
-			throw new NoSuchElementException();
-		}
+			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}
 
 }
