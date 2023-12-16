@@ -211,12 +211,18 @@
                  (input)="filterList()" #filterResource>
         </div>
       </div>
+
+
       <div class="mt-4 colorBack rounded">
-        <div class="dropdown  cursor-pointer">
-          <button type="button" class="btn material-symbols-outlined" [disabled]="project.getId() == '-1'">Settings</button>
-          <div class="dropdown-content" *ngIf="project.getId() != '-1'">
-            <a (click)="showRenameProject()">Rename</a>
-            <a (click)="deleteProject()">Delete</a>
+        <div ngbDropdown class="dropdown  cursor-pointer">
+          <button ngbDropdownToggle type="button" class="btn material-symbols-outlined dropdown-toggle"
+                  id="dropdownMenuButton" data-toggle="dropdown" [disabled]="project.getId() == '-1'">Settings</button>
+          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton" *ngIf="project.getId() != '-1'">
+
+            <a ngbDropdownItem class="dropdown-item" (click)="getShareUrl()">Share project</a>
+
+            <a ngbDropdownItem class="dropdown-item" (click)="showRenameProject()">Rename</a>
+            <a ngbDropdownItem class="dropdown-item" (click)="deleteProject()">Delete</a>
           </div>
         </div>
       </div>
@@ -229,7 +235,7 @@
         </div>
         <div class="d-flex align-items-center mt-2 mb-2">
           <button type="button" class="btn px-lg-5 px-sm-4 shadow-sm" (click)="showNewResource()"
-                  [disabled]="project.getId() == '-1'">+ Create new project
+                  [disabled]="project.getId() == '-1'">+ Create new image tracking
           </button>
         </div>
       </div>

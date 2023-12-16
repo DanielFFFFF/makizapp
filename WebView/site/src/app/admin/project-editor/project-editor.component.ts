@@ -1,4 +1,4 @@
-import {Component, ElementRef, signal, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Project} from "../commons/Project";
 import {Resource} from "../commons/Resource";
 import {ProjectSelectorService} from "../commons/ProjectSelector.service";
@@ -494,6 +494,14 @@ export class ProjectEditorComponent {
    */
   hideNewResource() {
     this.newResourceView = false;
+  }
+
+  getShareUrl() : void{
+    let url = this.SERVER_PATH + `/admin/projects/${this.project.getId()}`
+    navigator.clipboard.writeText(url).then(function (){
+      alert(`Link  ${url}  has been copied to clipboard`)
+    }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
+
   }
 
   /**
