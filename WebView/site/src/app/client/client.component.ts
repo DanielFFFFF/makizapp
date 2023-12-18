@@ -15,22 +15,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 export class ClientComponent {
   SERVER_PATH: string = "";
-  MARKERS : string = "";
   resources: Resource[] = [];
   projectId : string = "";
 
   ngOnInit() {
     this.config.getConfig().subscribe(data => {
       this.SERVER_PATH = data["SERVER_PATH"];
-      this.MARKERS = `${this.SERVER_PATH}/resources/MARKERS`;
-
 
       this.getResources();
     });
 
   }
 
-  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private sanitizer: DomSanitizer) {
+  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService) {
     this.projectId = (route.snapshot.paramMap.get("projectID") as string);
     if(this.projectId == null){
       alert("Project not found")
@@ -38,9 +35,6 @@ export class ClientComponent {
     }
   }
 
-    sanitizeUrl(url: string) {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
 
   getResources(){
       this.http.get<any>( `${this.SERVER_PATH}/public/projects/${this.projectId}/resources`).pipe(map((value: Resource[]) => {
@@ -82,5 +76,9 @@ export class ClientComponent {
             }
           });
     }
+  }
+
+  toto(id : string){
+    console.log(id);
   }
 }

@@ -128,7 +128,7 @@ public class SimpleStorageService implements StorageService {
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
 			FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
-			FileSystemManager.writeGenericMarkers(resourceId, new MarkerDTO(resource.getMarkers().getId(),name,marker1,marker2,marker3));
+			FileSystemManager.writeGenericMarkers(resourceId, new MarkerDTO(resource.getId(),name,marker1,marker2,marker3));
 	}
 
 
@@ -215,9 +215,9 @@ public class SimpleStorageService implements StorageService {
 			throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
 		}
 
-		Objects.requireNonNull(incomingResourceDTO.marker1(), "Maker1 must not be null");
-		Objects.requireNonNull(incomingResourceDTO.marker2(), "Maker2 must not be null");
-		Objects.requireNonNull(incomingResourceDTO.marker3(), "Maker3 must not be null");
+		Objects.requireNonNull(incomingResourceDTO.marker1(), "Marker1 must not be null");
+		Objects.requireNonNull(incomingResourceDTO.marker2(), "Marker2 must not be null");
+		Objects.requireNonNull(incomingResourceDTO.marker3(), "Marker3 must not be null");
 
 		Project project = tryGetProject(projectId);
 

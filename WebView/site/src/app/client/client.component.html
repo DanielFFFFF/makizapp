@@ -28,32 +28,31 @@
   </a-nft>
   </a-container-->
 
-  <a-nft
+  <a-nft *ngFor="let resource of resources"
+         type="nft"
+         url="/resources/MARKERS/{{toto(resource.id)}}/m"
+         smooth="true"
+         smoothCount="10"
+         smoothTolerance=".01"
+         smoothThreshold="5">
+    <a-video vidhandler position="300 0 -90" src="{{resource.videoAsset}}" rotation="-90 0 0" width="300" height="300"></a-video>
+  </a-nft>
+
+  <!--a-nft
           type="nft"
           url="assets/1"
           smooth="true"
           smoothCount="10"
           smoothTolerance=".01"
           smoothThreshold="5"
+          videohandler
   >
+    <a-video vidhandler position="300 0 -90" src="assets/asset.mp4" rotation="-90 0 0" width="300" height="300"></a-video>
 
-    <a-entity
-      geometry="primitive: plane"
-      scale="1 1 1" position="300 0 -90" width="100%" height="100%">
-      <a-box rotation="-90 0 0" width="100%" height="100%"></a-box>
-    </a-entity>
-
-
-<!--a-entity geometry="primitive: plane"
-      scale="1 1 1" position="50% 0 0" width="100%" height="100%"
-    >
-      <a-video src="assets/asset.mp4" width="100%" height="100%"  rotation="-90 0 0">
-      </a-video>
-    </a-entity-->
-
-  </a-nft>
+  </a-nft-->
 
   <a-entity camera></a-entity>
 
 </a-scene>
+
 
