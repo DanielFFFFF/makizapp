@@ -4,7 +4,6 @@ import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
 import {Resource} from "../commons/Resource";
 import {AppConfigService} from "../config/app.config.service";
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user',
