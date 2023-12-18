@@ -1,35 +1,16 @@
-'General diagram truncated for overall visibility. For more details, see the User and admin diagrams
 @startuml
+'General diagram truncated for overall visibility. For more details, see the User and admin diagrams
+
 :User: as usr
 :Admin: as org
+:Video platform: as vim <<Vimeo>>
 
 left to right direction
 
-
-package App {
+Rectangle App {
     (Connect to webApp) as InAPP
-    (Scan QRCode) as scanQR
-    package User {
-      (Scan Picture) as scanPic
-      (Play video in repeat) as startVid
-      (Switch to fullscreen video playback) as switchMod
-      (Mute / Unmute video) as mute
-      (Stop video playback) as closeVid
-    }
-    package Admin {
-      (Create project) as createPro
-      (Delete project) as deletePro
-      (Display project list) as listPro
-      (Duplicate project) as dupePro
-      (Rename project) as renaPro
-      (Upload picture on project) as UplPic
-      (Delete picture on project) as delPic
-      (Upload video on project) as UplVid
-      (Delete video on project) as delVid
-      (Upload song on project) as UplSon
-      (Delete song on project) as DelSon
-      (Login) as Login
-    }
+    Collections User
+    Collections Admin
 }
 
 org--Admin
@@ -37,10 +18,10 @@ org--InAPP: Enter webapp URL
 
 
 usr--InAPP: Enter webapp URL
+usr--InAPP: Scan QR code
 usr--User
 
-'Includes / extends
-startVid .> scanPic: << extends >> {if tracked picture is detected}
-scanQR .> InAPP: << extends >>
+vim-up-User
 
+'Includes / extends
 @enduml
