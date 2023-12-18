@@ -1,0 +1,33 @@
+@startuml
+:Admin: as org
+
+left to right direction
+
+Rectangle "Manage media" {
+    Rectangle "Manage picture" {
+        (Upload picture on project) as UplPic
+        (Delete picture on project) as delPic
+    }
+    Rectangle "Manage video" {
+        (Upload video on project) as UplVid
+        (Delete video on project) as delVid
+    }
+    Rectangle "Manage song" {
+        (Upload song on project) as UplSon
+        (Delete song on project) as delSon
+    }
+}
+
+
+
+'Includes / extends
+
+' Liens entre l'utilisateur (org) et les cas d'utilisation dans le package Admin
+
+org--UplPic
+org--delPic
+org--UplVid
+org--delVid
+org--UplSon
+org--delSon
+@enduml
