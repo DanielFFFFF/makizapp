@@ -3,52 +3,27 @@
 
 left to right direction
 
-package App {
-    (Connect to webApp) as InAPP
-    (Scan QRCode) as scanQR
-    Rectangle "Admin" {
-      (Create project) as createPro
-      (Delete project) as deletePro
-      (Display project list) as listPro
-      (Duplicate project) as dupePro
-      (Rename project) as renaPro
-      (Login) as Login
-      (Upload picture on project) as UplPic
-      (Delete picture on project) as delPic
-      (Upload video on project) as UplVid
-      (Delete video on project) as delVid
-      (Upload song on project) as UplSon
-      (Delete song on project) as delSon
+Rectangle "Admin" {
+    (Login) as Login
+    (Display project list) as listPro
+    Rectangle "Manage project" as manageP {
+        (Create project) as createPro
+        (Delete project) as deletePro
+        (Duplicate project) as dupePro
+        (Rename project) as renaPro
+        Collections "Manage media" as manageM
     }
 }
 
 
-
 'Includes / extends
-scanQR .> InAPP: << extends >>
 
 ' Liens entre l'utilisateur (org) et les cas d'utilisation dans le package Admin
-org--InAPP: Enter webapp URL
 org--Login: Connect with google Login
+org--listPro
+org--manageP
 org--createPro
 org--deletePro
-org--listPro
 org--dupePro
-org--renaPro
-org--UplPic
-org--delPic
-org--UplVid
-org--delVid
-org--UplSon
-org--delSon
-
-Login -[hidden]- UplVid
-createPro -[hidden]- UplPic
-deletePro -[hidden]- UplSon
-
-listPro -[hidden]- delVid
-dupePro -[hidden]- delPic
-renaPro -[hidden]- delSon
-
-
+org--manageM
 @enduml
