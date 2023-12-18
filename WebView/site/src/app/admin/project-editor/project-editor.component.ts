@@ -584,7 +584,7 @@ export class ProjectEditorComponent {
   }
 
   getShareUrl() : void{
-    let url = this.SERVER_PATH + `/admin/projects/${this.project.getId()}`
+    let url = `/#/${this.project.getId()}`
     navigator.clipboard.writeText(url).then(function (){
       alert(`Link  ${url}  has been copied to clipboard`)
     }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
