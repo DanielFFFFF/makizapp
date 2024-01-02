@@ -1,0 +1,36 @@
+@startuml
+
+node Presentation {
+  component "Client Web" as web
+}
+
+node Application {
+  () "API" as api
+  
+  package Springboot{
+    component "Server" as srv
+    component "Rest Controller" as rst
+    component "Makizapp" as app
+    component "Data Access Object (jpaRepository)" as dao
+    component "Tomcat" as tc
+    component "Storage Service" as ss
+    
+    tc -- rst
+    rst -- srv
+    srv -- app
+    srv - dao
+    dao -up- ss
+
+    api -- rst
+  }
+}
+
+node Data {
+  database DataBase as db << Postgres >>
+}
+
+' Interactions
+ss <.> db
+web ..> api : use
+
+@enduml
