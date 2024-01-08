@@ -156,7 +156,7 @@
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Displayed image</h4>
             <div class="border colorBack square mb-3 position-relative ">
-              <img *ngIf="resourceSelected?.videoAsset != ''; else noimage" class="img-fluid square" src="{{resourceSelected?.imageAsset}}">
+              <img *ngIf="resourceSelected?.videoAsset == ''; else noimage" class="img-fluid square" src="{{resourceSelected?.imageAsset}}">
 
               <input type="file" style="display: none;" #NewImage (change)="uploadNewImage(NewImage)"/>
             </div>
@@ -174,7 +174,7 @@
           <div class="flex-column justify-content-center">
             <h4 class="mt-2 text-center">Son</h4>
             <figure>
-              <audio autoplay *ngIf="resourceSelected?.videoAsset != ''; else nosound" controls src="{{resourceSelected?.soundAsset}}"></audio>
+              <audio autoplay *ngIf="resourceSelected?.videoAsset == ''; else nosound" controls src="{{resourceSelected?.soundAsset}}"></audio>
               <ng-template #nosound>
                 <p>No sound</p>
               </ng-template>
