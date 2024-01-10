@@ -4,7 +4,6 @@
 left to right direction
 
 Rectangle "Admin" {
-    (Login) as Login
     (Display project list) as listPro
     Rectangle "Manage project" as manageP {
         (Create project) as createPro
@@ -19,7 +18,6 @@ Rectangle "Admin" {
 'Includes / extends
 
 ' Liens entre l'utilisateur (org) et les cas d'utilisation dans le package Admin
-org--Login: Connect with google Login
 org--listPro
 org--manageP
 org--createPro
