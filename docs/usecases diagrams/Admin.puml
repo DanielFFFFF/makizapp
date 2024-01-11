@@ -19,9 +19,9 @@ Rectangle "Admin" {
 
 ' Liens entre l'utilisateur (org) et les cas d'utilisation dans le package Admin
 org--listPro
-org--manageP
 org--createPro
 org--deletePro
 org--dupePro
+org--renaPro
 org--manageM
 @enduml
