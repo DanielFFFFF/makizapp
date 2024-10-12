@@ -1,7 +1,6 @@
 package fr.makizart.common.database.table;
 
 import jakarta.persistence.*;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
