@@ -145,6 +145,7 @@ public class RestController {
     @ResponseStatus(HttpStatus.OK)
 
     public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
+        System.out.println("get projects api");
         return storageService.getProjects(page, size);
     }
 

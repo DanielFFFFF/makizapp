@@ -1,15 +1,6 @@
-
-
 spring:
-
   profiles:
     active: development
-
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://127.0.0.1:8080/jwt
 
   datasource:
     url: jdbc:postgresql://localhost:5432/makizapp
@@ -23,4 +14,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     default-property-inclusion: non_null
+
+server:
+  address: 192.168.58.31
+  port: 8080
+  tomcat:
+    address: 0.0.0.0
+    port: 8080
 
