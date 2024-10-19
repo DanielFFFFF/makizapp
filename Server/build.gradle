@@ -36,3 +36,12 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+//Do not build a executable jar for this project as it only contain data
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
