@@ -19,7 +19,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 2. Configure the server so the api calls your machine
    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
     change the variable SERVER_PATH to the ip of your machine. 
-3. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
+3. Using intelliJ, right click on MakizappApplication and Run, it should be in the following directory:
    ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
 4. Afterwards you should be able to connect using the ip of your machine in your browser
 
