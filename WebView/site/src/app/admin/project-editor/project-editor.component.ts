@@ -583,8 +583,7 @@ export class ProjectEditorComponent {
     this.newResourceView = false;
   }
 
-  /**
-*
+
   getShareUrl() : void{
     let url = `/#/${this.project.getId()}`
     navigator.clipboard.writeText(url).then(function (){
@@ -592,11 +591,9 @@ export class ProjectEditorComponent {
     }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
 
   }
-    **/
 
-  getShareUrl() : void {
-    console.log(`/#/${this.project.getId()}`)
-  }
+
+
 
   /**
    * @method deleteResource()
