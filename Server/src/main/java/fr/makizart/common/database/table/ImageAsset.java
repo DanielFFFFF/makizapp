@@ -14,6 +14,9 @@ public class ImageAsset extends Media {
     private URI pathToRessource;
 
 
+    @Column(name = "image_data", columnDefinition="BLOB")
+    private byte[] imageData;
+
     public ImageAsset(URI pathToRessource) {
         this.pathToRessource = pathToRessource;
     }
@@ -31,4 +34,11 @@ public class ImageAsset extends Media {
     }
 
 
+    public void setData(byte[] data) {
+        this.imageData = data;
+    }
+
+    public byte[] getData() {
+        return this.imageData;
+    }
 }

@@ -51,6 +51,7 @@ public class ArResource extends DatedEntity {
     }
 
     public ImageAsset getImageAsset() {
+        System.out.println("test");
         return imageAsset;
     }
 

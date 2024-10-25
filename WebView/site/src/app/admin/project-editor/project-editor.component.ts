@@ -147,11 +147,11 @@ export class ProjectEditorComponent {
       this.resources.map(resource => {
         // For each resource, we send a request to the server to get the thumbnail
 
-        this.http.get(`${this.SERVER_PATH}/resources/IMAGE/${resource.thumbnailId}`, {responseType: 'blob'})
+        this.http.get(`${this.SERVER_PATH}/resources/IMAGE/${resource.id}`, {responseType: 'blob'})
           .subscribe((res) => {
             let reader = new FileReader();
             reader.addEventListener("loadend", () => {
-              if (this.showResponses) console.log(this.SERVER_PATH + `/resources/IMAGE/${resource.thumbnailId}`);
+              if (this.showResponses) console.log(this.SERVER_PATH + `/resources/IMAGE/${resource.id}`);
               if (this.showResponses) console.log(res);
               resource.thumbnail = (reader.result as string);
             });

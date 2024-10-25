@@ -104,11 +104,17 @@ public class SimpleStorageService implements StorageService {
 		}
 	}
 
+	@Override
+	public byte[] getThumbnail(String resourceID) {
+		ArResource resource = tryGetResource(resourceID);
+		Objects.requireNonNull(resource.getThumbnail());
+		return resource.getThumbnail().getData();
+	}
+
 	private void saveImage(String thumbnail, ArResource resource) throws IOException {
 		ImageAsset image = new ImageAsset();
 		imageAssetRepository.save(image);//id created
-		Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(thumbnail));
-		image.setPathToRessource(path.toUri());
+		image.setData(Base64.getDecoder().decode(thumbnail));
 		resource.setThumbnail(image);
 		arResourceRepository.save(resource);
 	}
@@ -201,79 +207,117 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO) throws InvalidParameterException, NameAlreadyBoundException {
+	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
+			throws InvalidParameterException, NameAlreadyBoundException {
+
+		// Create a new AR resource object*
 		ArResource resource = new ArResource();
+
+		// Generate a random UUID for the resource and set its ID
 		UUID id = UUID.randomUUID();
 		resource.setId(id);
+
+		// Set the resource's name based on the incoming DTO
 		resource.setName(incomingResourceDTO.name());
 
-		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() == null && incomingResourceDTO.soundAsset() == null && incomingResourceDTO.videoAsset() == null;
-		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null || incomingResourceDTO.soundAsset() != null) && (incomingResourceDTO.videoAsset() != null);
-		if (atLeastOneAsset){
+		// Check if there are no assets (image, sound, video); an asset must be present
+		boolean atLeastOneAsset = incomingResourceDTO.imageAsset() == null
+				&& incomingResourceDTO.soundAsset() == null
+				&& incomingResourceDTO.videoAsset() == null;
+
+		// Check if both (image or sound) and video are provided, which is invalid
+		boolean noVideoAndSoundOrImage = (incomingResourceDTO.imageAsset() != null
+				|| incomingResourceDTO.soundAsset() != null)
+				&& (incomingResourceDTO.videoAsset() != null);
+
+		// If no asset is provided, throw an exception
+		if (atLeastOneAsset) {
 			throw new IllegalStateException("Cannot create resource without asset");
 		}
+
+		// If both video and (image or sound) are present, throw an exception
 		if (noVideoAndSoundOrImage) {
 			throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
 		}
 
+		// Ensure that markers (marker1, marker2, marker3) are not null
 		Objects.requireNonNull(incomingResourceDTO.marker1(), "Marker1 must not be null");
 		Objects.requireNonNull(incomingResourceDTO.marker2(), "Marker2 must not be null");
 		Objects.requireNonNull(incomingResourceDTO.marker3(), "Marker3 must not be null");
 
+		// Retrieve the project by its ID, throwing an error if it doesn't exist
 		Project project = tryGetProject(projectId);
 
-		try {
+		// Try to save the thumbnail image asset and assign it to the resource
+
 			ImageAsset thumbnail = new ImageAsset();
-			imageAssetRepository.save(thumbnail);//id created
-			Path path = FileSystemManager.writeImage(thumbnail.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.thumbnail()));
-			thumbnail.setPathToRessource(path.toUri());
+			thumbnail.setData(Base64.getDecoder().decode(incomingResourceDTO.thumbnail()));
+			imageAssetRepository.save(thumbnail); // ID is created here
+
+
+
+			//Path path = FileSystemManager.writeImage(thumbnail.getId().toString(),
+			//		);
+
+
 			resource.setThumbnail(thumbnail);
-		}catch(IOException e){
-			throw new InvalidParameterException("Can't create thumbnail");
-		}
 
 
-		//save data that must always be present
+		// Save marker data (marker1, marker2, marker3) as part of the resource
 		try {
 			ARjsMarker markers = new ARjsMarker();
-			markerAssetRepository.save(markers);
-			MarkerDTO markerDTO = new MarkerDTO(markers.getId(),markers.getId().toString(),incomingResourceDTO.marker1(),incomingResourceDTO.marker2(),incomingResourceDTO.marker3()); //(Long id, String name, String marker1, String marker2, String marker3)
-			Map<String,Path> paths = FileSystemManager.writeGenericMarkers(id.toString(), markerDTO);
+			markerAssetRepository.save(markers); // ID is created here
+			MarkerDTO markerDTO = new MarkerDTO(
+					markers.getId(),
+					markers.getId().toString(),
+					incomingResourceDTO.marker1(),
+					incomingResourceDTO.marker2(),
+					incomingResourceDTO.marker3()
+			); // Create marker DTO with marker data
+
+			// Write markers to file system and set marker paths in the resource
+			Map<String, Path> paths = FileSystemManager.writeGenericMarkers(id.toString(), markerDTO);
 			markers.setMarker1Path(paths.get("marker1").toUri());
 			markers.setMarker2Path(paths.get("marker2").toUri());
 			markers.setMarker3Path(paths.get("marker3").toUri());
 			resource.setMarkers(markers);
-		}catch(IOException e){
+		} catch(IOException e) {
 			throw new InvalidParameterException("Can't create markers");
 		}
 
-		//handle case where image or sound is present
-		if(incomingResourceDTO.videoAsset() == null) {
+		// If no video asset is present, handle image and/or sound assets
+		if (incomingResourceDTO.videoAsset() == null) {
+			// Try to save the image asset and assign it to the resource
 			try {
 				ImageAsset image = new ImageAsset();
-				imageAssetRepository.save(image);//id created
-				Path path = FileSystemManager.writeImage(image.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.imageAsset()));
+				imageAssetRepository.save(image); // ID is created here
+				Path path = FileSystemManager.writeImage(image.getId().toString(),
+						Base64.getDecoder().decode(incomingResourceDTO.imageAsset()));
 				image.setPathToRessource(path.toUri());
 				resource.setImageAsset(image);
 			} catch (IOException e) {
 				throw new InvalidParameterException("Can't create image");
 			}
-			if(incomingResourceDTO.soundAsset() != null) {
+
+			// If a sound asset is present, save and assign it to the resource
+			if (incomingResourceDTO.soundAsset() != null) {
 				try {
 					SoundAsset sound = new SoundAsset();
-					soundAssetReposetory.save(sound);//id created
-					Path path = FileSystemManager.writeSound(sound.getId().toString(), Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
+					soundAssetReposetory.save(sound); // ID is created here
+					Path path = FileSystemManager.writeSound(sound.getId().toString(),
+							Base64.getDecoder().decode(incomingResourceDTO.soundAsset()));
 					sound.setPathToRessource(path.toUri());
 					resource.setSoundAsset(sound);
 				} catch (IOException e) {
 					throw new InvalidParameterException("Can't create sound");
 				}
 			}
-		//save video
-		} else {
+		}
+		// If a video asset is present, save it and assign it to the resource
+		else {
 			try {
 				VideoAsset video = new VideoAsset();
-				videoAssetRepository.save(video);//id created
+				videoAssetRepository.save(video); // ID is created here
 				video.setVideoURL(URI.create(incomingResourceDTO.videoAsset()).toURL());
 				resource.setVideoAsset(video);
 			} catch (IOException e) {
@@ -281,8 +325,11 @@ public class SimpleStorageService implements StorageService {
 			}
 		}
 
+		// Add the created resource to the project and save the project
 		project.addResource(resource);
 		projectRepository.save(project);
+
+		// Return the created resource as a DTO
 		return new ArResourceDTO(resource);
 	}
 
@@ -307,8 +354,11 @@ public class SimpleStorageService implements StorageService {
 			return projectRepository.findById(UUID.fromString(projectId)).orElseThrow();
 	}
 	private ArResource tryGetResource(String resourceID) {
-			return arResourceRepository.findById(UUID.fromString(resourceID)).orElseThrow();
+		return arResourceRepository.findById(UUID.fromString(resourceID)).orElseThrow();
+
+
 	}
+
 	private VideoAsset tryGetVideo(String resourceID) {
 			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}

@@ -205,4 +205,5 @@ public interface StorageService  {
 			throws InvalidParameterException, NoSuchElementException, IOException, NameAlreadyBoundException;
 
 
+    byte[] getThumbnail(String resourceID);
 }
