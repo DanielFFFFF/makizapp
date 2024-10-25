@@ -184,6 +184,14 @@ public class RestController {
         return new ResponseEntity<>(storageService.getVideoURL(id), HttpStatus.OK);
     }
 
+    @GetMapping("/resources/IMAGE/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
+        byte[] image = storageService.getThumbnail(id); // Assume this method fetches the image bytes
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
+                .body(image);
+    }
+
 
 /*
     @ExceptionHandler(InvalidParameterException.class)
