@@ -206,4 +206,13 @@ public interface StorageService  {
 
 
     byte[] getThumbnail(String resourceID);
+
+
+	byte[] getMarker1(String id);
+
+	byte[] getMarker2(String id);
+
+	byte[] getMarker3(String id);
+
 }
+

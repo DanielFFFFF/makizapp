@@ -193,6 +193,31 @@ public class RestController {
     }
 
 
+    @GetMapping("/resources/MARKER1/{id}")
+    public ResponseEntity<byte[]> getMarker1(@PathVariable String id) throws IOException {
+        byte[] image = storageService.getMarker1(id); // Assume this method fetches the image bytes
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
+                .body(image);
+    }
+
+    @GetMapping("/resources/MARKER2/{id}")
+    public ResponseEntity<byte[]> getMarker2(@PathVariable String id) throws IOException {
+        byte[] image = storageService.getMarker2(id); // Assume this method fetches the image bytes
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
+                .body(image);
+    }
+
+    @GetMapping("/resources/MARKER3/{id}")
+    public ResponseEntity<byte[]> getMarker3(@PathVariable String id) throws IOException {
+        byte[] image = storageService.getMarker3(id); // Assume this method fetches the image bytes
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
+                .body(image);
+    }
+
+
 /*
     @ExceptionHandler(InvalidParameterException.class)
     public ResponseEntity<?> handleFileNotFound(NoSuchElementException exc) {

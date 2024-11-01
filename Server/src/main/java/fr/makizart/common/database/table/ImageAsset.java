@@ -14,7 +14,7 @@ public class ImageAsset extends Media {
     private URI pathToRessource;
 
 
-    @Column(name = "image_data", columnDefinition="BLOB")
+    @Column(name = "image_data", columnDefinition="BYTEA")
     private byte[] imageData;
 
     public ImageAsset(URI pathToRessource) {
