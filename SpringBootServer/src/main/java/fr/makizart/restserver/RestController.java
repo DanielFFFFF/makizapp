@@ -13,6 +13,8 @@ import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -217,6 +219,45 @@ public class RestController {
                 .body(image);
     }
 
+    @GetMapping("/run-docker")
+    public String runDockerContainer() {
+        System.out.println("Starting /run-docker endpoint");
+        System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
+
+        try {
+            // Prepare the Docker command
+            String[] command = {"docker", "run", "--rm",
+                    "-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
+                    "marker-creator-app"
+            };
+            
+
+
+            // Run the Docker container
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            processBuilder.redirectErrorStream(true); // Combine stdout and stderr
+            Process process = processBuilder.start();
+
+            System.out.println("Docker command started");
+
+            // Capture the output
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+                System.out.println("Docker output: " + line);
+            }
+
+            process.waitFor();
+            System.out.println("Docker command completed");
+            return output.toString();
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+            return "Failed to run Docker container: " + e.getMessage();
+        }
+    }
 
 /*
     @ExceptionHandler(InvalidParameterException.class)
