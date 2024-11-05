@@ -583,17 +583,65 @@ export class ProjectEditorComponent {
     this.newResourceView = false;
   }
 
+  /**
+   * @method getShareUrl
+   * Generates a shareable URL and attempts to copy it to the clipboard.
+   */
+  getShareUrl(): void {
+      let url = `/#/${this.project.getId()}`;
 
-  getShareUrl() : void{
-    let url = `/#/${this.project.getId()}`
-    navigator.clipboard.writeText(url).then(function (){
-      alert(`Link  ${url}  has been copied to clipboard`)
-    }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
-
+      // Check if the clipboard API is available
+      if (navigator.clipboard) {
+          // Check clipboard permission
+          navigator.permissions.query({ name: 'clipboard-write' })
+              .then(permissionStatus => {
+                  if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
+                      navigator.clipboard.writeText(url)
+                          .then(() => {
+                              alert(`Link ${url} has been copied to clipboard`);
+                          })
+                          .catch((e) => {
+                              console.error(e); // Log the error for debugging
+                              alert(`Cannot copy to clipboard. Share link is ${url}`);
+                          });
+                  } else {
+                      alert(`Clipboard permission denied. Cannot copy the link.`);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Permission query failed:', error);
+                  alert(`Cannot check clipboard permission. Share link is ${url}`);
+              });
+      } else {
+          // Fallback for browsers that do not support navigator.clipboard
+          this.fallbackCopyToClipboard(url);
+      }
   }
 
+  /**
+   * @method fallbackCopyToClipboard
+   * Copies the given text to the clipboard using a fallback method for unsupported browsers.
+   * @param {string} text - The text to copy to the clipboard.
+   */
+  fallbackCopyToClipboard(text: string) {
+      // Create a temporary textarea element
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
 
+      try {
+          const successful = document.execCommand('copy');
+          const msg = successful ? 'successful' : 'unsuccessful';
+          alert(`Fallback: Link ${text} has been copied to clipboard (copy command was ${msg}).`);
+      } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+          alert(`Cannot copy to clipboard. Share link is ${text}`);
+      }
 
+      // Clean up
+      document.body.removeChild(textarea);
+  }
 
   /**
    * @method deleteResource()
