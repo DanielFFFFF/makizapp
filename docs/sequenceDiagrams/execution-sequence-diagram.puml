@@ -1,0 +1,59 @@
+@startuml
+title Project execution sequence diagram
+
+actor "User" as U
+participant "System" as S
+
+== Running the database ==
+
+U -> S : Executing the docker-compose.yml file
+note right of U : Command : docker compose up
+activate S
+S -> S : Create and run a container which runs a postgres database
+deactivate S
+
+== Running the SpringBoot server ==
+
+U -> S : Change the variable SERVER_PATH to the ip of your machine in app.config.json
+note right of U : Path : SpringBootServer/src/main/resources/static/assets/app.config.json
+activate S
+S -> S : Save changes
+deactivate S
+
+U -> S : Change the IP in the application.yml file in the static server folder of the Springboot application
+activate S
+S -> S : Save changes
+deactivate S
+
+alt Using intelliJ
+
+U -> S : Right click on MakizApplication
+note right of U : Path : SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java
+activate S
+S -> S : Run the application
+deactivate S
+
+else Using a command line
+
+U -> S : Run the command
+note right of U : Command : java -jar “./SpringBootServer/build/libs/SpringBootServer-0.0.1-SNAPSHOT.jar”
+activate S
+S -> S : Run the application
+deactivate S
+
+end
+
+== Compiling the front end ==
+
+U-> S : Compiling the front end in the webview/site folder
+note right of U : Command : ng build
+activate S
+S -> S : Compile into webview/site/dist/site/
+deactivate S
+
+U -> S : Copy the build to the SprinBootServer jar in resource/static
+activate S
+S -> S : Save changes
+deactivate S
+
+@enduml
