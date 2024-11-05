@@ -111,6 +111,30 @@ public class SimpleStorageService implements StorageService {
 		return resource.getThumbnail().getData();
 	}
 
+
+	@Override
+	public byte[] getMarker1(String resourceID) {
+		ArResource resource = tryGetResource(resourceID);
+		Objects.requireNonNull(resource.getMarkers());
+		return resource.getMarkers().getMarkerData1();
+	}
+
+	@Override
+	public byte[] getMarker2(String resourceID) {
+		ArResource resource = tryGetResource(resourceID);
+		Objects.requireNonNull(resource.getMarkers());
+		return resource.getMarkers().getMarkerData1();
+	}
+
+	@Override
+	public byte[] getMarker3(String resourceID) {
+		ArResource resource = tryGetResource(resourceID);
+		Objects.requireNonNull(resource.getMarkers());
+		return resource.getMarkers().getMarkerData1();
+	}
+
+
+
 	private void saveImage(String thumbnail, ArResource resource) throws IOException {
 		ImageAsset image = new ImageAsset();
 		imageAssetRepository.save(image);//id created
@@ -264,28 +288,33 @@ public class SimpleStorageService implements StorageService {
 
 
 		// Save marker data (marker1, marker2, marker3) as part of the resource
-		try {
-			ARjsMarker markers = new ARjsMarker();
-			markerAssetRepository.save(markers); // ID is created here
-			MarkerDTO markerDTO = new MarkerDTO(
-					markers.getId(),
-					markers.getId().toString(),
-					incomingResourceDTO.marker1(),
-					incomingResourceDTO.marker2(),
-					incomingResourceDTO.marker3()
-			); // Create marker DTO with marker data
+        ARjsMarker markers = new ARjsMarker();
+        markerAssetRepository.save(markers); // ID is created here
+        MarkerDTO markerDTO = new MarkerDTO(
+                markers.getId(),
+                markers.getId().toString(),
+                incomingResourceDTO.marker1(),
+                incomingResourceDTO.marker2(),
+                incomingResourceDTO.marker3()
+        ); // Create marker DTO with marker data
 
-			// Write markers to file system and set marker paths in the resource
+        // Write markers to file system and set marker paths in the resource
+
+			/*
 			Map<String, Path> paths = FileSystemManager.writeGenericMarkers(id.toString(), markerDTO);
 			markers.setMarker1Path(paths.get("marker1").toUri());
 			markers.setMarker2Path(paths.get("marker2").toUri());
 			markers.setMarker3Path(paths.get("marker3").toUri());
 			resource.setMarkers(markers);
-		} catch(IOException e) {
-			throw new InvalidParameterException("Can't create markers");
-		}
+			 */
 
-		// If no video asset is present, handle image and/or sound assets
+        markers.setMarkerData1(Base64.getDecoder().decode(incomingResourceDTO.marker1()));
+		markers.setMarkerData2(Base64.getDecoder().decode(incomingResourceDTO.marker2()));
+		markers.setMarkerData3(Base64.getDecoder().decode(incomingResourceDTO.marker3()));
+
+		resource.setMarkers(markers);
+
+        // If no video asset is present, handle image and/or sound assets
 		if (incomingResourceDTO.videoAsset() == null) {
 			// Try to save the image asset and assign it to the resource
 			try {
