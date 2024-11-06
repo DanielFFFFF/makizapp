@@ -1,0 +1,14 @@
+.scanner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+video {
+  width: 100%;
+  max-width: 500px;
+}
+
+.video-container {
+  margin-top: 20px;
+}
