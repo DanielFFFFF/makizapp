@@ -588,13 +588,14 @@ export class ProjectEditorComponent {
    * Generates a shareable URL and attempts to copy it to the clipboard.
    */
   getShareUrl(): void {
-      let url = `/#/${this.project.getId()}`;
+      const baseUrl = window.location.href.replace('admin', '');
+      const url = `${baseUrl}${this.project.getId()}`;
 
       // Check if the clipboard API is available
       if (navigator.clipboard) {
           // Check clipboard permission
-          navigator.permissions.query({ name: 'clipboard-write' })
-              .then(permissionStatus => {
+        navigator.permissions.query({ name: 'clipboard-write' as PermissionName })
+          .then(permissionStatus => {
                   if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
                       navigator.clipboard.writeText(url)
                           .then(() => {
@@ -633,9 +634,9 @@ export class ProjectEditorComponent {
       try {
           const successful = document.execCommand('copy');
           const msg = successful ? 'successful' : 'unsuccessful';
-          alert(`Fallback: Link ${text} has been copied to clipboard (copy command was ${msg}).`);
+          alert(`Link ${text} has been copied to clipboard (copy command was ${msg}).`);
       } catch (err) {
-          console.error('Fallback: Oops, unable to copy', err);
+          console.error('Oops, unable to copy', err);
           alert(`Cannot copy to clipboard. Share link is ${text}`);
       }
 
