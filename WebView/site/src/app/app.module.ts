@@ -14,7 +14,6 @@ import {AdminComponent} from './admin/admin.component';
 import {ClientComponent} from './client/client.component';
 import {RouterModule, RouterOutlet} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
-import { ScannerComponent } from './client/scanner/scanner.component';
 
 
 @NgModule({
@@ -26,7 +25,6 @@ import { ScannerComponent } from './client/scanner/scanner.component';
     SafePipe,
     AdminComponent,
     ClientComponent,
-    ScannerComponent,
   ],
     imports: [
         BrowserModule,
