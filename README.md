@@ -28,17 +28,16 @@ The goal of this repository is to improve upon the existing Makizapp created by 
   ```
 
 
-3. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
+3. Two choice to execute ``` MakizappApplication ``` :
+
+- Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
    ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
+
+- Run the commande ``` ./gradlew :SpringBootServer:bootRun ```. If you need to clean and compile, do ``` ./gradlew clean build ```
 4. Afterwards you should be able to connect using the ip of your machine in your browser
 
 ### How to compile front-end
 
-In
-     ```webview/site```
-run the command 
-    ```ng build```
-this should compile into ```webview/site/dist/site/```
-you then need to move the newly compiled files into 
-```SpringBootServer/src/main/resources/static```
-so that SpringBoot uses the newly compiled frontend.
+Run the command ``` ./build-front.sh ```
+
+If you need to change the right : ``` chmod +x ./build-front.sh ```
