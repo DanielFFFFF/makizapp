@@ -15,6 +15,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
    - Use the docker compose file in the makizapp directory by running the command
    ```docker compose up```
    This will create and run a container which runs a postgres database
+   - If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill "PID"```
    
 2. Configure the server so the api calls your machine
    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
@@ -23,7 +24,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
    192.168.14.31, you should have the following in your application.yml:
 ```yml
   server:
-    address: 192.168.14.31
+    address: XXX.XXX.XX.XX
     port: 8080
   ```
 
