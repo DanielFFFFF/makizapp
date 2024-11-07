@@ -6,7 +6,7 @@ import {authGuard} from "./Auth/auth.guard";
 
 const routes: Routes = [
   {path: "admin", component: AdminComponent, canActivate:[authGuard]},
-  {path: "client", component: ClientComponent},
+  {path: ":projectId", component: ClientComponent},
 
   {path: "", redirectTo: '/admin', pathMatch: 'full'},  // Default path redirects to admin
   {path: "**", redirectTo: '/admin'}                    // Page path not found

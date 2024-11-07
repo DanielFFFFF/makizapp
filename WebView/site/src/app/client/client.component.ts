@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
 import {Resource} from "../commons/Resource";
@@ -21,27 +21,33 @@ export class ClientComponent {
   resources: Resource[] = [];
   projectId : string = "";
 
-  ngOnInit() {
-    this.config.getConfig().subscribe(data => {
-      this.SERVER_PATH = data["SERVER_PATH"];
-
-      this.getResources();
-    });
-
-    this.startCamera();
-
-  }
-
-  ngOnDestroy(): void {
-    this.stopCamera();
-  }
-
-  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService) {
+  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private router: Router) {
     /*this.projectId = (route.snapshot.paramMap.get("projectID") as string);
     if(this.projectId == null){
       alert("Project not found")
       throw new Error("Project is invalid")
     }*/
+  }
+
+  ngOnInit() {
+      this.config.getConfig().subscribe(data => {
+        this.SERVER_PATH = data["SERVER_PATH"];
+        this.projectId = this.route.snapshot.paramMap.get("projectID") as string;
+
+        if (!this.projectId) {
+          //alert("Project ID is missing or invalid. Redirecting to admin.");
+          this.router.navigate(['/admin']); // Redirect to admin page if projectId is invalid
+          return;
+        }
+
+        this.getResources();
+      });
+
+      this.startCamera();
+  }
+
+  ngOnDestroy(): void {
+    this.stopCamera();
   }
 
   getResources(){
@@ -91,7 +97,7 @@ export class ClientComponent {
     // Check for browser compatibility
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       console.error("Camera access is not supported in this browser.");
-      alert("Your browser does not support camera access. Please use a modern browser like Chrome, Firefox, or Edge.");
+      //alert("Your browser does not support camera access. Please use a modern browser like Chrome, Firefox, or Edge.");
       return;
     }
 
@@ -103,11 +109,11 @@ export class ClientComponent {
       // Type guard to check if `error` has a `name` property
       if (error instanceof DOMException) {
         if (error.name === "NotAllowedError") {
-          alert("Camera access was denied. Please allow camera permissions to use this feature.");
+          console.error("Camera access was denied. Please allow camera permissions to use this feature.");
         } else if (error.name === "NotFoundError") {
-          alert("No camera found on this device.");
+          console.error("No camera found on this device.");
         } else {
-          alert("An unexpected error occurred while trying to access the camera.");
+          console.error("An unexpected error occurred while trying to access the camera.");
         }
       } else {
         console.error("Unexpected error:", error);
