@@ -11,12 +11,10 @@
     margin-top: 20px;
     position: relative;
 }
-
 /* Hide the canvas element (used for QR code scanning, not directly displayed) */
 canvas {
     display: none;
 }
-
 /* Style for the title */
 h1 {
     text-align: center;
@@ -24,7 +22,6 @@ h1 {
     font-size: 24px;
     margin-top: 20px;
 }
-
 /* Style for the video element */
 video {
     width: 100%;
