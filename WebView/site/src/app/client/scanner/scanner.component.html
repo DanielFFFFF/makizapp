@@ -1,0 +1,8 @@
+<div class="scanner-container">
+  <video #video autoplay playsinline></video>
+  <canvas #canvas hidden></canvas>
+
+  <div *ngIf="videoUrl" class="video-container">
+    <iframe [src]="videoUrl | safe" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>

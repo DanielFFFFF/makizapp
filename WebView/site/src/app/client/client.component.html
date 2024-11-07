@@ -1,12 +1,10 @@
 <!-- a-frame scene -->
-<!--
 <a-scene
   vr-mode-ui="enabled: false;"
   renderer="logarithmicDepthBuffer: true;"
   embedded
   arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
 >
--->
   <!--a-container *ngFor="let resource of resources">
   <a-asset>
     <img *ngIf="resource.imageAsset !=undefined" src="{{resource.imageAsset}}" id="img_{{resource.id}}"/>
@@ -30,7 +28,6 @@
   </a-nft>
   </a-container-->
 
-<!--
   <a-nft *ngFor="let resource of resources"
          type="nft"
          url="/resources/MARKERS/{{toto(resource.id)}}/m"
@@ -40,7 +37,6 @@
          smoothThreshold="5">
     <a-video vidhandler position="300 0 -90" src="{{resource.videoAsset}}" rotation="-90 0 0" width="300" height="300"></a-video>
   </a-nft>
--->
 
   <!--a-nft
           type="nft"
@@ -55,24 +51,8 @@
 
   </a-nft-->
 
-<!--
   <a-entity camera></a-entity>
 
 </a-scene>
 
--->
-
-<h1>Scannez une image</h1>
-
-<div id="camera-container">
-  <video #video autoplay></video>
-  <canvas #canvas></canvas>
-</div>
-
-<!--
-<div *ngIf="videoUrl">
-  <p>Video URL: {{ videoUrl }}</p>
-  <a [href]="videoUrl" target="_blank">Watch the video on Vimeo</a>
-</div>
--->
 

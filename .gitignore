@@ -43,8 +43,4 @@ SpringBootServer/src/main/java/fr/.DS_Store
 SpringBootServer/src/main/java/fr/makizart/.DS_Store
 .DS_Store
 
-### Node ###
 /WebView/node_modules
-
-### Static files ###
-SpringBootServer/src/main/resources/static/*
