@@ -1,5 +1,5 @@
-import {Component } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs";
 import { Resource } from "../commons/Resource";
