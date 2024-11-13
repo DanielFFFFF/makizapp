@@ -22,19 +22,22 @@ The goal of this repository is to improve upon the existing Makizapp created by 
     change the variable SERVER_PATH to the ip of your machine. 
    - Also change the IP in the application.yml file in the static server folder of the Springboot application,  for example if the ip of your machine is 
    192.168.14.31, you should have the following in your application.yml:
+
 ```yml
   server:
     address: XXX.XXX.XX.XX
     port: 8080
   ```
 
-
 3. Two choice to execute ``` MakizappApplication ``` :
 
 - Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
    ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
 
-- Run the commande ``` ./gradlew :SpringBootServer:bootRun ```. If you need to clean and compile, do ``` ./gradlew clean build ```
+- If you need to clean and compile, do ```sudo ./gradlew clean build ```
+
+- Run the command ```sudo ./gradlew :SpringBootServer:bootRun ```.
+
 4. Afterwards you should be able to connect using the ip of your machine in your browser
 
 ### How to compile front-end
