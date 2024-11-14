@@ -17,15 +17,13 @@ import java.util.UUID;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-
     final SimpleStorageService storageService;
 
     public RestController(@Autowired SimpleStorageService storageService) {
         this.storageService = storageService;
     }
 
-
-    //POST------
+    //----------------- POST -----------------
     @PostMapping("/admin/projects/create/project/")
 
     public ResponseEntity<IdDTO> createProject(
@@ -41,7 +39,7 @@ public class RestController {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
     }
 
-    //PUT--------
+    //----------------- PUT -----------------
 
     @PutMapping("/admin/projects/resources/{resource_id}/image/")
 
@@ -74,8 +72,6 @@ public class RestController {
                 body.marker3());
         return ResponseEntity.ok("Markers uploaded successfully.");
     }
-
-
 
     @PutMapping("/admin/projects/resources/{resource_id}/sound/")
 
@@ -123,7 +119,8 @@ public class RestController {
     }
 
 
-    //Delete-----------------
+    //----------------- Delete -----------------
+
     @DeleteMapping("/admin/projects/{project_id}/delete")
 
     public ResponseEntity<String> deleteProject(@PathVariable String project_id) {
@@ -138,14 +135,12 @@ public class RestController {
         return ResponseEntity.ok("Delete successful.");
     }
 
-
-    //Get--------------------
+    //----------------- Get -----------------
 
     @GetMapping("/public/projects/")
     @ResponseStatus(HttpStatus.OK)
 
     public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
-        System.out.println("get projects api");
         return storageService.getProjects(page, size);
     }
 
@@ -192,7 +187,6 @@ public class RestController {
                 .body(image);
     }
 
-
     @GetMapping("/resources/MARKER1/{id}")
     public ResponseEntity<byte[]> getMarker1(@PathVariable String id) throws IOException {
         byte[] image = storageService.getMarker1(id); // Assume this method fetches the image bytes
@@ -217,6 +211,10 @@ public class RestController {
                 .body(image);
     }
 
+    @GetMapping("/projects/{project_id}/exist")
+    public ResponseEntity<Boolean> checkProjectExists(@PathVariable String project_id) {
+        return ResponseEntity.ok(storageService.projectExists(project_id));
+    }
 
 /*
     @ExceptionHandler(InvalidParameterException.class)

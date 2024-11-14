@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs";
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Resource } from "../commons/Resource";
 import { AppConfigService } from "../config/app.config.service";
 
@@ -19,43 +20,55 @@ export class ClientComponent {
 
   SERVER_PATH: string = "";
   resources: Resource[] = [];
-  projectId: string = "";
+  projectId: string | null = null;
 
   constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private router: Router) {
-    /*this.projectId = (route.snapshot.paramMap.get("projectID") as string);
-    if(this.projectId == null){
-      alert("Project not found")
-      throw new Error("Project is invalid")
-    }*/
   }
 
   ngOnInit() {
+    //
+    this.projectId = this.route.snapshot.paramMap.get("projectId");
+
+    //
     this.config.getConfig().subscribe(data => {
       this.SERVER_PATH = data["SERVER_PATH"];
-      this.projectId = this.route.snapshot.paramMap.get("projectID") as string;
+      this.checkProjectExists().subscribe(isExisting => {
+        if (isExisting) {
+          console.log("Project exists, loading resources...");
+          this.getResources();
+        } else {
+          console.log("Project does not exist, redirecting to admin.");
+          this.router.navigate(['/admin']);
+        }
+        });
+    });
 
-      if (!this.projectId) {
-        //alert("Project ID is missing or invalid. Redirecting to admin.");
-        this.router.navigate(['/admin']); // Redirect to admin page if projectId is invalid
-        return;
-      }
-
-        this.getResources();
-      });
-
+    //
     this.startCamera();
+
   }
 
   ngOnDestroy(): void {
     this.stopCamera();
   }
 
+  checkProjectExists(){
+    return this.http.get<boolean>(`${this.SERVER_PATH}/projects/${this.projectId}/exist`)
+      .pipe(
+        catchError(error => {
+          console.error("Erreur lors de la vérification de l'éxistence du projet", error);
+          return of([]);
+      }));
+  }
+
   getResources(){
-      this.http.get<any>( `${this.SERVER_PATH}/public/projects/${this.projectId}/resources`).pipe(map((value: Resource[]) => {
+      this.http.get<any>( `${this.SERVER_PATH}/public/projects/${this.projectId}/resources`).pipe(
+        map((value: Resource[]) => {
           return value
-      })).subscribe((res: Resource[]) => {
+        }
+      )).subscribe((res: Resource[]) => {
         console.log(res);
-          this.resources = res;
+        this.resources = res;
 
         this.resources.map(resource => {
           this.getContentOfResource(resource);
@@ -129,7 +142,4 @@ export class ClientComponent {
     }
   }
 
-  toto(id : string){
-    console.log(id);
-  }
 }

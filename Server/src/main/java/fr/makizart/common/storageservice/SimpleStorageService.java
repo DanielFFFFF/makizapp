@@ -54,7 +54,6 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public Page<Project> getProjects(int nbPage, int size) {
-		System.out.println("Getting projects");
 		return projectRepository.findAll(PageRequest.of(nbPage, size));
 	}
 
@@ -63,7 +62,10 @@ public class SimpleStorageService implements StorageService {
 		return new ProjectDTO(tryGetProject(projectId));
 	}
 
-
+	@Override
+	public boolean projectExists(String projectId) {
+		return projectRepository.existsById(UUID.fromString(projectId));
+	}
 
 	@Override
 	public List<ArResourceDTO> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException {
@@ -382,10 +384,9 @@ public class SimpleStorageService implements StorageService {
 	private Project tryGetProject(String projectId) {
 			return projectRepository.findById(UUID.fromString(projectId)).orElseThrow();
 	}
+
 	private ArResource tryGetResource(String resourceID) {
 		return arResourceRepository.findById(UUID.fromString(resourceID)).orElseThrow();
-
-
 	}
 
 	private VideoAsset tryGetVideo(String resourceID) {
