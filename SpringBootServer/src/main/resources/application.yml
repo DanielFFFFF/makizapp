@@ -16,5 +16,5 @@ spring:
     default-property-inclusion: non_null
 
 server:
-  address: 10.212.240.70
+  address: 172.18.0.1
   port: 8080
