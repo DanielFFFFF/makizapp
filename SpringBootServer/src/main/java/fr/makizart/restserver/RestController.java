@@ -39,7 +39,7 @@ public class RestController {
 
     public ResponseEntity<ArResourceDTO> createResource(
             @PathVariable String project_id,
-            @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException {
+            @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException, IOException {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
     }
 

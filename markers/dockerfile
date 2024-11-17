@@ -17,5 +17,7 @@ COPY NFT-Marker-Creator ./markerCreatorAppFolder
 RUN mkdir output
 
 # Set the command to run your application and keep the container alive
-CMD ["/bin/sh", "-c", "node ./markerCreatorAppFolder/app.js -i ./test.png -o ./output;"]
+CMD ["/bin/sh", "-c", "node ./markerCreatorAppFolder/app.js -i ./output/thumbnail.png -o ./output;"]
 
+# to build
+# sudo docker build -t marker-creator-app .

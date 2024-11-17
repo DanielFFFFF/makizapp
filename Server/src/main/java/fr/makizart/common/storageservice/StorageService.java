@@ -176,7 +176,7 @@ public interface StorageService  {
 	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
 	 */
 	ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
-			throws InvalidParameterException, NameAlreadyBoundException;
+            throws InvalidParameterException, NameAlreadyBoundException, IOException;
 
 	/**
 	 * Uploads an image for a resource.

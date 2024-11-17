@@ -200,51 +200,44 @@ export class ProjectEditorComponent {
    * @param {HTMLInputElement} video - The video element associated with the new resource.
    * @param {HTMLInputElement} sound - The sound element associated with the new resource.
    * @param {HTMLInputElement} image - The image element associated with the new resource.
-   * @param {HTMLInputElement} fset Ar js marker file
-   * @param {HTMLInputElement} fset3 Ar js marker file
-   * @param {HTMLInputElement} iset Ar js marker file
    */
   createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
-                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement,
-                    fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
-    //Create the request body
+                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
+    // Create the request body
     const body: { [key: string]: any } = {};
     body["name"] = name.value;
 
-    if (name.value == "") {
+    if (name.value === "") {
       alert("Il manque le nom de la ressource !");
       return;
     }
 
-    let isImagePresent = image.files != null && image.files.length > 0
-    let isSoundPresent  = sound.files != null && sound.files.length > 0
-    let isVideoPresent = video.value != ""
+    const isImagePresent = image.files != null && image.files.length > 0;
+    const isSoundPresent = sound.files != null && sound.files.length > 0;
+    const isVideoPresent = video.value !== "";
 
-    if((isImagePresent || isSoundPresent) == (isVideoPresent)){
-      alert("Impossible d'avoir du son ou une image en meme temps qu'une video")
+    if ((isImagePresent || isSoundPresent) === isVideoPresent) {
+      alert("Impossible d'avoir du son ou une image en meme temps qu'une video");
+      return;
     }
-
 
     if (isVideoPresent) {
       body["videoAsset"] = video.value;
-    } else if (!isSoundPresent || !isImagePresent) {
+    } else if (!isSoundPresent && !isImagePresent) {
       alert("Aucun media à jouer en AR choisit");
       return;
     }
 
+    // Array containing promises to execute the POST request only when all data has been retrieved
+    const promises = [];
 
-
-    // Array containing promises to execute the post query only when all data has been retrieved
-    let promises = [];
-
-    //Add to the body the thumbnail if exist (sets by the user)
-    if (thumbnail.files != null && thumbnail.files.length != 0) {
+    // Add the thumbnail to the body if it exists
+    if (thumbnail.files != null && thumbnail.files.length !== 0) {
       const reader = new FileReader();
-      let p = new Promise((resolve) => {
+      const p = new Promise<void>((resolve) => {
         reader.onload = () => {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-
-          resolve(true);
+          resolve();
         };
       });
       reader.readAsDataURL(thumbnail.files[0]);
@@ -254,80 +247,33 @@ export class ProjectEditorComponent {
       return;
     }
 
-    if (fset.files != null && fset.files.length != 0) {
+    // Add the image if it exists
+    if (image.files != null && image.files.length !== 0) {
       const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(fset.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque le marker fset !");
-      return;
-    }
-
-    if (fset3.files != null && fset3.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(fset3.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque le marker fset3 !");
-      return;
-    }
-
-    if (iset.files != null && iset.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(iset.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque le marker iset !");
-      return;
-    }
-
-    //Add to the body the image if exist (sets by the user)
-    if (image.files != null && image.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
+      const p = new Promise<void>((resolve) => {
         reader.onload = () => {
           body["imageAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
+          resolve();
         };
       });
       reader.readAsDataURL(image.files[0]);
       promises.push(p);
     }
 
-    //Add to the body the sound if exist (sets by the user)
-    if (sound.files != null && sound.files.length != 0) {
+    // Add the sound if it exists
+    if (sound.files != null && sound.files.length !== 0) {
       const reader = new FileReader();
-      let p = new Promise((resolve) => {
+      const p = new Promise<void>((resolve) => {
         reader.onload = () => {
           body["soundAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
+          resolve();
         };
       });
       reader.readAsDataURL(sound.files[0]);
       promises.push(p);
     }
 
-    // Execute and send the request POST to create the resource
-    // Will be executed when all promises have been delivered
-    // @ts-ignore
+    // Execute and send the POST request to create the resource when all promises have been fulfilled
     Promise.all(promises).then(() => {
       // @ts-ignore
       this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((res: Created_id) => {
@@ -335,8 +281,6 @@ export class ProjectEditorComponent {
         this.updateProjectSelected();
       });
     });
-
-
   }
 
   /**
@@ -344,88 +288,29 @@ export class ProjectEditorComponent {
    * Uploads a new thumbnail for the selected resource.
    * @param {HTMLInputElement} thumbnail - The thumbnail element associated with the new resource.
    */
-  uploadNewThumbnail(thumbnail: HTMLInputElement,  fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
-    if (thumbnail.files != null) {
+  uploadNewThumbnail(thumbnail: HTMLInputElement) {
+    if (thumbnail.files != null && thumbnail.files.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(thumbnail.files[0]);
       reader.onload = () => {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
-        var srcImage = `markers_${this.resourceSelected?.name}`;
         this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`, {
           "name": `thumbnail_${this.resourceSelected?.id}`,
           "media": thumbnail_file
-        }, {responseType: 'text'}).subscribe((res) => {
+        }, { responseType: 'text' }).subscribe((res) => {
           if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`);
           if (this.showResponses) console.log(res);
           if (this.resourceSelected != null) {
             this.resourceSelected.thumbnail = thumbnail_file;
           }
-
         });
       };
-    }
-
-    let promises = [];
-
-    let bodyMarkers: { [key: string]: any } = {};
-    bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
-
-    if (fset.files != null && fset.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(fset.files[0]);
-      promises.push(p);
     } else {
-      alert("Il manque le marker fset !");
-      return;
+      alert("Il manque l'image à capturer !");
     }
-
-    if (fset3.files != null && fset3.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(fset3.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque le marker fset3 !");
-      return;
-    }
-
-    if (iset.files != null && iset.files.length != 0) {
-      const reader = new FileReader();
-      let p = new Promise((resolve) => {
-        reader.onload = () => {
-          bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve(true);
-        };
-      });
-      reader.readAsDataURL(iset.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque le marker iset !");
-      return;
-    }
-
-    Promise.all(promises).then(() => {
-      // @ts-ignore
-      this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/markers/`, bodyMarkers, {responseType: 'text'}).subscribe((res) => {
-        if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/markers/`);
-        if (this.showResponses) console.log(res);
-      });
-    });
-
-
   }
+
 
 
   /**

@@ -9,10 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.naming.NameAlreadyBoundException;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -232,7 +238,7 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
-			throws InvalidParameterException, NameAlreadyBoundException {
+            throws InvalidParameterException, NameAlreadyBoundException, IOException {
 
 		// Create a new AR resource object*
 		ArResource resource = new ArResource();
@@ -264,20 +270,24 @@ public class SimpleStorageService implements StorageService {
 			throw new IllegalStateException("(ImageAsset, SoundAsset) and videoAsset are mutually exclusive.");
 		}
 
-		// Ensure that markers (marker1, marker2, marker3) are not null
-		Objects.requireNonNull(incomingResourceDTO.marker1(), "Marker1 must not be null");
-		Objects.requireNonNull(incomingResourceDTO.marker2(), "Marker2 must not be null");
-		Objects.requireNonNull(incomingResourceDTO.marker3(), "Marker3 must not be null");
-
 		// Retrieve the project by its ID, throwing an error if it doesn't exist
 		Project project = tryGetProject(projectId);
 
 		// Try to save the thumbnail image asset and assign it to the resource
-
+		    byte[] decodedImageData = Base64.getDecoder().decode(incomingResourceDTO.thumbnail());
 			ImageAsset thumbnail = new ImageAsset();
-			thumbnail.setData(Base64.getDecoder().decode(incomingResourceDTO.thumbnail()));
+			thumbnail.setData(decodedImageData);
 			imageAssetRepository.save(thumbnail); // ID is created here
 
+		// Convert the WebP byte array to PNG
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedImageData);
+		BufferedImage pngImage = ImageIO.read(byteArrayInputStream);
+
+		// Save the decoded thumbnail to disk
+		Path outputPath = Paths.get("./output/thumbnail.png");
+
+		// Write the decoded data to the file
+		ImageIO.write(pngImage, "PNG", outputPath.toFile());
 
 
 			//Path path = FileSystemManager.writeImage(thumbnail.getId().toString(),
@@ -288,7 +298,8 @@ public class SimpleStorageService implements StorageService {
 
 
 		// Save marker data (marker1, marker2, marker3) as part of the resource
-        ARjsMarker markers = new ARjsMarker();
+		ARjsMarker markers = runDockerContainer(thumbnail);
+
         markerAssetRepository.save(markers); // ID is created here
         MarkerDTO markerDTO = new MarkerDTO(
                 markers.getId(),
@@ -308,9 +319,7 @@ public class SimpleStorageService implements StorageService {
 			resource.setMarkers(markers);
 			 */
 
-        markers.setMarkerData1(Base64.getDecoder().decode(incomingResourceDTO.marker1()));
-		markers.setMarkerData2(Base64.getDecoder().decode(incomingResourceDTO.marker2()));
-		markers.setMarkerData3(Base64.getDecoder().decode(incomingResourceDTO.marker3()));
+
 
 		resource.setMarkers(markers);
 
@@ -390,6 +399,68 @@ public class SimpleStorageService implements StorageService {
 
 	private VideoAsset tryGetVideo(String resourceID) {
 			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
+	}
+
+	private ARjsMarker runDockerContainer(ImageAsset thumbnail) {
+		System.out.println("Starting /run-docker endpoint");
+		System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
+
+		ARjsMarker markers = new ARjsMarker();
+
+		try {
+
+			// Prepare the Docker command
+			 String[] command = {"docker", "run", "--rm",
+			 		"-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
+			 		"marker-creator-app"
+			 	};
+
+
+
+
+			// Run the Docker container
+			ProcessBuilder processBuilder = new ProcessBuilder(command);
+			processBuilder.redirectErrorStream(true); // Combine stdout and stderr
+			Process process = processBuilder.start();
+
+			System.out.println("Docker command started");
+
+			// Capture the output
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			StringBuilder output = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				output.append(line).append("\n");
+				System.out.println("Docker output: " + line);
+			}
+
+
+
+			process.waitFor();
+			System.out.println("Docker command completed");
+
+			// Read the output files
+			String outputDir = "./output";
+			File markerFile1 = new File(outputDir, "test.fset");
+			File markerFile2 = new File(outputDir, "test.fset3");
+			File markerFile3 = new File(outputDir, "test.iset");
+
+			if (markerFile1.exists() && markerFile2.exists() && markerFile3.exists()) {
+				markers.setMarkerData1(Files.readAllBytes(markerFile1.toPath()));
+				markers.setMarkerData2(Files.readAllBytes(markerFile2.toPath()));
+				markers.setMarkerData3(Files.readAllBytes(markerFile3.toPath()));
+
+				System.out.println("Markers set with file data successfully.");
+			} else {
+				System.out.println("One or more marker files not found.");
+			}
+			return markers;
+
+		} catch (Exception e) {
+			System.out.println("Error occurred: " + e.getMessage());
+			e.printStackTrace();
+			return new ARjsMarker();
+		}
 	}
 
 }
