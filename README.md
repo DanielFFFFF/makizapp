@@ -11,12 +11,27 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 
 ### How to run
 
-1. Firstly we need a postgres database to communicate with the spring server
+1. We need to allow Springboot to use docker commands without sudo.
+
+Create  a docker group\
+   ```sudo groupadd docker```\
+Get your username\
+   ```whoami```\
+Use the username you just found to add yourself to the docker group\
+  ```sudo usermod -aG docker $USER```\
+Apply the groupchange to your current session to avoid logging in and out\
+   ```newgrp docker```
+
+All these changes must be done to user you plan on running the server from.
+
+
+2. We'll need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
    ```docker compose up```
-   This will create and run a container which runs a postgres database
-   
-2. Configure the server so the api calls your machine
+   This will create and run a container which runs a postgres database.
+   This will also build the docker image which will be used to generate markers later on. 
+
+3. Configure the server so the api calls your machine
    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
     change the variable SERVER_PATH to the ip of your machine. 
    - Also change the IP in the application.yml file in the static server folder of the Springboot application,  for example if the ip of your machine is 
@@ -28,9 +43,9 @@ The goal of this repository is to improve upon the existing Makizapp created by 
   ```
 
 
-3. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
+4. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
    ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
-4. Afterwards you should be able to connect using the ip of your machine in your browser
+5.Afterwards you should be able to connect using the ip of your machine in your browser
 
 ### How to compile front-end
 

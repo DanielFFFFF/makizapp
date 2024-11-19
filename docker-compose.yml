@@ -14,6 +14,17 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  marker-creator-app:
+    build:
+      context: ./markers  # Set the build context to the 'markers' folder
+      dockerfile: Dockerfile.custom  # Specify the custom Dockerfile name
+    profiles:
+      - build-only  # This profile ensures it is only built, not run
+    volumes:
+      - ./markers/output:/usr/src/app/output  # Mount local 'output' folder to the container
+    environment:
+      - NODE_ENV=production
+    container_name: marker-creator-container
 
 volumes:
   pgdata: {}

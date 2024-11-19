@@ -412,7 +412,7 @@ public class SimpleStorageService implements StorageService {
 			// Prepare the Docker command
 			 String[] command = {"docker", "run", "--rm",
 			 		"-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
-			 		"marker-creator-app"
+			 		"makizapp-marker-creator-app"
 			 	};
 
 
@@ -441,9 +441,9 @@ public class SimpleStorageService implements StorageService {
 
 			// Read the output files
 			String outputDir = "./output";
-			File markerFile1 = new File(outputDir, "test.fset");
-			File markerFile2 = new File(outputDir, "test.fset3");
-			File markerFile3 = new File(outputDir, "test.iset");
+			File markerFile1 = new File(outputDir, "thumbnail.fset");
+			File markerFile2 = new File(outputDir, "thumbnail.fset3");
+			File markerFile3 = new File(outputDir, "thumbnail.iset");
 
 			if (markerFile1.exists() && markerFile2.exists() && markerFile3.exists()) {
 				markers.setMarkerData1(Files.readAllBytes(markerFile1.toPath()));
