@@ -24,12 +24,14 @@ Apply the groupchange to your current session to avoid logging in and out\
 
 All these changes must be done to user you plan on running the server from.
 
+We also need to build an image that the server uses for building markers:
+from the makizapp folder run\
+``` sudo docker build -t marker-creator-app ./markers```
 
 2. We'll need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
    ```docker compose up```
    This will create and run a container which runs a postgres database.
-   This will also build the docker image which will be used to generate markers later on. 
 
 3. Configure the server so the api calls your machine
    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```

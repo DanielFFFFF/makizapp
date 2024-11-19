@@ -412,7 +412,7 @@ public class SimpleStorageService implements StorageService {
 			// Prepare the Docker command
 			 String[] command = {"docker", "run", "--rm",
 			 		"-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
-			 		"makizapp-marker-creator-app"
+			 		"marker-creator-app"
 			 	};
 
 
