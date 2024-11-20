@@ -64,7 +64,11 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public boolean projectExists(String projectId) {
-		return projectRepository.existsById(UUID.fromString(projectId));
+		try {
+			return projectRepository.existsById(UUID.fromString(projectId));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
