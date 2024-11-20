@@ -148,12 +148,15 @@ public class RestController {
 
     public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
         System.out.println("get projects api");
+
         return storageService.getProjects(page, size);
+
     }
 
     @GetMapping("/public/projects/{project_id}")
     @ResponseStatus(HttpStatus.OK)
     public ProjectDTO getProject(@PathVariable String project_id) {
+        System.out.println("1");
         return storageService.getProject(project_id);
     }
 
@@ -162,6 +165,7 @@ public class RestController {
     @ResponseStatus(HttpStatus.OK)
 
     public List<ArResourceDTO> getResourcesInProject(@PathVariable String project_id) {
+        System.out.println("2");
         return storageService.getResourcesInProject(project_id);
     }
 
