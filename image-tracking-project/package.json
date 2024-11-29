@@ -1,0 +1,19 @@
+{
+  "name": "image-tracking-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@msgpack/msgpack": "^3.0.0-beta2",
+    "@tensorflow/tfjs": "^4.22.0",
+    "canvas": "^2.11.2",
+    "mathjs": "^14.0.0"
+  }
+}

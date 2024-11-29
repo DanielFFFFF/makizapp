@@ -28,6 +28,9 @@ We also need to build an image that the server uses for building markers:
 from the makizapp folder run\
 ``` sudo docker build -t marker-creator-app ./markers```
 
+docker build -t mind-tracker-compiler .
+docker run --rm -v ./output:/app/src/images mind-tracker-compiler
+
 2. We'll need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
    ```docker compose up```
