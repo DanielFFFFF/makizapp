@@ -5,7 +5,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Resource } from "../commons/Resource";
 import { AppConfigService } from "../config/app.config.service";
-
+import { ARService } from './ARService';
 
 @Component({
   selector: 'app-user',
@@ -24,7 +24,7 @@ export class ClientComponent {
   projectId: string | null = null;
   @ViewChild('targetContainer', { static: false }) targetContainer!: ElementRef;
   sceneLoaded = false;
-  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private router: Router, private elRef: ElementRef, private renderer: Renderer2) {
+  constructor(private route: ActivatedRoute, private http:HttpClient, private config: AppConfigService, private router: Router, private elRef: ElementRef, private renderer: Renderer2, private arService: ARService) {
   }
 
 
@@ -52,22 +52,7 @@ export class ClientComponent {
 
 
   ngAfterViewInit(): void {
-    if (this.sceneLoaded) {
-      const appElement = this.targetContainer.nativeElement.querySelector('#app');
-
-      if (appElement) {
-        // Remove `#app` from its current position
-        const appParent = appElement.parentNode;
-        if (appParent) {
-          appParent.removeChild(appElement);
-        }
-
-        // Append `#app` to the document body
-        this.renderer.appendChild(document.body, appElement);
-      } else {
-        console.error('#app element not found.');
-      }
-    }
+    this.arService.initializeARScene();
   }
 
 
