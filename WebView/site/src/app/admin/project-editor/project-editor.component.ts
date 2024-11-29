@@ -200,44 +200,51 @@ export class ProjectEditorComponent {
    * @param {HTMLInputElement} video - The video element associated with the new resource.
    * @param {HTMLInputElement} sound - The sound element associated with the new resource.
    * @param {HTMLInputElement} image - The image element associated with the new resource.
+   * @param {HTMLInputElement} fset Ar js marker file
+   * @param {HTMLInputElement} fset3 Ar js marker file
+   * @param {HTMLInputElement} iset Ar js marker file
    */
   createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
-                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
-    // Create the request body
+                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement,
+                    fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
+    //Create the request body
     const body: { [key: string]: any } = {};
     body["name"] = name.value;
 
-    if (name.value === "") {
+    if (name.value == "") {
       alert("Il manque le nom de la ressource !");
       return;
     }
 
-    const isImagePresent = image.files != null && image.files.length > 0;
-    const isSoundPresent = sound.files != null && sound.files.length > 0;
-    const isVideoPresent = video.value !== "";
+    let isImagePresent = image.files != null && image.files.length > 0
+    let isSoundPresent  = sound.files != null && sound.files.length > 0
+    let isVideoPresent = video.value != ""
 
-    if ((isImagePresent || isSoundPresent) === isVideoPresent) {
-      alert("Impossible d'avoir du son ou une image en meme temps qu'une video");
-      return;
+    if((isImagePresent || isSoundPresent) == (isVideoPresent)){
+      alert("Impossible d'avoir du son ou une image en meme temps qu'une video")
     }
+
 
     if (isVideoPresent) {
       body["videoAsset"] = video.value;
-    } else if (!isSoundPresent && !isImagePresent) {
+    } else if (!isSoundPresent || !isImagePresent) {
       alert("Aucun media à jouer en AR choisit");
       return;
     }
 
-    // Array containing promises to execute the POST request only when all data has been retrieved
-    const promises = [];
 
-    // Add the thumbnail to the body if it exists
-    if (thumbnail.files != null && thumbnail.files.length !== 0) {
+
+    // Array containing promises to execute the post query only when all data has been retrieved
+    let promises = [];
+
+    //Add to the body the thumbnail if exist (sets by the user)
+    if (thumbnail.files != null && thumbnail.files.length != 0) {
       const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
+      let p = new Promise((resolve) => {
         reader.onload = () => {
           body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
+
+          resolve(true);
         };
       });
       reader.readAsDataURL(thumbnail.files[0]);
@@ -247,33 +254,80 @@ export class ProjectEditorComponent {
       return;
     }
 
-    // Add the image if it exists
-    if (image.files != null && image.files.length !== 0) {
+    if (fset.files != null && fset.files.length != 0) {
       const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset !");
+      return;
+    }
+
+    if (fset3.files != null && fset3.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset3.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset3 !");
+      return;
+    }
+
+    if (iset.files != null && iset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          body["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(iset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker iset !");
+      return;
+    }
+
+    //Add to the body the image if exist (sets by the user)
+    if (image.files != null && image.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
         reader.onload = () => {
           body["imageAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
+          resolve(true);
         };
       });
       reader.readAsDataURL(image.files[0]);
       promises.push(p);
     }
 
-    // Add the sound if it exists
-    if (sound.files != null && sound.files.length !== 0) {
+    //Add to the body the sound if exist (sets by the user)
+    if (sound.files != null && sound.files.length != 0) {
       const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
+      let p = new Promise((resolve) => {
         reader.onload = () => {
           body["soundAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
+          resolve(true);
         };
       });
       reader.readAsDataURL(sound.files[0]);
       promises.push(p);
     }
 
-    // Execute and send the POST request to create the resource when all promises have been fulfilled
+    // Execute and send the request POST to create the resource
+    // Will be executed when all promises have been delivered
+    // @ts-ignore
     Promise.all(promises).then(() => {
       // @ts-ignore
       this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((res: Created_id) => {
@@ -281,6 +335,8 @@ export class ProjectEditorComponent {
         this.updateProjectSelected();
       });
     });
+
+
   }
 
   /**
@@ -288,29 +344,88 @@ export class ProjectEditorComponent {
    * Uploads a new thumbnail for the selected resource.
    * @param {HTMLInputElement} thumbnail - The thumbnail element associated with the new resource.
    */
-  uploadNewThumbnail(thumbnail: HTMLInputElement) {
-    if (thumbnail.files != null && thumbnail.files.length > 0) {
+  uploadNewThumbnail(thumbnail: HTMLInputElement,  fset: HTMLInputElement, fset3 : HTMLInputElement, iset: HTMLInputElement) {
+    if (thumbnail.files != null) {
       const reader = new FileReader();
       reader.readAsDataURL(thumbnail.files[0]);
       reader.onload = () => {
         let thumbnail_file = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
 
+        var srcImage = `markers_${this.resourceSelected?.name}`;
         this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`, {
           "name": `thumbnail_${this.resourceSelected?.id}`,
           "media": thumbnail_file
-        }, { responseType: 'text' }).subscribe((res) => {
+        }, {responseType: 'text'}).subscribe((res) => {
           if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/thumbnail/`);
           if (this.showResponses) console.log(res);
           if (this.resourceSelected != null) {
             this.resourceSelected.thumbnail = thumbnail_file;
           }
+
         });
       };
-    } else {
-      alert("Il manque l'image à capturer !");
     }
-  }
 
+    let promises = [];
+
+    let bodyMarkers: { [key: string]: any } = {};
+    bodyMarkers["name"] = `markers_${this.resourceSelected?.id}`;
+
+    if (fset.files != null && fset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker1"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset !");
+      return;
+    }
+
+    if (fset3.files != null && fset3.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker2"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(fset3.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker fset3 !");
+      return;
+    }
+
+    if (iset.files != null && iset.files.length != 0) {
+      const reader = new FileReader();
+      let p = new Promise((resolve) => {
+        reader.onload = () => {
+          bodyMarkers["marker3"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+          resolve(true);
+        };
+      });
+      reader.readAsDataURL(iset.files[0]);
+      promises.push(p);
+    } else {
+      alert("Il manque le marker iset !");
+      return;
+    }
+
+    Promise.all(promises).then(() => {
+      // @ts-ignore
+      this.http.put(this.SERVER_PATH + `/admin/projects/resources/${this.resourceSelected?.id}/markers/`, bodyMarkers, {responseType: 'text'}).subscribe((res) => {
+        if (this.showResponses) console.log(`/admin/projects/resources/${this.resourceSelected?.id}/markers/`);
+        if (this.showResponses) console.log(res);
+      });
+    });
+
+
+  }
 
 
   /**
@@ -468,17 +583,66 @@ export class ProjectEditorComponent {
     this.newResourceView = false;
   }
 
+  /**
+   * @method getShareUrl
+   * Generates a shareable URL and attempts to copy it to the clipboard.
+   */
+  getShareUrl(): void {
+      const baseUrl = window.location.href.replace('admin', '');
+      const url = `${baseUrl}${this.project.getId()}`;
 
-  getShareUrl() : void{
-    let url = `/#/${this.project.getId()}`
-    navigator.clipboard.writeText(url).then(function (){
-      alert(`Link  ${url}  has been copied to clipboard`)
-    }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
-
+      // Check if the clipboard API is available
+      if (navigator.clipboard) {
+          // Check clipboard permission
+        navigator.permissions.query({ name: 'clipboard-write' as PermissionName })
+          .then(permissionStatus => {
+                  if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
+                      navigator.clipboard.writeText(url)
+                          .then(() => {
+                              alert(`Link ${url} has been copied to clipboard`);
+                          })
+                          .catch((e) => {
+                              console.error(e); // Log the error for debugging
+                              alert(`Cannot copy to clipboard. Share link is ${url}`);
+                          });
+                  } else {
+                      alert(`Clipboard permission denied. Cannot copy the link.`);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Permission query failed:', error);
+                  alert(`Cannot check clipboard permission. Share link is ${url}`);
+              });
+      } else {
+          // Fallback for browsers that do not support navigator.clipboard
+          this.fallbackCopyToClipboard(url);
+      }
   }
 
+  /**
+   * @method fallbackCopyToClipboard
+   * Copies the given text to the clipboard using a fallback method for unsupported browsers.
+   * @param {string} text - The text to copy to the clipboard.
+   */
+  fallbackCopyToClipboard(text: string) {
+      // Create a temporary textarea element
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
 
+      try {
+          const successful = document.execCommand('copy');
+          const msg = successful ? 'successful' : 'unsuccessful';
+          alert(`Link ${text} has been copied to clipboard (copy command was ${msg}).`);
+      } catch (err) {
+          console.error('Oops, unable to copy', err);
+          alert(`Cannot copy to clipboard. Share link is ${text}`);
+      }
 
+      // Clean up
+      document.body.removeChild(textarea);
+  }
 
   /**
    * @method deleteResource()

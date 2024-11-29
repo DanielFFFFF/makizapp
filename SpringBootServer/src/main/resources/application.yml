@@ -16,7 +16,7 @@ spring:
     default-property-inclusion: non_null
 
 server:
-  address: 192.168.207.31
+  address: 192.168.235.31
   port: 8080
   ssl:
     key-store: keystore.p12

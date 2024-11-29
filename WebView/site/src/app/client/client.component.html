@@ -1,58 +1,10 @@
-<!-- a-frame scene -->
-<a-scene
-  vr-mode-ui="enabled: false;"
-  renderer="logarithmicDepthBuffer: true;"
-  embedded
-  arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
->
-  <!--a-container *ngFor="let resource of resources">
-  <a-asset>
-    <img *ngIf="resource.imageAsset !=undefined" src="{{resource.imageAsset}}" id="img_{{resource.id}}"/>
-    <audio *ngIf="resource.soundAsset !=undefined" src="{{resource.soundAsset}}" id="snd_{{resource.id}}"></audio>
-    <video *ngIf="resource.videoAsset !=undefined" src="{{resource.videoAsset}}" id="video_{{resource.id}}"></video>
-  </a-asset>
-
-    <a-nft
-    type="nft"
-    url="{{MARKERS}}/{{resource.id}}/m"
-    smooth="true"
-    smoothCount="10"
-    smoothTolerance=".01"
-    smoothThreshold="5"
-  >
-      <a-entity position="0 0 0" sound="snd_{{resource.id}}">
-        <a-video *ngIf="resource.videoAsset !=undefined" src="#video_{{resource.id}}" width="50" height="50" rotation="-90 0 0" position="75 0 -50"></a-video>
-        <a-image *ngIf="resource.imageAsset !=undefined" src="#img_{{resource.id}}"  width="50" height="50" position="0 0 0" rotation="-90 0 0"></a-image>
+<div #targetContainer>
+  <div *ngIf="sceneLoaded" id="app">
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane color="blue" opacity="0.5" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
       </a-entity>
-
-  </a-nft>
-  </a-container-->
-
-  <a-nft *ngFor="let resource of resources"
-         type="nft"
-         url="'/resources/MARKERS/' + resource.id + '/m'"
-         smooth="true"
-         smoothCount="10"
-         smoothTolerance=".01"
-         smoothThreshold="5">
-    <a-video vidhandler position="300 0 -90" src="{{resource.videoAsset}}" rotation="-90 0 0" width="300" height="300"></a-video>
-  </a-nft>
-
-  <!--a-nft
-          type="nft"
-          url="assets/1"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance=".01"
-          smoothThreshold="5"
-          videohandler
-  >
-    <a-video vidhandler position="300 0 -90" src="assets/asset.mp4" rotation="-90 0 0" width="300" height="300"></a-video>
-
-  </a-nft-->
-
-  <a-entity camera></a-entity>
-
-</a-scene>
-
-
+    </a-scene>
+  </div>
+</div>

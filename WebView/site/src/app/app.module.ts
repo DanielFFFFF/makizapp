@@ -1,6 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {AppComponent} from './app.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProjectManagerComponent} from './admin/project-manager/project-manager.component';
@@ -15,6 +14,8 @@ import {ClientComponent} from './client/client.component';
 import {RouterModule, RouterOutlet} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
 
+import { AFrameDirective } from './a-frame.directive';
+
 
 @NgModule({
   declarations: [
@@ -24,18 +25,19 @@ import {MatIconModule} from "@angular/material/icon";
     TopBarComponent,
     SafePipe,
     AdminComponent,
-    ClientComponent,
+    ClientComponent
   ],
-    imports: [
-        BrowserModule,
-        NgbModule,
-        FormsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        RouterModule,
-        RouterOutlet,
-        MatIconModule,
-    ],
+  imports: [
+    BrowserModule,
+    NgbModule,
+    FormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    RouterModule,
+    RouterOutlet,
+    MatIconModule,
+    AFrameDirective,
+  ],
   providers: [],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
