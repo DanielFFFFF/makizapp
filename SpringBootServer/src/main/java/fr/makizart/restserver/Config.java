@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
 @Configuration
 @EnableTransactionManagement
@@ -20,7 +21,11 @@ public class Config implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/resources/**")
-                    .addResourceLocations("file:" +FileSystemManager.PATH);
+        // Serve files from the 'mind-markers' folder at the same level as the 'src' directory
+        registry.addResourceHandler("/markers/**")
+                .addResourceLocations("file:./SpringBootServer/mind-markers/markers/") // Use relative path to the 'mind-markers' folder
+                .setCachePeriod(0)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver()); // Resolver for serving files from the file system
     }
 }

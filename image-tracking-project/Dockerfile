@@ -28,6 +28,7 @@ COPY . .
 # Expose the port your application will run on
 EXPOSE 3000
 
+
 # Command to run your app (modify as needed)
 CMD ["node", "./src/generate_mind.js", "images"]
 

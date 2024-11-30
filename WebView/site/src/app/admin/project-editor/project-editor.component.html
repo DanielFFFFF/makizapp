@@ -11,9 +11,6 @@
           <div class="mt-2 d-flex flex-column">
             <span>Nom :</span><input class="mb-2" #resourceName>
             <span>Image à capturer :</span><input class="mb-2 form-control" type="file" #resourceThumbnail>
-            <span>fset :</span><input class="mb-2 form-control" type="file" #fset>
-            <span>fset3 :</span><input class="mb-2 form-control" type="file" #fset3>
-            <span>iset :</span><input class="mb-2 form-control" type="file" #iset>
             <span>Vidéo (url):</span><input class="mb-2 form-control" value="https://player.vimeo.com/video/879891554?h=fba301cac0" #resourceVideo>
             <span>Son :</span><input class="mb-2 form-control" type="file" #resourceSound>
 
@@ -29,7 +26,7 @@
           </button>
           <button type="button"
                   class="m-1 p-1 btn cursor-pointer "
-                  (click)="createNewResource(resourceName,resourceThumbnail,resourceVideo,resourceSound,resourceImage,fset,fset3,iset)">
+                  (click)="createNewResource(resourceName,resourceThumbnail,resourceVideo,resourceSound,resourceImage)">
             Enregistrer
           </button>
         </div>
@@ -110,14 +107,11 @@
 
               <div class="mt-2 d-flex flex-column">
                 <span class="d-flex">Image à capturer :</span><input class="mb-2 form-control" type="file" #newResourceThumbnail>
-                <span class="d-flex">fset :</span><input class="mb-2 form-control" type="file" #fset>
-                <span class="d-flex">fset3 :</span><input class="mb-2 form-control" type="file" #fset3>
-                <span class="d-flex">iset :</span><input class="mb-2 form-control" type="file" #iset>
-                </div>
+              </div>
               <div class="d-flex">
                 <button type="button"
                         class="m-1 p-1 btn cursor-pointer"
-                        (click)="uploadNewThumbnail(newResourceThumbnail, fset,fset3,iset)">Modifier
+                        (click)="uploadNewThumbnail(newResourceThumbnail)">Modifier
                 </button>
               </div>
             </div>
@@ -190,7 +184,7 @@
           </div>
         </div>
       </div>
-      </div>
+    </div>
   </div>
 </div>
 

@@ -15,6 +15,12 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:src/main/resources/dynamic/ # Custom folder for runtime files
+
 server:
   address: 10.212.240.70
   port: 8080
@@ -23,4 +29,3 @@ server:
     key-store-password: abcdef
     key-store-type: PKCS12
     key-alias: makizapp
-

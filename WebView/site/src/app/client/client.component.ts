@@ -52,7 +52,8 @@ export class ClientComponent {
 
 
   ngAfterViewInit(): void {
-    this.arService.initializeARScene();
+    this.projectId = this.route.snapshot.paramMap.get("projectId");
+    this.arService.initializeARScene(this.projectId);
   }
 
 

@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.io.BufferedReader;
@@ -78,12 +80,11 @@ public class RestController {
     }
 
 
-
     @PutMapping("/admin/projects/resources/{resource_id}/sound/")
 
     public ResponseEntity<String> uploadSound(
             @PathVariable String resource_id,
-			@RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
+            @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
         storageService.overrideSound(resource_id, body.name(), body.media());
         return ResponseEntity.ok("Sound uploaded successfully.");
     }
@@ -142,6 +143,37 @@ public class RestController {
 
 
     //Get--------------------
+
+
+    private final String baseDynamicPath = "SpringBootServer/mind-markers/markers";
+
+    @GetMapping("/markers/{projectId}/png-count")
+    @ResponseStatus(HttpStatus.OK)
+
+    public ResponseEntity<Integer> getPngCount(@PathVariable String projectId) {
+        // Build the full path to the project folder
+        File projectFolder = new File(baseDynamicPath + "/" + projectId + "/");
+
+        System.out.println("Looking for folder: " + projectFolder.getAbsolutePath());
+        System.out.println("Folder exists: " + projectFolder.exists());
+        System.out.println("Is directory: " + projectFolder.isDirectory());
+
+        if (!projectFolder.exists() || !projectFolder.isDirectory()) {
+            return ResponseEntity.badRequest().body(0); // Return 0 if the folder doesn't exist
+        }
+
+
+
+
+        // Count the number of .png files in the folder
+        int pngCount = (int) Arrays.stream(projectFolder.listFiles())
+                .filter(file -> file.isFile() && file.getName().endsWith(".png"))
+                .count();
+
+        System.out.println("Amount of pngs:" + pngCount);
+        return ResponseEntity.ok(pngCount);
+    }
+
 
     @GetMapping("/public/projects/")
     @ResponseStatus(HttpStatus.OK)
@@ -234,7 +266,6 @@ public class RestController {
                     "-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
                     "marker-creator-app"
             };
-            
 
 
             // Run the Docker container
@@ -262,6 +293,8 @@ public class RestController {
             return "Failed to run Docker container: " + e.getMessage();
         }
     }
+
+
 
 /*
     @ExceptionHandler(InvalidParameterException.class)

@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 import javax.naming.NameAlreadyBoundException;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -283,22 +281,49 @@ public class SimpleStorageService implements StorageService {
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedImageData);
 		BufferedImage pngImage = ImageIO.read(byteArrayInputStream);
 
-		// Save the decoded thumbnail to disk
-		Path outputPath = Paths.get("./output/thumbnail.png");
+		// Path to the marker directory
+		String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
 
-		// Write the decoded data to the file
-		ImageIO.write(pngImage, "PNG", outputPath.toFile());
+// Full path to the file (image)
+		String filePath = markerDirPath + "/" + resource.getId().toString() + ".png";
 
+// Create a File object for the directory
+		File markerDir = new File(markerDirPath);
 
-			//Path path = FileSystemManager.writeImage(thumbnail.getId().toString(),
-			//		);
+// Check if the directory exists, and create it if it doesn't
+		if (!markerDir.exists()) {
+			System.out.println("Directory does not exist. Creating: " + markerDirPath);
+			boolean dirsCreated = markerDir.mkdirs();  // Create the directory and any necessary parent directories
+
+			if (dirsCreated) {
+				System.out.println("Directory created successfully.");
+			} else {
+				System.out.println("Failed to create the directory.");
+			}
+		}
+
+// Create a File object for the output image file
+		File outputFile = new File(filePath);
+
+// Check if the output file already exists and is a directory
+		if (outputFile.exists() && outputFile.isDirectory()) {
+			System.out.println("Error: Expected a file, but found a directory at: " + filePath);
+		} else {
+			try {
+				// Write the image (assuming you have the image data ready)
+				ImageIO.write(pngImage, "PNG", outputFile);  // Save the image to the file
+				System.out.println("Image saved successfully at: " + filePath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 
 			resource.setThumbnail(thumbnail);
 
 
 		// Save marker data (marker1, marker2, marker3) as part of the resource
-		ARjsMarker markers = runDockerContainer(thumbnail);
+		ARjsMarker markers = runDockerContainer(thumbnail, projectId);
 
         markerAssetRepository.save(markers); // ID is created here
         MarkerDTO markerDTO = new MarkerDTO(
@@ -401,18 +426,25 @@ public class SimpleStorageService implements StorageService {
 			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}
 
-	private ARjsMarker runDockerContainer(ImageAsset thumbnail) {
+	private ARjsMarker runDockerContainer(ImageAsset thumbnail, String projectId) {
 		System.out.println("Starting /run-docker endpoint");
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
 
 		ARjsMarker markers = new ARjsMarker();
 
 		try {
+			String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
 
+			Path path = Paths.get(markerDirPath).toAbsolutePath();
+
+			// Print the absolute path
+			System.out.println("Absolute Path: " + path);
+
+			String volume = path + ":/app/src/images";
 			// Prepare the Docker command
 			 String[] command = {"docker", "run", "--rm",
-			 		"-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
-			 		"marker-creator-app"
+			 		"-v", volume,
+			 		"mind-tracker-compiler"
 			 	};
 
 
