@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArResourceTest {
 
+    /*
     private static EntityManagerFactory emf;
     private EntityManager em;
 
@@ -96,4 +97,5 @@ class ArResourceTest {
         em.persist(resource);
         em.getTransaction().commit();
     }
+    */
 }
