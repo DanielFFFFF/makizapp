@@ -48,6 +48,7 @@ export class ClientComponent {
     // Wait for the scene to be rendered before moving it
 
     console.log('ClientComponent ngOnInit called');
+    this.getResources();
   }
 
 
@@ -86,7 +87,9 @@ export class ClientComponent {
   getContentOfResource(resource: Resource) {
     if (resource.videoAssetId != null) {
       this.http.get(`${this.SERVER_PATH}/public/video/${resource.videoAssetId}`, { responseType: 'text' })
+
         .subscribe((res: any) => {
+          console.log("VIDEO URL = " + res)
           resource.videoAsset = res;
         });
     }
