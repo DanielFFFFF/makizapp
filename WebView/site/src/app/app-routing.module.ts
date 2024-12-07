@@ -2,12 +2,14 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {AdminComponent} from "./admin/admin.component";
 import {ClientComponent} from "./client/client.component";
-import {authGuard} from "./Auth/auth.guard";
+import {AuthGuard} from "./Auth/auth.guard";
+import {LoginComponent} from "./login/login.component"
 
 const routes: Routes = [
-  {path: "admin", component: AdminComponent, canActivate:[authGuard]},
+  {path: 'login', component: LoginComponent },
+  {path: "admin", component: AdminComponent, canActivate:[AuthGuard]},
   {path: ":projectID", component: ClientComponent},
-  {path: "", redirectTo: '/admin', pathMatch: 'full'}
+  {path: "", redirectTo: '/login', pathMatch: 'full'}
 ];
 
 @NgModule({

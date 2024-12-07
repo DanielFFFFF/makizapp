@@ -27,18 +27,20 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        // Initialisation de la liste des autorités
+        // Initialize the list of authorities
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        // Ajoute l'autorité ROLE_ADMIN si l'utilisateur a le rôle ADMIN
+        // Add the ROLE_ADMIN authority if the user has the ADMIN role
         if ("ADMIN".equalsIgnoreCase(utilisateur.getRole())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        // Convertit les autorités existantes en SimpleGrantedAuthority, si elles existent
-        authorities.addAll(utilisateur.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                .collect(Collectors.toList()));
+        // Convert existing authorities to SimpleGrantedAuthority, if they exist
+        if (utilisateur.getAuthorities() != null) {
+            authorities.addAll(utilisateur.getAuthorities().stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                    .collect(Collectors.toList()));
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 utilisateur.getUsername(),

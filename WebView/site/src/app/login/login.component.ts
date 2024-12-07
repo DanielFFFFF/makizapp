@@ -18,11 +18,13 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
+        console.log('Login successful, token received:', response.token);
         localStorage.setItem('token', response.token);  // Stocke le token
         this.router.navigate(['/admin']);  // Redirige vers l'interface admin
       },
       error: (err) => {
         this.errorMessage = 'Invalid credentials';
+        console.error('Login failed:', err);
       }
     });
   }

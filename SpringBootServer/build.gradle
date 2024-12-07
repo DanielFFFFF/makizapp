@@ -25,7 +25,15 @@ repositories {
 
 dependencies {
 
-    // Communes avec les collègues
+    // Add these dependencies to resolve javax.xml.bind.DatatypeConverter issues
+    implementation 'javax.xml.bind:jaxb-api:2.3.1' // Java XML Binding API
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1' // JAXB Runtime for runtime implementations
+    implementation 'javax.activation:activation:1.1.1' // Java Activation Framework (required for JAXB)
+
+    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
+
+    // Communes
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 
     implementation "org.apache.commons:commons-lang3:3.12.0"
@@ -67,4 +75,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+application {
+    mainClass = 'fr.makizart.restserver.MakizappApplication'
+}
+
+bootRun {
+    mainClass.set(application.mainClass)
 }
