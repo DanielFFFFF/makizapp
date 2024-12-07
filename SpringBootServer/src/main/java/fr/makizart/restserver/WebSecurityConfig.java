@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -48,9 +49,9 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Updated CORS configuration usage
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                      //  .requestMatchers("/login", "/api/login").permitAll() // Autoriser l'accès public aux endpoints de login
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                      // Autoriser l'accès public aux endpoints de login
+                        //.requestMatchers("/api/login").permitAll()
+                        //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
@@ -69,55 +70,16 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    // CORS configuration bean
-   /* @Bean
-    public CorsConfigurationSource corsConfigurationSource() throws UnknownHostException {
-        // Fetch IP address of the host
-        String ipAddress = InetAddress.getLocalHost().getHostAddress();
-
-        CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(Arrays.asList("http://172.18.0.1:4200", "http://172.18.0.1:8080")); // Frontend URLs
-        configuration.setAllowedOrigins(Arrays.asList("http://" + ipAddress + ":4200", "http://" + ipAddress + ":8080")); // Frontend URLs
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        configuration.setAllowCredentials(true); // Allows credentials like cookies and headers
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }*/
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        /*try {
-            // Fetch the local IP address
-            String ipAddress = InetAddress.getLocalHost().getHostAddress();
-            configuration.setAllowedOrigins(Arrays.asList(
-                    "http://" + ipAddress + ":4200",
-                    "http://" + ipAddress + ":8080"
-            )); // Autoriser les URLs frontend
-        } catch (UnknownHostException e) {
-            // Fallback to localhost if the local IP cannot be retrieved
-            configuration.setAllowedOrigins(Arrays.asList(
-                    "http://localhost:4200",
-                    "http://localhost:8080"
-            ));
-        }
-        */
 
         // Configuration des origines autorisées
-        configuration.setAllowedOrigins(Arrays.asList(
-               // "http://localhost:4200",        // Localhost pour Angular
-               // "http://172.18.0.1:4200",      // IP de votre front-end Angular
-                "http://172.18.0.1:8080"       // IP de votre back-end Spring Boot
-        ));
+        configuration.setAllowedOriginPatterns(List.of("*"));
 
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setAllowedHeaders(List.of("*")); // Autorise tous les headers
         configuration.setAllowCredentials(true); // Autorise les cookies et les headers comme les tokens
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

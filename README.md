@@ -70,14 +70,3 @@ This steps are not necessary if you are running the app on the same machine you 
    ```
    More details on the script behaviour can be found in the script itself.
 
-#### Manually:
-
-1. Firstly we need a postgres database to communicate with the spring server
-    - Use the docker compose file in the makizapp directory by running the command
-      `docker compose up`. This will create and run a container which runs a postgres database.
-2. In `webview/site` run the command `ng build` this should compile into `webview/site/dist/site/`
-   you then need to move the newly compiled files into `SpringBootServer/src/main/resources/static`
-   so that SpringBoot uses the newly compiled frontend.
-3. Using intelliJ, go to `SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java` and run the main method.
-
-Afterwards you should be able to connect using the ip of your machine in your browser

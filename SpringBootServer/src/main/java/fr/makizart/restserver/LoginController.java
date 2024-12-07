@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RestController
-@CrossOrigin(origins = "http://172.18.0.1:8080") // Autoriser les requêtes de cette origine
 @RequestMapping("/api")
 public class LoginController {
 
