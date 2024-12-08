@@ -378,6 +378,7 @@ public class SimpleStorageService implements StorageService {
 		projectRepository.save(project);
 
 		// Return the created resource as a DTO
+		System.out.println("Ressource created successfully!");
 		return new ArResourceDTO(resource);
 	}
 

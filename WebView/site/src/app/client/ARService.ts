@@ -51,6 +51,7 @@ export class ARService {
     this.renderer.setAttribute(camera, 'look-controls', 'enabled: false');
     this.renderer.appendChild(aScene, camera);
 
+
     // Create as many entities as there are photos
     for (let i = 0; i < pngcount; i++) {
       this.getResourceVideoURL(project_id, pngcount - i - 1).subscribe(videoURL => {
@@ -68,17 +69,38 @@ export class ARService {
         this.renderer.setAttribute(aVideo, 'src', videoURL);
 
         // The settings
-        this.renderer.setAttribute(aVideo, 'opacity', '0.5');
+        this.renderer.setAttribute(aVideo, 'opacity', '0.8');
         this.renderer.setAttribute(aVideo, 'position', '0 0 0');
         this.renderer.setAttribute(aVideo, 'height', '0.552');
         this.renderer.setAttribute(aVideo, 'width', '1');
         this.renderer.setAttribute(aVideo, 'rotation', '0 0 0');
+        //aVideo.pause();
+
+
+        // Listen for the targetFound event
+        aEntity.addEventListener('targetFound', () => {
+
+            let arSystem = aScene.systems["mindar-image-system"];
+          console.log(`Target ${i} found`);
+          // Add additional code to handle the target being found, such as playing the video
+          aVideo.play();
+        });
+
+        // Listen for the targetLost event
+        aEntity.addEventListener('targetLost', () => {
+          let arSystem = aScene.systems["mindar-image-system"];
+          console.log(`Target ${i} lost`);
+          // Add additional code to handle the target being lost, such as pausing the video
+          aVideo.pause();
+        });
+
 
         // Make it a child of the entity
         this.renderer.appendChild(aEntity, aVideo);
 
         // Append the entity to the scene
         this.renderer.appendChild(aScene, aEntity);
+
 
 
       });

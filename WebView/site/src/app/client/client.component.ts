@@ -39,9 +39,6 @@ export class ClientComponent {
 
     });
 
-    setTimeout(() => {
-      this.sceneLoaded = true;
-    }, 500); // 3000ms = 3 seconds
 
 
 
@@ -54,7 +51,11 @@ export class ClientComponent {
 
   ngAfterViewInit(): void {
     this.projectId = this.route.snapshot.paramMap.get("projectId");
-    this.arService.initializeARScene(this.projectId);
+
+    setTimeout(() => {
+      this.arService.initializeARScene(this.projectId);
+    }, 500); // 3000ms = 3 seconds
+
   }
 
 
