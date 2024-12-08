@@ -1,71 +1,53 @@
 package fr.makizart.restserver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.authentication.AuthenticationManager;
+import fr.makizart.common.database.table.Utilisateur;
+import fr.makizart.restserver.services.JwtService;
+import fr.makizart.restserver.services.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+    private final UserService userService;
 
-    private final AuthenticationManager authenticationManager;
-    private final String secretKey = "YourSecretKey"; // Replace with your secret key
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public JwtAuthenticationFilter(JwtService jwtService,
+                                    UserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Clear security context before processing the request
+        SecurityContextHolder.clearContext();
+
         try {
-            // Extract username and password from request
-            Map<String, String> credentials = new ObjectMapper().readValue(request.getInputStream(), HashMap.class);
-            String username = credentials.get("username");
-            String password = credentials.get("password");
-
-            // Authenticate the user
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            return authenticationManager.authenticate(authenticationToken);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            String authorizationHeader = request.getHeader("Authorization");
+            // Check if Authorization header is present and formatted correctly
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
+                String usernameFromToken = jwtService.getUsernameFromToken(token);
+                // then create the authentication, set it in the context to use it for the request only. (toujours stateless)
+                Utilisateur user = userService.findByUsername(usernameFromToken);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write(e.getMessage());
         }
-    }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // Generate JWT token
-        User user = (User) authResult.getPrincipal();
-        String token = Jwts.builder()
-                .setSubject(user.getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + 864_000_000)) // 10 days
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
-                .compact();
-
-        // Create response body
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("token", "Bearer " + token);
-        responseBody.put("message", "Authentication successful");
-
-        System.out.println("Token généré : " + token);
-
-        // Set response content type to JSON
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        // Write response body
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseBody));
+        // Continue with the filter chain
+        filterChain.doFilter(request, response);
     }
 }

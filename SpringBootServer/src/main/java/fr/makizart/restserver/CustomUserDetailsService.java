@@ -2,6 +2,7 @@ package fr.makizart.restserver;
 
 import fr.makizart.common.database.table.Utilisateur;
 import fr.makizart.common.database.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -22,30 +24,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utilisateur utilisateur = userRepository.findByUsername(username);
-        if (utilisateur == null) {
+        Utilisateur utilisateur = userRepository.findByUsername(username).orElseThrow();
+
+        if (utilisateur.getRole() == null)
             throw new UsernameNotFoundException("User not found");
-        }
 
-        // Initialize the list of authorities
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-        // Add the ROLE_ADMIN authority if the user has the ADMIN role
-        if ("ADMIN".equalsIgnoreCase(utilisateur.getRole())) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        // Convert existing authorities to SimpleGrantedAuthority, if they exist
-        if (utilisateur.getAuthorities() != null) {
-            authorities.addAll(utilisateur.getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                    .collect(Collectors.toList()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(
-                utilisateur.getUsername(),
-                utilisateur.getPassword(),
-                authorities
-        );
+        var user =  new Utilisateur();
+        user.setUsername(utilisateur.getUsername());
+        user.setPassword(utilisateur.getPassword());
+        user.setRole(utilisateur.getRole());
+        return user;
     }
 }

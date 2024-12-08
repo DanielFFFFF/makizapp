@@ -28,6 +28,11 @@ rm -rf SpringBootServer/src/main/resources/static/*
 # Moving compiled frontend files to the backend
 mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
 
+# # Export each variable from the secrets.txt file as an environment variable
+while IFS='=' read -r key value; do
+  export "$key"="$value"
+done < secrets.txt
+
 # Start the backend
 echo 'Starting the backend...'
 

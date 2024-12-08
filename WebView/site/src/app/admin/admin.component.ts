@@ -11,19 +11,11 @@ import { AuthService } from '../services/auth.service';
 })
 export class AdminComponent {
 
-  constructor(private http: HttpClient, private router: Router, private elementRef: ElementRef, private authService: AuthService) {}
+  constructor( private router: Router, private elementRef: ElementRef, private authService: AuthService) {}
 
   ngAfterViewInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#F6F7FA';
     this.elementRef.nativeElement.ownerDocument.body.style.overflowY = 'scroll';
   }
-
-
-  logout() {
-    console.log("Logout button clicked");
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
 
 }

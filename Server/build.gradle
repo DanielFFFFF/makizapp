@@ -27,6 +27,10 @@ dependencies {
     // Only needed database driver
     runtimeOnly 'org.postgresql:postgresql'
 
+    // Lombok pour les annotations
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
     // Test dependencies (if needed)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter'

@@ -8,7 +8,7 @@ import {ProjectEditorComponent} from './admin/project-editor/project-editor.comp
 import {TopBarComponent} from './admin/top-bar/top-bar.component';
 import {SafePipe} from "./admin/commons/safe.pipe";
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import {HttpClientModule, HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {AppRoutingModule} from './app-routing.module';
 import {AdminComponent} from './admin/admin.component';
 import {ClientComponent} from './client/client.component';
@@ -44,11 +44,7 @@ import { AuthInterceptor } from './auth.interceptor';
         MatIconModule,
     ],
   providers: [
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true, // Permet de chaîner plusieurs intercepteurs
-      },
+      provideHttpClient(withInterceptors([AuthInterceptor])),
     ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
