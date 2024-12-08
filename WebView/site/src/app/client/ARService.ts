@@ -5,6 +5,11 @@ import {AppConfigService} from "../config/app.config.service";
 import {map, switchMap} from "rxjs/operators";
 import {Observable} from "rxjs";
 
+/*
+* This injectable is responsible for creating the HTML file that runs the MindAR script
+* This is done instead of using the angular html file directly because the script needs to run outside of the angular app-root
+ */
+
 @Injectable({
   providedIn: 'root',
 })
@@ -23,9 +28,18 @@ export class ARService {
 
   resources: Resource[] = [];
 
+/*
+* Creates an AR scene
+* Requires projectID to find the corresponding .mind marker file
+* Requires pngcount to know how many images to add
+* It loops through all the images and creates an entity with the corresponding index ( the index picks the correct marker in the .mind)
+* This index is also used to find the corresponding video/ressource associated to the png
+ */
 
   createARScene(project_id: string | null, pngcount: number) {
     // Create the a-scene element
+    // This is done only once as all the images will be children of it as they share the same .mind file
+
     const aScene = this.renderer.createElement('a-scene');
     this.renderer.setAttribute(aScene, 'mindar-image', `imageTargetSrc: ./markers/${project_id}/targets.mind`);
     this.renderer.setAttribute(aScene, 'vr-mode-ui', 'enabled: false');
@@ -37,22 +51,30 @@ export class ARService {
     this.renderer.setAttribute(camera, 'look-controls', 'enabled: false');
     this.renderer.appendChild(aScene, camera);
 
+    // Create as many entities as there are photos
     for (let i = 0; i < pngcount; i++) {
-
-
       this.getResourceVideoURL(project_id, pngcount - i - 1).subscribe(videoURL => {
         // Create the a-entity element with mindar-image-target attribute
         var aEntity = this.renderer.createElement(`a-entity`);
+
+        // Associate the entity with the correct index in the .mind file
+        // This means the entity will look for the features in the i*th "marker" in the .mind
         this.renderer.setAttribute(aEntity, 'mindar-image-target', `targetIndex: ${i}`);
+
+        // Create a video element to display on this entity if found
         var aVideo = this.renderer.createElement('a-video');
 
+        // The video to be displayed
         this.renderer.setAttribute(aVideo, 'src', videoURL);
+
+        // The settings
         this.renderer.setAttribute(aVideo, 'opacity', '0.5');
         this.renderer.setAttribute(aVideo, 'position', '0 0 0');
         this.renderer.setAttribute(aVideo, 'height', '0.552');
         this.renderer.setAttribute(aVideo, 'width', '1');
         this.renderer.setAttribute(aVideo, 'rotation', '0 0 0');
 
+        // Make it a child of the entity
         this.renderer.appendChild(aEntity, aVideo);
 
         // Append the entity to the scene
@@ -60,31 +82,6 @@ export class ARService {
 
 
       });
-
-
-
-
-      /**
-       *
-       *
-       *
-       *  var aPlane = this.renderer.createElement('a-plane');
-       *       this.renderer.setAttribute(aPlane, 'color', 'blue');
-       *       this.renderer.setAttribute(aPlane, 'opacity', '0.5');
-       *       this.renderer.setAttribute(aPlane, 'position', '0 0 0');
-       *       this.renderer.setAttribute(aPlane, 'height', '0.552');
-       *       this.renderer.setAttribute(aPlane, 'width', '1');
-       *       this.renderer.setAttribute(aPlane, 'rotation', '0 0 0');
-       *
-       * // Append the plane to the entity
-       *       this.renderer.appendChild(aEntity, aPlane);
-       *
-       *       // Append the entity to the scene
-       *       this.renderer.appendChild(aScene, aEntity);
-       *
-       *
-       // Create and configure the a-plane element
-       */
 
 
     }
@@ -95,6 +92,7 @@ export class ARService {
     return aScene;
   }
 
+  // Creates a scene after using endpoint to count the amount of pngs in the project folder
   initializeARScene(project_id: string | null) {
     // Fetch the PNG count for the given project_id
     this.http.get<number>(`./markers/${project_id}/png-count`)
@@ -105,6 +103,8 @@ export class ARService {
         console.error("Failed to fetch PNG count:", error);
       });
   }
+
+  // Gets the URL of the video given the index in the directory
 
   getResourceVideoURL(projectId: string | null, k: number): Observable<string> {
     return this.http.get<Resource[]>(`${this.SERVER_PATH}/public/projects/${projectId}/resources`).pipe(
