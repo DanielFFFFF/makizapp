@@ -191,15 +191,46 @@ public class SimpleStorageService implements StorageService {
 
 	@Override
 	public void deleteProject(String projectId) throws InvalidParameterException, NoSuchElementException {
+		String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
+
+		// Delete the project from the repository
 		projectRepository.delete(tryGetProject(projectId));
+
+		// Delete the directory and all its contents
+		Path directoryPath = Paths.get(markerDirPath);
+
+		try {
+			Files.walk(directoryPath)
+					.sorted(Comparator.reverseOrder()) // Process children before parent
+					.map(Path::toFile)
+					.forEach(File::delete);
+		} catch (IOException e) {
+			System.err.println("Error deleting directory: " + e.getMessage());
+		}
 	}
 
+	// Delets a ressource
+	// WARNING : .mind must be recompiled after normally
 	@Override
 	public void deleteResource(String projectId, String resourceId) throws InvalidParameterException, NoSuchElementException {
+		String filePath = "SpringBootServer/mind-markers/markers/" + projectId + "/" + resourceId + ".png";
 		ArResource res = tryGetResource(resourceId);
 		Project p = tryGetProject(projectId);
 		p.removeResource(res);
+
 		projectRepository.save(p);
+
+		Path path = Paths.get(filePath);
+
+		try {
+			if (Files.deleteIfExists(path)) {
+				System.out.println("File deleted: " + filePath);
+			} else {
+				System.err.println("File not found: " + filePath);
+			}
+		} catch (IOException e) {
+			System.err.println("Error deleting file: " + e.getMessage());
+		}
 	}
 
 	@Override
