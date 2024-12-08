@@ -34,7 +34,6 @@ public class SimpleStorageService implements StorageService {
 	private final VideoAssetRepository videoAssetRepository;
 	private final SoundAssetReposetory soundAssetReposetory;
 
-	private final MarkerAssetRepository markerAssetRepository;
 
 
 	final Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
@@ -43,7 +42,6 @@ public class SimpleStorageService implements StorageService {
 	public SimpleStorageService(
 			@Autowired ProjectRepository projectRepository,
 			@Autowired ArResourceAssetRepository arResourceRepository,
-			@Autowired MarkerAssetRepository markerAssetRepository,
 			@Autowired ImageAssetRepository imageAssetRepository,
 			@Autowired VideoAssetRepository videoAssetRepository,
 			@Autowired SoundAssetReposetory soundAssetReposetory,
@@ -53,7 +51,6 @@ public class SimpleStorageService implements StorageService {
 		this.imageAssetRepository = imageAssetRepository;
 		this.videoAssetRepository = videoAssetRepository;
 		this.soundAssetReposetory = soundAssetReposetory;
-		this.markerAssetRepository = markerAssetRepository;
     }
 
 	@Override
@@ -116,27 +113,6 @@ public class SimpleStorageService implements StorageService {
 	}
 
 
-	@Override
-	public byte[] getMarker1(String resourceID) {
-		ArResource resource = tryGetResource(resourceID);
-		Objects.requireNonNull(resource.getMarkers());
-		return resource.getMarkers().getMarkerData1();
-	}
-
-	@Override
-	public byte[] getMarker2(String resourceID) {
-		ArResource resource = tryGetResource(resourceID);
-		Objects.requireNonNull(resource.getMarkers());
-		return resource.getMarkers().getMarkerData1();
-	}
-
-	@Override
-	public byte[] getMarker3(String resourceID) {
-		ArResource resource = tryGetResource(resourceID);
-		Objects.requireNonNull(resource.getMarkers());
-		return resource.getMarkers().getMarkerData1();
-	}
-
 
 
 	private void saveImage(String thumbnail, ArResource resource) throws IOException {
@@ -162,7 +138,7 @@ public class SimpleStorageService implements StorageService {
 		if(marker1 == null || marker2 == null || marker3 == null){
 			throw new InvalidParameterException("3 markers are required (Iset, Fset, Fset3)");
 		}
-			FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
+			//FileSystemManager.deleteMarker(resource.getMarkers().getId().toString());
 			FileSystemManager.writeGenericMarkers(resourceId, new MarkerDTO(resource.getId(),name,marker1,marker2,marker3));
 	}
 
@@ -323,30 +299,8 @@ public class SimpleStorageService implements StorageService {
 
 
 		// Save marker data (marker1, marker2, marker3) as part of the resource
-		ARjsMarker markers = runDockerContainer(thumbnail, projectId);
+		runDockerContainer(thumbnail, projectId);
 
-        markerAssetRepository.save(markers); // ID is created here
-        MarkerDTO markerDTO = new MarkerDTO(
-                markers.getId(),
-                markers.getId().toString(),
-                incomingResourceDTO.marker1(),
-                incomingResourceDTO.marker2(),
-                incomingResourceDTO.marker3()
-        ); // Create marker DTO with marker data
-
-        // Write markers to file system and set marker paths in the resource
-
-			/*
-			Map<String, Path> paths = FileSystemManager.writeGenericMarkers(id.toString(), markerDTO);
-			markers.setMarker1Path(paths.get("marker1").toUri());
-			markers.setMarker2Path(paths.get("marker2").toUri());
-			markers.setMarker3Path(paths.get("marker3").toUri());
-			resource.setMarkers(markers);
-			 */
-
-
-
-		resource.setMarkers(markers);
 
         // If no video asset is present, handle image and/or sound assets
 		if (incomingResourceDTO.videoAsset() == null) {
@@ -426,11 +380,10 @@ public class SimpleStorageService implements StorageService {
 			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}
 
-	private ARjsMarker runDockerContainer(ImageAsset thumbnail, String projectId) {
-		System.out.println("Starting /run-docker endpoint");
+	private void runDockerContainer(ImageAsset thumbnail, String projectId) {
+
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
 
-		ARjsMarker markers = new ARjsMarker();
 
 		try {
 			String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
@@ -471,27 +424,10 @@ public class SimpleStorageService implements StorageService {
 			process.waitFor();
 			System.out.println("Docker command completed");
 
-			// Read the output files
-			String outputDir = "./output";
-			File markerFile1 = new File(outputDir, "thumbnail.fset");
-			File markerFile2 = new File(outputDir, "thumbnail.fset3");
-			File markerFile3 = new File(outputDir, "thumbnail.iset");
-
-			if (markerFile1.exists() && markerFile2.exists() && markerFile3.exists()) {
-				markers.setMarkerData1(Files.readAllBytes(markerFile1.toPath()));
-				markers.setMarkerData2(Files.readAllBytes(markerFile2.toPath()));
-				markers.setMarkerData3(Files.readAllBytes(markerFile3.toPath()));
-
-				System.out.println("Markers set with file data successfully.");
-			} else {
-				System.out.println("One or more marker files not found.");
-			}
-			return markers;
 
 		} catch (Exception e) {
 			System.out.println("Error occurred: " + e.getMessage());
 			e.printStackTrace();
-			return new ARjsMarker();
 		}
 	}
 

@@ -62,3 +62,14 @@ this should compile into ```webview/site/dist/site/```
 you then need to move the newly compiled files into 
 ```SpringBootServer/src/main/resources/static```
 so that SpringBoot uses the newly compiled frontend.
+
+
+### Resetting database
+
+If database is modified such as after the removal of the old fset markers, the database must be remade:
+
+```docker-compose down --volumes --remove-orphans```
+
+This command will completely reset the database, this will delete all projects in the database (but not the stored .mind files)
+
+

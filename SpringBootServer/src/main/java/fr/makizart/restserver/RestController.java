@@ -231,68 +231,6 @@ public class RestController {
     }
 
 
-    @GetMapping("/resources/MARKER1/{id}")
-    public ResponseEntity<byte[]> getMarker1(@PathVariable String id) throws IOException {
-        byte[] image = storageService.getMarker1(id); // Assume this method fetches the image bytes
-        return ResponseEntity.ok()
-                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
-                .body(image);
-    }
-
-    @GetMapping("/resources/MARKER2/{id}")
-    public ResponseEntity<byte[]> getMarker2(@PathVariable String id) throws IOException {
-        byte[] image = storageService.getMarker2(id); // Assume this method fetches the image bytes
-        return ResponseEntity.ok()
-                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
-                .body(image);
-    }
-
-    @GetMapping("/resources/MARKER3/{id}")
-    public ResponseEntity<byte[]> getMarker3(@PathVariable String id) throws IOException {
-        byte[] image = storageService.getMarker3(id); // Assume this method fetches the image bytes
-        return ResponseEntity.ok()
-                .header("Content-Type", "image/jpeg") // Or "image/png" depending on your image type
-                .body(image);
-    }
-
-    @GetMapping("/run-docker")
-    public String runDockerContainer() {
-        System.out.println("Starting /run-docker endpoint");
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
-
-        try {
-            // Prepare the Docker command
-            String[] command = {"docker", "run", "--rm",
-                    "-v", "./output:/usr/src/app/markerCreatorAppFolder/output",
-                    "marker-creator-app"
-            };
-
-
-            // Run the Docker container
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
-            processBuilder.redirectErrorStream(true); // Combine stdout and stderr
-            Process process = processBuilder.start();
-
-            System.out.println("Docker command started");
-
-            // Capture the output
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-                System.out.println("Docker output: " + line);
-            }
-
-            process.waitFor();
-            System.out.println("Docker command completed");
-            return output.toString();
-        } catch (Exception e) {
-            System.out.println("Error occurred: " + e.getMessage());
-            e.printStackTrace();
-            return "Failed to run Docker container: " + e.getMessage();
-        }
-    }
 
 
 

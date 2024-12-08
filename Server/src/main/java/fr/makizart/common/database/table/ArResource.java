@@ -14,9 +14,6 @@ public class ArResource extends DatedEntity {
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    private ARjsMarker ARjsMarker;
-
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
     private ImageAsset thumbnail;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -75,13 +72,7 @@ public class ArResource extends DatedEntity {
         this.soundAsset = soundAsset;
     }
 
-    public ARjsMarker getMarkers() {
-        return ARjsMarker;
-    }
 
-    public void setMarkers(ARjsMarker ARjsMarker) {
-        this.ARjsMarker = ARjsMarker;
-    }
 
     public ImageAsset getThumbnail() {
         return thumbnail;
