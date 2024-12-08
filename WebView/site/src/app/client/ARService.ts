@@ -40,7 +40,7 @@ export class ARService {
     for (let i = 0; i < pngcount; i++) {
 
 
-      this.getResourceVideoURL(project_id, i).subscribe(videoURL => {
+      this.getResourceVideoURL(project_id, pngcount - i - 1).subscribe(videoURL => {
         // Create the a-entity element with mindar-image-target attribute
         var aEntity = this.renderer.createElement(`a-entity`);
         this.renderer.setAttribute(aEntity, 'mindar-image-target', `targetIndex: ${i}`);
