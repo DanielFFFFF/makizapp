@@ -75,7 +75,6 @@ This steps are not necessary if you are running the app on the same machine you 
 2. Run the script `./start.sh`:
     - ```shell
       chmod +x start.sh
-      ./start.sh
-   ```
+      ./start.sh```
  More details on the script behaviour can be found in the script itself.
 
