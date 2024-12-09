@@ -36,8 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring(7);
                 String usernameFromToken = jwtService.getUsernameFromToken(token);
-                // then create the authentication, set it in the context to use it for the request only. (toujours stateless)
-                Utilisateur user = userService.findByUsername(usernameFromToken);
+                // then create the authentication for that specific user, set it in the spring context to use it for the request only. (toujours stateless)
+                Utilisateur user = userService.findUserByUsername(usernameFromToken);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

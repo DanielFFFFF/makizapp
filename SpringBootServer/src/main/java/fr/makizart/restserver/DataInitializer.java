@@ -22,8 +22,8 @@ public class DataInitializer {
     public CommandLineRunner initData() {
         return args -> {
             // Code de création de l'utilisateur admin commenté pour le désactiver
-
-            if (utilisateurRepository.findByUsername("admin") == null) {
+            boolean userExists = utilisateurRepository.existsByUsername("admin");
+            if (!userExists) {
                 Utilisateur admin = new Utilisateur();
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode("pass"));

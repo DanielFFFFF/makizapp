@@ -18,7 +18,7 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public Utilisateur findByUsername(String username) {
+    public Utilisateur findUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow();
     }
 

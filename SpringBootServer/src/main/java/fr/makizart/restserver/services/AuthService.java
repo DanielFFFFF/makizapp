@@ -18,7 +18,7 @@ public class AuthService {
 
     // Return a JWT token if the user exists and the password is correct
     public String login(String username, String passwordFromRequest) {
-        Utilisateur userInDatabase = userService.findByUsername(username);
+        Utilisateur userInDatabase = userService.findUserByUsername(username);
 
         if (!passwordEncoder.matches(passwordFromRequest, userInDatabase.getPassword()))
             throw new RuntimeException("Invalid credentials");
