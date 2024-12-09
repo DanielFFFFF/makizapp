@@ -10,7 +10,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - MELEHI Hanae
 
 
-## Contributors 2024/2025
+## Contributors 2023/2024
 
 - CORNET Kevin
 - MEUNIER Rodrigue
@@ -77,5 +77,5 @@ This steps are not necessary if you are running the app on the same machine you 
       chmod +x start.sh
       ./start.sh
    ```
-   More details on the script behaviour can be found in the script itself.
+ More details on the script behaviour can be found in the script itself.
 
