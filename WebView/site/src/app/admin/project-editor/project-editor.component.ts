@@ -32,7 +32,7 @@ export class ProjectEditorComponent {
   /**
    * @property {string} SERVER_PATH - Constant containing the server path.
    */
-  SERVER_PATH: string = ""
+  SERVER_PATH: string = "";
 
   /**
    * @property {ElementRef | null} filterResource - Reference to the HTML element for filtering resources.
@@ -106,6 +106,11 @@ export class ProjectEditorComponent {
    * @private
    */
   newName: string = "";
+
+  /**
+   * @property {string} qrData
+   */
+  public qrData: string = '';
 
   confirmDelete(): void {
     if(confirm("Are you sure wo want to delete this resource?")) {
@@ -595,7 +600,8 @@ export class ProjectEditorComponent {
    * Displays the share popup.
    */
   showSharePopup() {
-      this.sharePopup = true;
+    this.qrData = `${this.SERVER_PATH}/#/${this.project.getId()}`;
+    this.sharePopup = true;
   }
 
   /**
@@ -611,8 +617,7 @@ export class ProjectEditorComponent {
    * Generates a shareable URL and attempts to copy it to the clipboard.
    */
   getShareUrl(): void {
-      const baseUrl = window.location.href.replace('admin', '');
-      const url = `${baseUrl}${this.project.getId()}`;
+      const url = `${this.SERVER_PATH}/#/${this.project.getId()}`;
 
       // Check if the clipboard API is available
       if (navigator.clipboard) {
@@ -666,6 +671,8 @@ export class ProjectEditorComponent {
       // Clean up
       document.body.removeChild(textarea);
   }
+
+  //----------------------------------------- Ressource -----------------------------------------
 
   /**
    * @method deleteResource()
