@@ -151,6 +151,7 @@ export class ProjectManagerComponent {
    * Displays the view for creating a new project.
    */
   showNewProject() {
+    console.log("Showing new project view");
     this.newProjectView = true;
   }
 
@@ -159,6 +160,7 @@ export class ProjectManagerComponent {
    * Hides the view for creating a new project.
    */
   hideNewProject() {
+    console.log("Hiding new project view");
     this.newProjectView = false;
   }
 

@@ -80,6 +80,11 @@ export class ProjectEditorComponent {
   newResourceView: boolean = false;
 
   /**
+   * @property {boolean} sharePopup - Show or not the share popup.
+   */
+  sharePopup: boolean = false;
+
+  /**
    * @property {boolean} showResponses
    * @private
    * Is used for show in console the response of all requests to server.
@@ -581,6 +586,24 @@ export class ProjectEditorComponent {
    */
   hideNewResource() {
     this.newResourceView = false;
+  }
+
+  //----------------------------------------- Share Popup -----------------------------------------
+
+  /**
+   * @method showSharePopup()
+   * Displays the share popup.
+   */
+  showSharePopup() {
+      this.sharePopup = true;
+  }
+
+  /**
+   * @method hideSharePopup()
+   * Hides the share popup.
+   */
+  hideSharePopup() {
+    this.sharePopup = false;
   }
 
   /**
