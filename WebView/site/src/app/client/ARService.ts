@@ -51,6 +51,7 @@ export class ARService {
     this.renderer.setAttribute(camera, 'look-controls', 'enabled: false');
     this.renderer.appendChild(aScene, camera);
 
+    const assets = this.renderer.createElement('a-assets');
 
     // Create as many entities as there are photos
     for (let i = 0; i < pngcount; i++) {
@@ -63,18 +64,39 @@ export class ARService {
         this.renderer.setAttribute(aEntity, 'mindar-image-target', `targetIndex: ${i}`);
 
         // Create a video element to display on this entity if found
-        var aVideo = this.renderer.createElement('a-video');
+        var video = this.renderer.createElement('video');
+
 
         // The video to be displayed
-        this.renderer.setAttribute(aVideo, 'src', videoURL);
+        this.renderer.setAttribute(video, 'src', videoURL);
+
+        this.renderer.setAttribute(video, 'id', i.toString());
+        // The settings
+        this.renderer.setAttribute(video, 'opacity', '0.8');
+        this.renderer.setAttribute(video, 'preload', 'auto');
+
+        this.renderer.setAttribute(video, 'position', '0 0 0');
+        this.renderer.setAttribute(video, 'height', '0.552');
+        this.renderer.setAttribute(video, 'width', '1');
+        this.renderer.setAttribute(video, 'rotation', '0 0 0');
+
+
+
+
+        var aVideo = this.renderer.createElement('a-video');
+
+
+        // The video to be displayed
+        this.renderer.setAttribute(aVideo, 'src', "#" + i.toString());
 
         // The settings
         this.renderer.setAttribute(aVideo, 'opacity', '0.8');
+        this.renderer.setAttribute(aVideo, 'preload', 'auto');
         this.renderer.setAttribute(aVideo, 'position', '0 0 0');
         this.renderer.setAttribute(aVideo, 'height', '0.552');
         this.renderer.setAttribute(aVideo, 'width', '1');
         this.renderer.setAttribute(aVideo, 'rotation', '0 0 0');
-        //aVideo.pause();
+
 
 
         // Listen for the targetFound event
@@ -83,7 +105,7 @@ export class ARService {
             let arSystem = aScene.systems["mindar-image-system"];
           console.log(`Target ${i} found`);
           // Add additional code to handle the target being found, such as playing the video
-          aVideo.play();
+          video.play();
         });
 
         // Listen for the targetLost event
@@ -91,14 +113,19 @@ export class ARService {
           let arSystem = aScene.systems["mindar-image-system"];
           console.log(`Target ${i} lost`);
           // Add additional code to handle the target being lost, such as pausing the video
-          aVideo.pause();
+          video.pause();
+          video.timestamp(0);
         });
 
+
+       // this.renderer.setAttribute(aEntity, 'src', "#" + i.toString());
+        this.renderer.appendChild(assets, video);
 
         // Make it a child of the entity
         this.renderer.appendChild(aEntity, aVideo);
 
         // Append the entity to the scene
+
         this.renderer.appendChild(aScene, aEntity);
 
 
@@ -107,6 +134,8 @@ export class ARService {
 
 
     }
+    this.renderer.appendChild(aScene, assets);
+
     // Append the scene to the body
     this.renderer.appendChild(document.body, aScene);
 
