@@ -10,6 +10,9 @@
       <input type="password" id="password" [(ngModel)]="password" name="password" required>
     </div>
     <button type="submit">Login</button>
+      <h2 class="text-center">
+          Nouveau admin ? <a class="text-primary" routerLink="/register">Inscrivez-vous</a>
+      </h2>
   </form>
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 </div>

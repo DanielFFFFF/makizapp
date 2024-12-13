@@ -8,7 +8,7 @@ import {ProjectEditorComponent} from './admin/project-editor/project-editor.comp
 import {TopBarComponent} from './admin/top-bar/top-bar.component';
 import {SafePipe} from "./admin/commons/safe.pipe";
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from "@angular/common/http";
+import {HttpClientModule, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {AppRoutingModule} from './app-routing.module';
 import {AdminComponent} from './admin/admin.component';
 import {ClientComponent} from './client/client.component';
@@ -17,8 +17,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {LoginComponent} from './login/login.component';
 import { CommonModule } from '@angular/common';
 import { AuthInterceptor } from './auth.interceptor';
-
-
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -30,7 +29,8 @@ import { AuthInterceptor } from './auth.interceptor';
     SafePipe,
     AdminComponent,
     ClientComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
     imports: [
         BrowserModule,

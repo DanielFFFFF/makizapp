@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {AppConfigService} from "../config/app.config.service";
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +10,6 @@ import {AppConfigService} from "../config/app.config.service";
 export class AuthService {
     private loginUrl = '/api/auth/login';
 
-    // Dependency injection de HttpClient et AppConfigService
     constructor(private http: HttpClient) {
     }
 

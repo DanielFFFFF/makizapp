@@ -1,7 +1,6 @@
 import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // Ajout de cet import
-import { Router } from '@angular/router'; // Ajout de cet import
-import { AuthService } from '../services/auth.service';
+
 
 @Component({
   selector: 'app-admin',
@@ -11,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class AdminComponent {
 
-  constructor( private router: Router, private elementRef: ElementRef, private authService: AuthService) {}
+  constructor( private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#F6F7FA';
