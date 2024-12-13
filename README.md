@@ -9,7 +9,16 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - FISHER Daniel
 - MELEHI Hanae
 
-### How to run (Methode classique)
+
+## Contributors 2023/2024
+
+- CORNET Kevin
+- MEUNIER Rodrigue
+- MOLLI Bilal
+- SELIN Ludivine
+ 
+
+### How to run (Manual Setup)
 
 1. Firstly we need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
@@ -43,8 +52,8 @@ you then need to move the newly compiled files into
 ```SpringBootServer/src/main/resources/static```
 so that SpringBoot uses the newly compiled frontend.
 
-### Méthode 2 : avec le script `start.sh`
-### How to run:
+
+### How to run (Automated Setup with Script)
 
 Make sure you have docker and Java 17 set up on your machine.
 
@@ -66,7 +75,6 @@ This steps are not necessary if you are running the app on the same machine you 
 2. Run the script `./start.sh`:
     - ```shell
       chmod +x start.sh
-      ./start.sh
-   ```
-   More details on the script behaviour can be found in the script itself.
+      ./start.sh```
+ More details on the script behaviour can be found in the script itself.
 
