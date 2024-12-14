@@ -28,8 +28,6 @@ public class RestController {
         this.storageService = storageService;
     }
 
-
-    //POST------
     @PostMapping("/admin/projects/create/project/")
 
     public ResponseEntity<IdDTO> createProject(

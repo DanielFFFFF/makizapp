@@ -84,6 +84,4 @@ class IntegrationTest {
         var page = simpleStorageService.getProjects(0,10);
         Assertions.assertArrayEquals(projects,page.getContent().toArray());
     }
-
-
 }

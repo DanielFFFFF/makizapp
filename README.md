@@ -9,18 +9,59 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - FISHER Daniel
 - MELEHI Hanae
 
+### How to install
+
+1. To begin, you have to clone the repository. Click on the green button ``` <>Code ``` (1), and copy the link of the git (2).  
+   [Screen of the path to follow on GitHub](docs/images/screen_gitclone.png)
+2. Then, navigate with your terminale en the folder where you want to put the project Makizapp.
+3. Use the command ``` git clone [url of the project, copied into the first step] ```.
+4. After that, use ``` cd makizapp ```
+5. Now, you have to install some dependencies :
+   - TODO
+
 ### How to run
+
+1. Firstly we need a postgres database to communicate with the spring server
+   - Use the docker compose file in the makizapp directory by running the command
+     ``` sudo docker compose up ```. This will create and run a container which runs a postgres database.
+   > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
+
+2. Configure the server so the api calls your machine :
+   - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```,
+     change the variable SERVER_PATH to the ip of your machine.
+   - Also change the IP in ```SpringBootServer/src/main/resources/static/application.yml```.
+     Your have to change the variable ``` address: ``` of the file like that :
+
+   ```yml
+   server:
+    address: [ip of your machine]
+    port: 8080
+   ```
+   > To have your ip address, use the following command ``` hostname -I | awk '{print $1}' ```.
+   > Example of ip address :  ``` 192.168.6.63 ```.
+
+3. Now, we will compile the front-end. Before, run this command to change the right of the file :
+   ``` chmod +x ./build-front.sh ```, and then run this command to compile : ``` ./build-front.sh ```.
+
+4. It's time to execute the application. To begin, you need to clean and compile with  ```sudo ./gradlew clean build ```.
+   After that, run the command ```sudo ./gradlew :SpringBootServer:bootRun ```.
+
+   > If you prefer, you can use intelliJ. Right click on MakizApplication and Run, it should be in the following directory:
+   > ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```.
+
+5. Afterwards you should be able to connect using the ip of your machine in your browser with this link :
+   ``` [ip of your machine]:8080 ```
 
 1. We need to allow Springboot to use docker commands without sudo.
 
 Create  a docker group\
-   ```sudo groupadd docker```\
+```sudo groupadd docker```\
 Get your username\
-   ```whoami```\
+```whoami```\
 Use the username you just found to add yourself to the docker group\
-  ```sudo usermod -aG docker $USER```\
+```sudo usermod -aG docker $USER```\
 Apply the groupchange to your current session to avoid logging in and out\
-   ```newgrp docker```
+```newgrp docker```
 
 All these changes must be done to user you plan on running the server from.
 
@@ -32,15 +73,15 @@ docker build -t mind-tracker-compiler .
 docker run --rm -v ./output:/app/src/images mind-tracker-compiler
 
 2. We'll need a postgres database to communicate with the spring server
-   - Use the docker compose file in the makizapp directory by running the command
-   ```docker compose up```
-   This will create and run a container which runs a postgres database.
+    - Use the docker compose file in the makizapp directory by running the command
+      ```docker compose up```
+      This will create and run a container which runs a postgres database.
 
 3. Configure the server so the api calls your machine
-   - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
-    change the variable SERVER_PATH to the ip of your machine. 
-   - Also change the IP in the application.yml file in the static server folder of the Springboot application,  for example if the ip of your machine is 
-   192.168.14.31, you should have the following in your application.yml:
+    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
+      change the variable SERVER_PATH to the ip of your machine.
+    - Also change the IP in the application.yml file in the static server folder of the Springboot application,  for example if the ip of your machine is
+      192.168.14.31, you should have the following in your application.yml:
 ```yml
   server:
     address: 192.168.14.31
@@ -50,16 +91,16 @@ docker run --rm -v ./output:/app/src/images mind-tracker-compiler
 
 4. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
    ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
-5.Afterwards you should be able to connect using the ip of your machine in your browser
+   5.Afterwards you should be able to connect using the ip of your machine in your browser
 
 ### How to compile front-end
 
 In
-     ```webview/site```
-run the command 
-    ```ng build```
+```webview/site```
+run the command
+```ng build```
 this should compile into ```webview/site/dist/site/```
-you then need to move the newly compiled files into 
+you then need to move the newly compiled files into
 ```SpringBootServer/src/main/resources/static```
 so that SpringBoot uses the newly compiled frontend.
 

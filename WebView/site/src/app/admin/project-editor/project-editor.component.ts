@@ -80,6 +80,11 @@ export class ProjectEditorComponent {
   newResourceView: boolean = false;
 
   /**
+   * @property {boolean} sharePopup - Show or not the share popup.
+   */
+  sharePopup: boolean = false;
+
+  /**
    * @property {boolean} showResponses
    * @private
    * Is used for show in console the response of all requests to server.
@@ -101,6 +106,11 @@ export class ProjectEditorComponent {
    * @private
    */
   newName: string = "";
+
+  /**
+   * @property {string} qrData
+   */
+  public qrData: string = '';
 
   confirmDelete(): void {
     if(confirm("Are you sure wo want to delete this resource?")) {
@@ -468,17 +478,86 @@ export class ProjectEditorComponent {
     this.newResourceView = false;
   }
 
+  //----------------------------------------- Share Popup -----------------------------------------
 
-  getShareUrl() : void{
-    let url = `/#/${this.project.getId()}`
-    navigator.clipboard.writeText(url).then(function (){
-      alert(`Link  ${url}  has been copied to clipboard`)
-    }).catch(e=> alert(`Cannot copy to clip board. Share link is ${url}`))
-
+  /**
+   * @method showSharePopup()
+   * Displays the share popup.
+   */
+  showSharePopup() {
+    this.qrData = `${this.SERVER_PATH}/#/${this.project.getId()}`;
+    this.sharePopup = true;
   }
 
+  /**
+   * @method hideSharePopup()
+   * Hides the share popup.
+   */
+  hideSharePopup() {
+    this.sharePopup = false;
+  }
 
+  /**
+   * @method getShareUrl
+   * Generates a shareable URL and attempts to copy it to the clipboard.
+   */
+  getShareUrl(): void {
+      const url = `${this.SERVER_PATH}/#/${this.project.getId()}`;
 
+      // Check if the clipboard API is available
+      if (navigator.clipboard) {
+          // Check clipboard permission
+        navigator.permissions.query({ name: 'clipboard-write' as PermissionName })
+          .then(permissionStatus => {
+                  if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
+                      navigator.clipboard.writeText(url)
+                          .then(() => {
+                              alert(`Link ${url} has been copied to clipboard`);
+                          })
+                          .catch((e) => {
+                              console.error(e); // Log the error for debugging
+                              alert(`Cannot copy to clipboard. Share link is ${url}`);
+                          });
+                  } else {
+                      alert(`Clipboard permission denied. Cannot copy the link.`);
+                  }
+              })
+              .catch((error) => {
+                  console.error('Permission query failed:', error);
+                  alert(`Cannot check clipboard permission. Share link is ${url}`);
+              });
+      } else {
+          // Fallback for browsers that do not support navigator.clipboard
+          this.fallbackCopyToClipboard(url);
+      }
+  }
+
+  /**
+   * @method fallbackCopyToClipboard
+   * Copies the given text to the clipboard using a fallback method for unsupported browsers.
+   * @param {string} text - The text to copy to the clipboard.
+   */
+  fallbackCopyToClipboard(text: string) {
+      // Create a temporary textarea element
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+          const successful = document.execCommand('copy');
+          const msg = successful ? 'successful' : 'unsuccessful';
+          alert(`Link ${text} has been copied to clipboard (copy command was ${msg}).`);
+      } catch (err) {
+          console.error('Oops, unable to copy', err);
+          alert(`Cannot copy to clipboard. Share link is ${text}`);
+      }
+
+      // Clean up
+      document.body.removeChild(textarea);
+  }
+
+  //----------------------------------------- Ressource -----------------------------------------
 
   /**
    * @method deleteResource()
@@ -540,10 +619,10 @@ export class ProjectEditorComponent {
     }
 
     if (resource.soundAssetId != null) {
-      this.http.get(`${this.SERVER_PATH}/resources/SOUND/${resource.soundAssetId}`, {responseType: 'blob'})
-        .subscribe((res) => {
-          resource.soundAsset = URL.createObjectURL(res);
-        });
+    this.http.get(`${this.SERVER_PATH}/resources/SOUND/${resource.soundAssetId}`, {responseType: 'blob'})
+      .subscribe((res) => {
+        resource.soundAsset = URL.createObjectURL(res);
+      });
     }
 
     if (resource.imageAssetId != null) {

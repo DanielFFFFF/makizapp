@@ -35,6 +35,13 @@ public interface StorageService  {
 	 */
 	ProjectDTO getProject(String projectId) throws NoSuchElementException, InvalidParameterException;
 
+	/**
+	 * Return a boolean that said if the project is in the database or not
+	 *
+	 * @param projectId The ID of the project.
+	 * @return A boolean that said if the project is in the database or not
+	 */
+	boolean projectExists(String projectId);
 
     /**
 	 * Retrieves a list of resource names in a project.

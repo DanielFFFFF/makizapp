@@ -5,8 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-
-
 @MappedSuperclass
 public abstract class DatedEntity {
     @CreationTimestamp

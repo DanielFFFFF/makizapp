@@ -64,6 +64,14 @@ public class SimpleStorageService implements StorageService {
 		return new ProjectDTO(tryGetProject(projectId));
 	}
 
+	@Override
+	public boolean projectExists(String projectId) {
+		try {
+			return projectRepository.existsById(UUID.fromString(projectId));
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 
 	@Override

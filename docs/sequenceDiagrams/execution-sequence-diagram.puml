@@ -1,0 +1,19 @@
+@startuml
+title Project execution sequence diagram
+
+actor "User" as U
+participant "System" as S
+
+== Running the database ==
+
+note right of U : TO DO
+
+== Running the SpringBoot server ==
+
+note right of U : TO DO
+
+== Compiling the front end ==
+
+note right of U : TO DO
+
+@enduml
