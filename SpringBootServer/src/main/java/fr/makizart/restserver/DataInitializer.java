@@ -28,6 +28,7 @@ public class DataInitializer {
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode("pass"));
                 admin.setRole("ADMIN");
+                admin.setEnabled(true);
                 utilisateurRepository.save(admin);
                 System.out.println("Utilisateur admin créé avec succès.");
             }

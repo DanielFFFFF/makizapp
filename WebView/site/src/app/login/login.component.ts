@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../services/auth.service';  // Le service que tu vas créer
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 
@@ -21,7 +21,7 @@ export class LoginComponent {
         this.router.navigate(['/admin']);  // Redirige vers l'interface admin
       },
       error: (err) => {
-        this.errorMessage = 'Invalid credentials';
+        this.errorMessage = err.message
         console.error('Login failed:', err);
       }
     });

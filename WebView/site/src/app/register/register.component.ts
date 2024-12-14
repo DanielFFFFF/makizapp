@@ -10,20 +10,21 @@ export class RegisterComponent {
     name: string = '';
     password: string = '';
     confirmation: string = '';
+    errorMessage: string = '';
 
     constructor(private auth: AuthService) { }
 
     onSubmit() {
-//       this.authService.register(this.name, this.password).subscribe({
-//         next: (response) => {
-//           console.log();
-//           alert('Registration sent to the administrator for approval');
-//         },
-//         error: (err) => {
-//           alert('Sorry! Registration Failed');
-//           console.error('Registration failed:', err);
-//         }
-//       });
+      this.auth.register(this.name, this.password).subscribe({
+          next: (response) => alert(response.message),
+          error: (err) => {
+              this.errorMessage = "An error occured while registering"
+              console.error(err)
+          }
+      })
+        this.name = ""
+        this.password = ""
+        this.confirmation = ""
     }
 
     formIsValid(): boolean {

@@ -32,8 +32,10 @@ public class Utilisateur implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private String role;  // Par exemple, "ADMIN" pour les administrateurs
+    private String role;// Par exemple, "ADMIN" pour les administrateurs
 
+    @Column(nullable = false)
+    private boolean enabled = false;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -52,7 +54,7 @@ public class Utilisateur implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override

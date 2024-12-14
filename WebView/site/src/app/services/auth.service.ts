@@ -9,6 +9,7 @@ import {tap} from 'rxjs/operators';
 })
 export class AuthService {
     private loginUrl = '/api/auth/login';
+    private registerUrl = '/api/auth/register'
 
     constructor(private http: HttpClient) {
     }
@@ -17,17 +18,25 @@ export class AuthService {
         return this.http.post<any>(this.loginUrl, {username, password})
             .pipe(
                 tap((response: any) => {
-                    if (response && response.token) {
-                        localStorage.setItem('token', response.token);
-                    } else {
-                        console.error('Token non reçu dans la réponse');
+                    if (response && response.token){
+                        if (response.user_enabled == false)
+                            throw new Error('User is disabled');
+                        else localStorage.setItem('token', response.token);
                     }
+                    else throw new Error('Token non reçu dans la réponse');
                 }),
                 catchError((error) => {
-                    console.error('Erreur lors du login :', error);
                     return throwError(error);
                 }));
 
+    }
+
+    register(username: string, password: string): Observable<any> {
+        return this.http.post<any>(this.registerUrl, {username, password})
+            .pipe(
+                tap((resp:any) => resp.message),
+                catchError((error) => throwError(error))
+            );
     }
 
     isLoggedIn(): boolean {
@@ -38,11 +47,11 @@ export class AuthService {
         localStorage.removeItem('token');
     }
 
-    getAuthHeaders(login = false) {
+    getAuthHeaders(login = false, json = true) {
         const token = localStorage.getItem('token');
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-        });
+        const headers = new HttpHeaders();
+        if (!json)
+            headers.set('Content-Type', 'text/plain');
 
         if (!login) {
             headers.set('Authorization', `Bearer ${token}`);

@@ -22,8 +22,17 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow();
     }
 
+    public Utilisateur findById(Long ID) {
+        return userRepository.findById(ID).orElseThrow();
+    }
+
     public void compact(Utilisateur user) {
         user.setPassword(null);
     }
 
+    public void registerUser(Utilisateur utilisateur) {
+        if (existsByUsername(utilisateur.getUsername()))
+            throw new RuntimeException("User already exists");
+        userRepository.save(utilisateur);
+    }
 }

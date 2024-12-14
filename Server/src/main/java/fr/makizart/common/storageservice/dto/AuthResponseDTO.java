@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthResponseDTO {
     private String token;
+    private boolean user_enabled;
 }
 
 /*

@@ -2,3 +2,9 @@
     background-color: rgb(147, 51, 234) ;
     border-color: rgb(150, 51, 234);
 }
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
