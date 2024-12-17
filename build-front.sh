@@ -8,6 +8,10 @@ else
   exit 1
 fi
 
+# Install npm
+echo "Install npm..."
+npm install
+
 # Build the Angular project (using production configuration)
 echo "Building Angular project..."
 ng build --configuration production
