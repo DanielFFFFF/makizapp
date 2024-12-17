@@ -22,7 +22,7 @@ spring:
         - file:src/main/resources/dynamic/ # Custom folder for runtime files
 
 server:
-  address: 192.168.43.99
+  address: 0.0.0.0
   port: 8080
   ssl:
     key-store: file:/home/asus/Bureau/Mer/makizapp/keystore.p12

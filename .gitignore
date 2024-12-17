@@ -43,8 +43,10 @@ SpringBootServer/src/main/java/fr/.DS_Store
 SpringBootServer/src/main/java/fr/makizart/.DS_Store
 .DS_Store
 
-### Node ###
-/WebView/node_modules
-
-### Static files ###
+WebView/site/node_modules
+WebView/site/dist
+WebView/site/.angular
 SpringBootServer/src/main/resources/static/*
+
+# git rm -r --cached WebView/site/.angular
+# git rm -r --cached WebView/site/dist

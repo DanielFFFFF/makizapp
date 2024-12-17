@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +7,7 @@ import {Observable} from "rxjs";
 export class AppConfigService {
   private configUrl = 'assets/app.config.json';
 
-  constructor(private http: HttpClient) { }
-
   getConfig(): Observable<any> {
-    return this.http.get(this.configUrl);
+    return of({ SERVER_PATH: ''})
   }
 }

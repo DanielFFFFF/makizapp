@@ -25,6 +25,15 @@ repositories {
 
 dependencies {
 
+    // Add these dependencies to resolve javax.xml.bind.DatatypeConverter issues
+    implementation 'javax.xml.bind:jaxb-api:2.3.1' // Java XML Binding API
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1' // JAXB Runtime for runtime implementations
+    implementation 'javax.activation:activation:1.1.1' // Java Activation Framework (required for JAXB)
+
+    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
+
+    // Communes
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 
     implementation "org.apache.commons:commons-lang3:3.12.0"
@@ -32,14 +41,14 @@ dependencies {
     implementation project(path: ':Server')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.1.5'
+
     // PostgreSQL Database
     implementation 'org.postgresql:postgresql:42.5.4'
 
     // JSON Web Token (JWT) pour gérer les tokens d'authentification
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-
-
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
     implementation 'org.springframework.boot:spring-boot-starter-security:3.0.4'
@@ -47,8 +56,13 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-client:6.1.5'
 
     // Résolution de vulnérabilités avec SnakeYAML
-    //Spring boot still use older snake yaml 1.33 which has vulnerability. This force the usage of a fixed version
+    //Spring boot still use older snake yaml 1.33 which has vulnerability This force the usage of a fixed version
     implementation "org.yaml:snakeyaml:2.0"
+
+    // Mes dépendances spécifiques
+    implementation 'org.springframework.security:spring-security-core'
+    implementation 'org.springframework.security:spring-security-config'
+    implementation 'org.springframework.security:spring-security-web'
 
     // Dépendances de développement et de tests
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.1.5'
@@ -60,7 +74,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testRuntimeOnly "com.h2database:h2-mvstore:2.1.214"
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
-
 }
 
 tasks.named('test') {
@@ -77,4 +90,12 @@ springBoot {
 
 tasks.named('bootRun') {
     mainClass = 'fr.makizart.restserver.MakizappApplication'
+}
+
+application {
+    mainClass = 'fr.makizart.restserver.MakizappApplication'
+}
+
+bootRun {
+    mainClass.set(application.mainClass)
 }

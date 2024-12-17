@@ -1,4 +1,6 @@
 import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
+import { HttpClient } from '@angular/common/http'; // Ajout de cet import
+
 
 @Component({
   selector: 'app-admin',
@@ -8,7 +10,7 @@ import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
 })
 export class AdminComponent {
 
-  constructor(private elementRef: ElementRef) {}
+  constructor( private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#F6F7FA';

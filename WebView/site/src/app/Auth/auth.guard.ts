@@ -1,6 +1,23 @@
-import {CanActivateFn} from '@angular/router';
+// `makizapp/WebView/site/src/app/Auth/auth.guard.ts`
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = () => {
-  //window.location.href = "http://localhost:9001";
-  return true;
-};
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(): boolean {
+    const isLoggedIn = this.authService.isLoggedIn();
+    console.log('AuthGuard#canActivate called. User logged in:', isLoggedIn);
+    if (this.authService.isLoggedIn()) {
+      return true;
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
+  }
+}

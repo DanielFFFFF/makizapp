@@ -9,17 +9,24 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - FISHER Daniel
 - MELEHI Hanae
 
-### How to install
 
+## Contributors 2023/2024
+
+- CORNET Kevin
+- MEUNIER Rodrigue
+- MOLLI Bilal
+- SELIN Ludivine
+ 
+### Getting Started
 1. To begin, you have to clone the repository. Click on the green button ``` <>Code ``` (1), and copy the link of the git (2).  
    [Screen of the path to follow on GitHub](docs/images/screen_gitclone.png)
 2. Then, navigate with your terminale en the folder where you want to put the project Makizapp.
 3. Use the command ``` git clone [url of the project, copied into the first step] ```.
 4. After that, use ``` cd makizapp ```
 5. Now, you have to install some dependencies :
-   - TODO
+    - TODO
 
-### How to run
+### How to run (Manual Setup)
 
 1. Firstly we need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
@@ -113,4 +120,31 @@ If database is modified such as after the removal of the old fset markers, the d
 
 This command will completely reset the database, this will delete all projects in the database (but not the stored .mind files)
 
+
+
+
+### How to run (Automated Setup with Script)
+
+Make sure you have docker and Java 17 set up on your machine.
+
+Also, in order to test the app in external devices such as phones, you only need to do the following:
+- Make sure your developpement machine and the device are on the same network or WiFi.
+    - You can also test in their connection by `ping <ip-of-target-device>` from your machine. The IP of the target device can be found in the `about` settings of the device.
+- Make sure your machine allows incoming connections on the port 8080 (`sudo ufw allow 8080` on linux per example)
+- You will need to determine the IP address of your machine on that network (you can do this by running `ip a` on linux or `ipconfig` on windows).
+- Once you have it, you can access the app by typing `http://<the-ip>:8080` in the browser of the device.
+
+This steps are not necessary if you are running the app on the same machine you are developing on.
+
+#### Using the script:
+
+1. Firstly we need a postgres database to communicate with the spring server
+    - Use the docker compose file in the makizapp directory by running `docker compose up`.
+      This will create and run a container which runs a postgres database.
+
+2. Run the script `./start.sh`:
+    - ```shell
+      chmod +x start.sh
+      ./start.sh```
+ More details on the script behaviour can be found in the script itself.
 
