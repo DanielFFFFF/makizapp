@@ -39,7 +39,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
    sudo nano /etc/environment
    source /etc/environment
    ```
-   You need to restart your machine  ```reboot``` in order to apply this change permently, so its required only once.
+   You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
    This is needed for the authentication to work in both root and ordinary environments.
 
 4. Configure the server so the api calls your machine :
@@ -158,7 +158,7 @@ This steps are not necessary if you are running the app on the same machine you 
    sudo nano /etc/environment
    source /etc/environment
    ```
-   You need to restart your machine  ```reboot``` in order to apply this change permently, so its required only once.
+   You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
    This is needed for the authentication to work in both root and ordinary environments.
 
 
