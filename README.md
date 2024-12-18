@@ -17,7 +17,7 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - MOLLI Bilal
 - SELIN Ludivine
  
-### Getting Started
+## Getting Started
 1. To begin, you have to clone the repository. Click on the green button ``` <>Code ``` (1), and copy the link of the git (2).  
    [Screen of the path to follow on GitHub](docs/images/screen_gitclone.png)
 2. Then, navigate with your terminale en the folder where you want to put the project Makizapp.
@@ -26,14 +26,23 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 5. Now, you have to install some dependencies :
     - TODO
 
-### How to run (Manual Setup)
+## How to run (Manual Setup)
 
 1. Firstly we need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
      ``` sudo docker compose up ```. This will create and run a container which runs a postgres database.
    > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
 
-2. Configure the server so the api calls your machine :
+2. Set Enironment Variable
+   open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
+   ```bash
+   sudo nano /etc/environment
+   source /etc/environment
+   ```
+   You need to restart your machine  ```reboot``` in order to apply this change permently, so its required only once.
+   This is needed for the authentication to work in both root and ordinary environments.
+
+4. Configure the server so the api calls your machine :
    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```,
      change the variable SERVER_PATH to the ip of your machine.
    - Also change the IP in ```SpringBootServer/src/main/resources/static/application.yml```.
@@ -47,10 +56,10 @@ The goal of this repository is to improve upon the existing Makizapp created by 
    > To have your ip address, use the following command ``` hostname -I | awk '{print $1}' ```.
    > Example of ip address :  ``` 192.168.6.63 ```.
 
-3. Now, we will compile the front-end. Before, run this command to change the right of the file :
+5. Now, we will compile the front-end. Before, run this command to change the right of the file :
    ``` chmod +x ./build-front.sh ```, and then run this command to compile : ``` ./build-front.sh ```.
 
-4. It's time to execute the application. To begin, you need to clean and compile with  ```sudo ./gradlew clean build ```.
+6. It's time to execute the application. To begin, you need to clean and compile with  ```sudo ./gradlew clean build ```.
    After that, run the command ```sudo ./gradlew :SpringBootServer:bootRun ```.
 
    > If you prefer, you can use intelliJ. Right click on MakizApplication and Run, it should be in the following directory:
@@ -123,7 +132,7 @@ This command will completely reset the database, this will delete all projects i
 
 
 
-### How to run (Automated Setup with Script)
+## How to run (Automated Setup with Script)
 
 Make sure you have docker and Java 17 set up on your machine.
 
@@ -136,11 +145,22 @@ Also, in order to test the app in external devices such as phones, you only need
 
 This steps are not necessary if you are running the app on the same machine you are developing on.
 
-#### Using the script:
+### Using the script:
 
 1. Firstly we need a postgres database to communicate with the spring server
-    - Use the docker compose file in the makizapp directory by running `docker compose up`.
-      This will create and run a container which runs a postgres database.
+   - Use the docker compose file in the makizapp directory by running the command
+     ``` sudo docker compose up ```. This will create and run a container which runs a postgres database.
+   > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
+
+2. Set Enironment Variable
+   open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
+   ```bash
+   sudo nano /etc/environment
+   source /etc/environment
+   ```
+   You need to restart your machine  ```reboot``` in order to apply this change permently, so its required only once.
+   This is needed for the authentication to work in both root and ordinary environments.
+
 
 2. Run the script `./start.sh`:
     - ```shell
