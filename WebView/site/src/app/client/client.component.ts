@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2, AfterViewInit} from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { ARService } from './ARService';
   templateUrl: './client.component.html'
 })
 
-export class ClientComponent {
+export class ClientComponent implements OnInit, AfterViewInit {
   @ViewChild('video') video!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   private stream: MediaStream | null = null;

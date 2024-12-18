@@ -48,5 +48,6 @@ WebView/site/dist
 WebView/site/.angular
 SpringBootServer/src/main/resources/static/*
 
+SpringBootServer/SpringBootServer/mind-markers/markers/*
 # git rm -r --cached WebView/site/.angular
 # git rm -r --cached WebView/site/dist

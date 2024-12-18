@@ -19,6 +19,8 @@ import { CommonModule } from '@angular/common';
 import { AuthInterceptor } from './auth.interceptor';
 import { RegisterComponent } from './register/register.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import {LoadingBarHttpClientModule} from "@ngx-loading-bar/http-client";
+import {LoadingBarModule} from "@ngx-loading-bar/core";
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { QRCodeModule } from 'angularx-qrcode';
         RouterModule,
         RouterOutlet,
         MatIconModule,
+        LoadingBarHttpClientModule,
+        LoadingBarModule,
         QRCodeModule,
     ],
   providers: [

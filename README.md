@@ -142,9 +142,12 @@ This steps are not necessary if you are running the app on the same machine you 
     - Use the docker compose file in the makizapp directory by running `docker compose up`.
       This will create and run a container which runs a postgres database.
 
-2. Run the script `./start.sh`:
+2. Run the app:
     - ```shell
+      cd 
+      docker build -t mind-tracker-compiler ./image-tracking-project
       chmod +x start.sh
-      ./start.sh```
- More details on the script behaviour can be found in the script itself.
-
+      ./start.sh
+      ```
+      
+More details on the script behaviour can be found in the script itself.

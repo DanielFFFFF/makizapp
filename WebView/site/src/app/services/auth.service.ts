@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import {AppConfigService} from "../config/app.config.service";
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,11 @@ export class AuthService {
     private loginUrl = '/api/auth/login';
     private registerUrl = '/api/auth/register'
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private configService: AppConfigService) {
+        this.configService.getConfig().subscribe((config) => {
+            this.loginUrl = config.SERVER_PATH + this.loginUrl;
+            this.registerUrl = config.SERVER_PATH + this.registerUrl;
+        });
     }
 
     login(username: string, password: string): Observable<any> {

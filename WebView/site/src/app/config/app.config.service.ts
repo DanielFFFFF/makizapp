@@ -8,6 +8,6 @@ export class AppConfigService {
   private configUrl = 'assets/app.config.json';
 
   getConfig(): Observable<any> {
-    return of({ SERVER_PATH: ''})
+    return of({ SERVER_PATH: window.location.origin });
   }
 }
