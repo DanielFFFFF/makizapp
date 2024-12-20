@@ -2,10 +2,10 @@ spring:
   profiles:
     active: development
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/makizapp
-    username: admin
-    password: password
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/makizapp
+#    username: admin
+#    password: password
   jpa:
     hibernate:
       ddl-auto: update
