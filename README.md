@@ -153,7 +153,7 @@ This steps are not necessary if you are running the app on the same machine you 
    > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
 
 2. Set Enironment Variable
-   open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
+   open the env.yaml and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
    ```bash
    sudo nano /etc/environment
    source /etc/environment
