@@ -16,7 +16,7 @@ jobs:
       - name: Postgres instance runtime check, create the database if needed
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.58.98.24
+          host: 34.133.219.45
           username: root
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
