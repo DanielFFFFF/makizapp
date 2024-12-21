@@ -1,7 +1,10 @@
 spring:
   profiles:
     active: development
-
+  datasource:
+    url: jdbc:postgresql://34.58.98.24:5432/makizapp
+    username: postgres
+    password: password
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/makizapp
 #    username: admin
@@ -24,8 +27,4 @@ spring:
 server:
   address: 0.0.0.0
   port: 8080
-  ssl:
-    key-store: file:src/main/resources/keystore.p12
-    key-store-password: abcdef
-    key-store-type: PKCS12
-    key-alias: makizapp
+
