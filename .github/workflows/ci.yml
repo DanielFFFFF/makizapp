@@ -13,8 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.7
 
-      #install docker in vm from ci.yml
-      - name: Install Docker in VM
+        #install docker in vm from ci.yml
+      - name: Install Docker and Node in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 34.133.219.45
@@ -26,9 +26,12 @@ jobs:
             then
                 sudo curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
-                sudo docker --version
-                sudo docker run hello-world
             fi
+            if ! command -v node &> /dev/null
+            then
+                sudo apt-get update && apt-get install -y nodejs npm
+            fi
+
 
       - name: Clone project and start DB
         uses: appleboy/ssh-action@v1.0.3
@@ -45,5 +48,23 @@ jobs:
             sudo docker compose down --volumes --remove-orphans
             sudo docker compose up -d
       
-            
 
+      - name: mind tracker and spring boot
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 34.133.219.45
+          username: asus
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            cd makizapp
+            sudo docker build -t mind-tracker-compiler ./image-tracking-project
+            cd WebView/site
+            npm install
+            npm install -g @angular/cli
+            ng build --configuration production
+            cd ../../
+            sudo rm -rf SpringBootServer/src/main/resources/static/*
+            sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
+            ./gradlew clean build
+            ./gradlew :SpringBootServer:bootRun > springboot.log 2>&1 &
+            
