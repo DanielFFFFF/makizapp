@@ -4,7 +4,7 @@ services:
   makizapp_db:
     container_name: java_db
     restart: always
-    image: postgres:16
+    image: postgres:16-alpine
     ports:
       - "5432:5432"
     environment:
