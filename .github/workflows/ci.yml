@@ -17,12 +17,12 @@ jobs:
       - name: Install Docker and Node in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.133.219.45
+          host: 104.197.29.187
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             set -e
-            if ! command -v docker > /dev/null 2>&1; then
+            if ! command -v docker 2>&1 > /dev/null; then
                 echo "Installing Docker..."
                 curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
@@ -41,7 +41,7 @@ jobs:
       - name: Clone project and start DB
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.133.219.45
+          host: 104.197.29.187
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
@@ -58,7 +58,7 @@ jobs:
       - name: mind tracker and spring boot
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.133.219.45
+          host: 104.197.29.187
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           command_timeout : '30m'
