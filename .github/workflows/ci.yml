@@ -20,7 +20,6 @@ jobs:
           host: 34.133.219.45
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
-          port: 22
           script: |
             if ! command -v docker &> /dev/null
             then
@@ -29,7 +28,7 @@ jobs:
             fi
             if ! command -v node &> /dev/null
             then
-              sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
               nvm install 22
               node -v
               npm -v
