@@ -55,6 +55,7 @@ jobs:
           host: 34.133.219.45
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
+          command_timeout : '30m'
           script: |
             cd makizapp
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
