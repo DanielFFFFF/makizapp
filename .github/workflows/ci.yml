@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4.1.7
 
       #install docker in vm from ci.yml
-      - name: ssh to vm in gcp
+      - name: Install Docker in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 34.133.219.45
@@ -29,6 +29,21 @@ jobs:
                 sudo docker --version
                 sudo docker run hello-world
             fi
-            
 
+      - name: Clone project and start DB
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 34.133.219.45
+          username: asus
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            # Remove the project if it already exists in order to remove .mind files remained in file system
+            if [ -d makizapp ]; then rm -rf makizapp; fi   
+            git clone --branch containerization https://github.com/HanaeMelehi/makizapp.git
+            cd makizapp
+            #delete DB data from previous run
+            sudo docker compose down --volumes --remove-orphans
+            sudo docker compose up -d
+      
+            
 
