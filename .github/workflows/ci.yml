@@ -41,7 +41,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             # Remove the project if it already exists in order to remove .mind files remained in file system
-            if [ -d makizapp ]; then rm -rf makizapp; fi   
+            if [ -d makizapp ]; then sudo rm -rf makizapp; fi   
             git clone --branch containerization https://github.com/HanaeMelehi/makizapp.git
             cd makizapp
             #delete DB data from previous run
@@ -62,7 +62,7 @@ jobs:
             cd WebView/site
             npm install
             npm install -g @angular/cli
-            sudo ng build --configuration production
+            ng build --configuration production
             cd ../../
             sudo rm -rf SpringBootServer/src/main/resources/static/*
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
