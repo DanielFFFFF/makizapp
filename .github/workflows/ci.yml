@@ -29,7 +29,7 @@ jobs:
             fi
             if ! command -v node &> /dev/null
             then
-                sudo apt-get update && apt-get install -y nodejs npm
+                sudo apt-get update && sudo apt-get install -y nodejs npm
             fi
 
 
@@ -61,10 +61,10 @@ jobs:
             cd WebView/site
             npm install
             npm install -g @angular/cli
-            ng build --configuration production
+            sudo ng build --configuration production
             cd ../../
             sudo rm -rf SpringBootServer/src/main/resources/static/*
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
-            ./gradlew clean build
-            ./gradlew :SpringBootServer:bootRun > springboot.log 2>&1 &
+            sudo ./gradlew clean build
+            sudo ./gradlew :SpringBootServer:bootRun > springboot.log 2>&1 &
             
