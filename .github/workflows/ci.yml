@@ -70,6 +70,8 @@ jobs:
             
             echo "Building Angular frontend..."
             cd WebView/site
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             npm install
             npm install -g @angular/cli
             ng build --configuration production
