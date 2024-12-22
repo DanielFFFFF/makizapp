@@ -6,39 +6,29 @@ on:
       - containerization
 
 jobs:
-  check-database:
+  setup-docker:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.7
 
-      - name: Postgres instance runtime check, create the database if needed
+      #install docker in vm from ci.yml
+      - name: ssh to vm in gcp
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 34.133.219.45
           username: root
           key: ${{ secrets.SSH_PRIVATE }}
+          port: 22
           script: |
-            sudo -i -u postgres
-            psql -d postgres -c "CREATE DATABASE makizapp;" 2> /dev/null  
-            \q
-            exit
+            if ! command -v docker &> /dev/null
+            then
+                curl -fsSL https://get.docker.com -o get-docker.sh
+                sh get-docker.sh
+                docker --version
+                docker run hello-world
+            fi
+            
 
-  deploy:
-    needs: check-database
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.7
 
-      - name: Auth to GCP
-        uses: 'google-github-actions/auth@v2'
-        with:
-          project_id: makizapp
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Run the backend deployment script
-        run: |
-          gcloud builds triggers run deploy-cloud-run --region=us-central1 --branch=containerization
-          
