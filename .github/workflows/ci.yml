@@ -22,13 +22,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             set -e
-            if ! docker --version; then
+            if ! command -v docker 2>&1 > /dev/null; then
                 echo "Installing Docker..."
                 curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
             fi
             
-            if ! node --version; then
+            if ! command -v node 2>&1 > /dev/null; then
                 echo "Installing Node.js via NVM..."
                 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
                 export NVM_DIR="$HOME/.nvm"
