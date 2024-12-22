@@ -22,18 +22,20 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             set -e
-            if ! command -v docker 2>&1 > /dev/null; then
+            if ! command -v docker > /dev/null 2>&1; then
                 echo "Installing Docker..."
                 curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
             fi
             
-            if ! command -v node 2>&1 > /dev/null; then
-                echo "Installing Node.js via NVM..."
+            if ! command -v node > /dev/null 2>&1; then
+              echo "Installing Node.js via NVM..."
+              if [ ! -d "$HOME/.nvm" ]; then
                 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-                export NVM_DIR="$HOME/.nvm"
-                [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-                nvm install --lts
+              fi
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              nvm install --lts
             fi
 
       - name: Clone project and start DB
@@ -79,5 +81,5 @@ jobs:
             
             echo "Building and starting Spring Boot..."
             sudo ./gradlew clean build
-            sudo ./gradlew :SpringBootServer:bootRun > springboot.log 2>&1 &
-            
+            date_now=$(date +"%Y-%m-%d_%H-%M-%S")
+            sudo ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$date_now.log 2>&1 &
