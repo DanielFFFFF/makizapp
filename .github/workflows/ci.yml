@@ -46,6 +46,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             set -e
+            sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
             # Remove the project if it already exists in order to remove .mind files remained in file system
             if [ -d makizapp ]; then sudo rm -rf makizapp; fi   
             git clone --branch containerization https://github.com/HanaeMelehi/makizapp.git
