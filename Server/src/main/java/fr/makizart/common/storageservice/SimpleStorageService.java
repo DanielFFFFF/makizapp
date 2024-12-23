@@ -29,18 +29,12 @@ import java.util.regex.Pattern;
 public class SimpleStorageService implements StorageService {
 
 	private final ProjectRepository projectRepository;
-
 	private final ArResourceAssetRepository arResourceRepository;
-
 	private final ImageAssetRepository imageAssetRepository;
-
 	private final VideoAssetRepository videoAssetRepository;
 	private final SoundAssetReposetory soundAssetReposetory;
 
-
-
 	final Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
-
 
 	public SimpleStorageService(
 			@Autowired ProjectRepository projectRepository,
@@ -75,7 +69,6 @@ public class SimpleStorageService implements StorageService {
 			return false;
 		}
 	}
-
 
 	@Override
 	public List<ArResourceDTO> getResourcesInProject(String projectId) throws InvalidParameterException, NoSuchElementException {
@@ -123,9 +116,6 @@ public class SimpleStorageService implements StorageService {
 		return resource.getThumbnail().getData();
 	}
 
-
-
-
 	private void saveImage(String thumbnail, ArResource resource) throws IOException {
 		ImageAsset image = new ImageAsset();
 		imageAssetRepository.save(image);//id created
@@ -133,7 +123,6 @@ public class SimpleStorageService implements StorageService {
 		resource.setThumbnail(image);
 		arResourceRepository.save(resource);
 	}
-
 
 	@Override
 	@Transactional
@@ -302,13 +291,13 @@ public class SimpleStorageService implements StorageService {
 		// Path to the marker directory
 		String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
 
-// Full path to the file (image)
+		// Full path to the file (image)
 		String filePath = markerDirPath + "/" + resource.getId().toString() + ".png";
 
-// Create a File object for the directory
+		// Create a File object for the directory
 		File markerDir = new File(markerDirPath);
 
-// Check if the directory exists, and create it if it doesn't
+		// Check if the directory exists, and create it if it doesn't
 		if (!markerDir.exists()) {
 			System.out.println("Directory does not exist. Creating: " + markerDirPath);
 			boolean dirsCreated = markerDir.mkdirs();  // Create the directory and any necessary parent directories
@@ -320,10 +309,10 @@ public class SimpleStorageService implements StorageService {
 			}
 		}
 
-// Create a File object for the output image file
+		// Create a File object for the output image file
 		File outputFile = new File(filePath);
 
-// Check if the output file already exists and is a directory
+		// Check if the output file already exists and is a directory
 		if (outputFile.exists() && outputFile.isDirectory()) {
 			System.out.println("Error: Expected a file, but found a directory at: " + filePath);
 		} else {
@@ -336,9 +325,7 @@ public class SimpleStorageService implements StorageService {
 			}
 		}
 
-
 			resource.setThumbnail(thumbnail);
-
 
 		// Save marker data (marker1, marker2, marker3) as part of the resource
 		runDockerContainer(thumbnail, projectId);
@@ -413,10 +400,9 @@ public class SimpleStorageService implements StorageService {
 	private Project tryGetProject(String projectId) {
 			return projectRepository.findById(UUID.fromString(projectId)).orElseThrow();
 	}
+
 	private ArResource tryGetResource(String resourceID) {
 		return arResourceRepository.findById(UUID.fromString(resourceID)).orElseThrow();
-
-
 	}
 
 	private VideoAsset tryGetVideo(String resourceID) {
@@ -426,7 +412,6 @@ public class SimpleStorageService implements StorageService {
 	private void runDockerContainer(ImageAsset thumbnail, String projectId) {
 
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
-
 
 		try {
 			String markerDirPath = "SpringBootServer/mind-markers/markers/" + projectId;
@@ -442,9 +427,6 @@ public class SimpleStorageService implements StorageService {
 			 		"-v", volume,
 			 		"mind-tracker-compiler"
 			 	};
-
-
-
 
 			// Run the Docker container
 			ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -462,11 +444,8 @@ public class SimpleStorageService implements StorageService {
 				System.out.println("Docker output: " + line);
 			}
 
-
-
 			process.waitFor();
 			System.out.println("Docker command completed");
-
 
 		} catch (Exception e) {
 			System.out.println("Error occurred: " + e.getMessage());

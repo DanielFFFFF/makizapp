@@ -10,7 +10,7 @@ fi
 
 # Install npm
 echo "Install npm..."
-npm install
+#npm install
 
 # Build the Angular project (using production configuration)
 echo "Building Angular project..."

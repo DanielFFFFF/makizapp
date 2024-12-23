@@ -11,6 +11,4 @@ public class MakizappApplication {
 		SpringApplication.run(MakizappApplication.class, args);
 	}
 
-
-
 }

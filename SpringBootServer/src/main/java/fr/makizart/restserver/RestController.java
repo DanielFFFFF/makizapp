@@ -21,7 +21,6 @@ import java.io.InputStreamReader;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-
     final SimpleStorageService storageService;
 
     public RestController(@Autowired SimpleStorageService storageService) {
@@ -29,24 +28,21 @@ public class RestController {
     }
 
     @PostMapping("/admin/projects/create/project/")
-
     public ResponseEntity<IdDTO> createProject(
             @RequestBody ProjectDTO project) throws NameAlreadyBoundException {
         return new ResponseEntity<>(storageService.createProject(project.name()), HttpStatus.CREATED);
     }
 
     @PostMapping("/admin/projects/{project_id}/create/resource/")
-
     public ResponseEntity<ArResourceDTO> createResource(
             @PathVariable String project_id,
             @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException, IOException {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
     }
 
-    //PUT--------
+    //----------------- PUT -----------------
 
     @PutMapping("/admin/projects/resources/{resource_id}/image/")
-
     public ResponseEntity<String> uploadImage(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -55,7 +51,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/thumbnail/")
-
     public ResponseEntity<String> uploadThumbnail(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -64,7 +59,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/markers/")
-
     public ResponseEntity<String> uploadMarkers(
             @PathVariable String resource_id,
             @RequestBody IncomingMarkerDTO body) throws NameAlreadyBoundException, IOException {
@@ -77,9 +71,7 @@ public class RestController {
         return ResponseEntity.ok("Markers uploaded successfully.");
     }
 
-
     @PutMapping("/admin/projects/resources/{resource_id}/sound/")
-
     public ResponseEntity<String> uploadSound(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -88,7 +80,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/video/")
-
     public ResponseEntity<String> uploadVideo(
             @PathVariable String resource_id,
             @RequestBody IncomingMediaDTO body) throws NameAlreadyBoundException, IOException {
@@ -97,7 +88,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/{project_id}/rename")
-
     public ResponseEntity<String> renameProject(
             @PathVariable String project_id,
             @RequestBody RenameDTO name) {
@@ -106,7 +96,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/resources/{resource_id}/rename")
-
     public ResponseEntity<String> renameResource(
             @PathVariable String resource_id,
             @RequestBody RenameDTO name) {
@@ -115,7 +104,6 @@ public class RestController {
     }
 
     @PutMapping("/admin/projects/medias/{media_id}/rename")
-
     public ResponseEntity<String> renameMedia(
             @PathVariable String media_id,
             @RequestParam String new_name) {
@@ -123,31 +111,26 @@ public class RestController {
         return ResponseEntity.ok("Rename successful.");
     }
 
+    //----------------- Delete -----------------
 
-    //Delete-----------------
     @DeleteMapping("/admin/projects/{project_id}/delete")
-
     public ResponseEntity<String> deleteProject(@PathVariable String project_id) {
         storageService.deleteProject(project_id);
         return ResponseEntity.ok("Delete successful.");
     }
 
     @DeleteMapping("/admin/projects/{project_id}/resources/{resource_id}/delete")
-
     public ResponseEntity<String> deleteResource(@PathVariable String project_id, @PathVariable String resource_id) {
         storageService.deleteResource(project_id, resource_id);
         return ResponseEntity.ok("Delete successful.");
     }
 
-
-    //Get--------------------
-
+    //----------------- Get -----------------
 
     private final String baseDynamicPath = "SpringBootServer/mind-markers/markers";
 
     @GetMapping("/markers/{projectId}/png-count")
     @ResponseStatus(HttpStatus.OK)
-
     public ResponseEntity<Integer> getPngCount(@PathVariable String projectId) {
         // Build the full path to the project folder
         File projectFolder = new File(baseDynamicPath + "/" + projectId + "/");
@@ -160,9 +143,6 @@ public class RestController {
             return ResponseEntity.badRequest().body(0); // Return 0 if the folder doesn't exist
         }
 
-
-
-
         // Count the number of .png files in the folder
         int pngCount = (int) Arrays.stream(projectFolder.listFiles())
                 .filter(file -> file.isFile() && file.getName().endsWith(".png"))
@@ -172,15 +152,12 @@ public class RestController {
         return ResponseEntity.ok(pngCount);
     }
 
-
     @GetMapping("/public/projects/")
     @ResponseStatus(HttpStatus.OK)
-
     public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
         System.out.println("get projects api");
 
         return storageService.getProjects(page, size);
-
     }
 
     @GetMapping("/public/projects/{project_id}")
@@ -190,10 +167,8 @@ public class RestController {
         return storageService.getProject(project_id);
     }
 
-
     @GetMapping("/public/projects/{project_id}/resources")
     @ResponseStatus(HttpStatus.OK)
-
     public List<ArResourceDTO> getResourcesInProject(@PathVariable String project_id) {
         System.out.println("2");
         return storageService.getResourcesInProject(project_id);
@@ -201,14 +176,12 @@ public class RestController {
 
     @GetMapping("/public/projects/resources/{resource_id}")
     @ResponseStatus(HttpStatus.OK)
-
     public ArResourceDTO getResource(@PathVariable String resource_id) {
         return storageService.getResource(resource_id);
     }
 
     @GetMapping("/admin/storage/")
     @ResponseStatus(HttpStatus.OK)
-
     public StorageInformationDTO getStorageInformation() throws IOException {
         return storageService.getStorageInformation();
     }
@@ -228,9 +201,10 @@ public class RestController {
                 .body(image);
     }
 
-
-
-
+    @GetMapping("/projects/{project_id}/exist")
+    public ResponseEntity<Boolean> checkProjectExists(@PathVariable String project_id) {
+        return ResponseEntity.ok(storageService.projectExists(project_id));
+    }
 
 /*
     @ExceptionHandler(InvalidParameterException.class)

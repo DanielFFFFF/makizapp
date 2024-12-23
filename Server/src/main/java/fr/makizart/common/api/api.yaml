@@ -498,8 +498,6 @@ paths:
         5XX:
           description: Bad request
 
-
-
   /admin/storage/:
     get:
       summary: Get storage information
@@ -516,6 +514,7 @@ paths:
                     type: integer
                   total:
                     type: integer
+
   /public/video/:
     get:
       summary: Get video url stored in db
@@ -529,6 +528,22 @@ paths:
           description: Video url as a string
           content:
             String:
+
+  /projects/{project_id}/exist:
+    get:
+      summary: Get a boolean that said if the project is in the database or not
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Boolean that said if the project is in the database or not
+        5XX:
+          description: Bad request
+
 
 components:
   schemas:
