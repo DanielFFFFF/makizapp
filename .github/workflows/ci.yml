@@ -84,7 +84,15 @@ jobs:
             cd ../../
             
             echo "Moving Angular build output..."
-            sudo rm SpringBootServer/src/main/resources/static/*
+            # check if static folder exists
+            if [ ! -d SpringBootServer/src/main/resources/static/ ]; then
+              mkdir SpringBootServer/src/main/resources/static/
+            fi
+            #check if the folder is not empty
+            if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
+              sudo rm SpringBootServer/src/main/resources/static/*
+            
+            
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
             
             echo "Building and starting Spring Boot..."
