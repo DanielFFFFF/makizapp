@@ -17,7 +17,7 @@ jobs:
       - name: Install Docker and Node in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 104.197.29.187
+          host: 34.55.190.196
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
@@ -37,15 +37,20 @@ jobs:
               [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
               nvm install --lts
             fi
+            
+            if ! command -v java > /dev/null 2>&1; then
+              echo "Installing Java..."
+              apt install openjdk-17-jdk openjdk-17-jre
+              java --version
+            fi
 
       - name: Clone project and start DB
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 104.197.29.187
+          host: 34.55.190.196
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
-            set -e
             sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
             # Remove the project if it already exists in order to remove .mind files remained in file system
             if [ -d makizapp ]; then sudo rm -rf makizapp; fi   
@@ -59,7 +64,7 @@ jobs:
       - name: mind tracker and spring boot
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 104.197.29.187
+          host: 34.55.190.196
           username: asus
           key: ${{ secrets.SSH_PRIVATE }}
           command_timeout : '30m'
@@ -79,7 +84,7 @@ jobs:
             cd ../../
             
             echo "Moving Angular build output..."
-            sudo rm -rf SpringBootServer/src/main/resources/static/*
+            sudo rm SpringBootServer/src/main/resources/static/*
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
             
             echo "Building and starting Spring Boot..."
