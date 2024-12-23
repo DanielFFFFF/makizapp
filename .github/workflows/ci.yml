@@ -97,7 +97,7 @@ jobs:
             
             echo "Building and starting Spring Boot..."
             sudo ./gradlew clean build
-            date_now=$(date +"%Y-%m-%d_%H-%M-%S")
+            dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
             mkdir -p ~/logs
-            sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$date_now.log 2>&1 &
+            sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
             sleep 10 # wait for app to start
