@@ -91,7 +91,7 @@ jobs:
             #check if the folder is not empty
             if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
               sudo rm SpringBootServer/src/main/resources/static/*
-            
+            fi
             
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
             
