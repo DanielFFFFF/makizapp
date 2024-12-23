@@ -259,6 +259,10 @@
           ></qrcode>
         </div>
         <div class="d-flex justify-content-between mt-2">
+            <button type="button"
+                    class="m-1 p-1 btn cursor-pointer"
+                    (click)="downloadQrCode()">Download
+            </button>
           <button type="button"
                   class="m-1 p-1 btn cursor-pointer"
                   (click)="getShareUrl()">Copy link

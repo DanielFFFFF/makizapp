@@ -321,8 +321,6 @@ export class ProjectEditorComponent {
     }
   }
 
-
-
   /**
    * @method uploadNewVideo(video: HTMLInputElement)
    * Uploads a new video url for the selected resource.
@@ -485,8 +483,8 @@ export class ProjectEditorComponent {
    * Displays the share popup.
    */
   showSharePopup() {
-    this.qrData = `${this.SERVER_PATH}/#/${this.project.getId()}`;
-    this.sharePopup = true;
+        this.qrData = `${this.SERVER_PATH}/#/${this.project.getId()}`;
+        this.sharePopup = true;
   }
 
   /**
@@ -494,7 +492,7 @@ export class ProjectEditorComponent {
    * Hides the share popup.
    */
   hideSharePopup() {
-    this.sharePopup = false;
+      this.sharePopup = false;
   }
 
   /**
@@ -504,30 +502,16 @@ export class ProjectEditorComponent {
   getShareUrl(): void {
       const url = `${this.SERVER_PATH}/#/${this.project.getId()}`;
 
-      // Check if the clipboard API is available
-      if (navigator.clipboard) {
-          // Check clipboard permission
-        navigator.permissions.query({ name: 'clipboard-write' as PermissionName })
-          .then(permissionStatus => {
-                  if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
-                      navigator.clipboard.writeText(url)
-                          .then(() => {
-                              alert(`Link ${url} has been copied to clipboard`);
-                          })
-                          .catch((e) => {
-                              console.error(e); // Log the error for debugging
-                              alert(`Cannot copy to clipboard. Share link is ${url}`);
-                          });
-                  } else {
-                      alert(`Clipboard permission denied. Cannot copy the link.`);
-                  }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url)
+              .then(() => {
+                  alert(`Link has been copied to the clipboard`);
               })
               .catch((error) => {
-                  console.error('Permission query failed:', error);
-                  alert(`Cannot check clipboard permission. Share link is ${url}`);
+                  console.error('Failed to copy to clipboard:', error);
+                  alert(`Cannot copy to clipboard. Share link is ${url}`);
               });
       } else {
-          // Fallback for browsers that do not support navigator.clipboard
           this.fallbackCopyToClipboard(url);
       }
   }
@@ -537,25 +521,33 @@ export class ProjectEditorComponent {
    * Copies the given text to the clipboard using a fallback method for unsupported browsers.
    * @param {string} text - The text to copy to the clipboard.
    */
-  fallbackCopyToClipboard(text: string) {
-      // Create a temporary textarea element
+  fallbackCopyToClipboard(text: string): void {
       const textarea = document.createElement('textarea');
       textarea.value = text;
+      textarea.style.position = 'fixed'; // Prevent scrolling to bottom of the page
+      textarea.style.opacity = '0'; // Make it invisible
       document.body.appendChild(textarea);
       textarea.select();
 
       try {
           const successful = document.execCommand('copy');
-          const msg = successful ? 'successful' : 'unsuccessful';
-          alert(`Link ${text} has been copied to clipboard (copy command was ${msg}).`);
-      } catch (err) {
-          console.error('Oops, unable to copy', err);
+          const message = successful ? 'successful' : 'unsuccessful';
+          alert(`Link ${text} has been copied to clipboard (copy command was ${message}).`);
+      } catch (error) {
+          console.error('Unable to copy using fallback method:', error);
           alert(`Cannot copy to clipboard. Share link is ${text}`);
+      } finally {
+          document.body.removeChild(textarea); // Clean up the temporary element
       }
-
-      // Clean up
-      document.body.removeChild(textarea);
   }
+
+   /**
+    * @method downloadQrCode
+    * Download QR Code currently displayed
+    */
+   downloadQrCode() {
+
+   }
 
   //----------------------------------------- Ressource -----------------------------------------
 
