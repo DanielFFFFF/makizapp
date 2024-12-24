@@ -16,6 +16,10 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 - MEUNIER Rodrigue
 - MOLLI Bilal
 - SELIN Ludivine
+
+## Context
+
+This project is a web application made in Angular and Spring boot that lets you play videos and images in augmented reality on images that serve as markers.
  
 ## Getting Started
 1. To begin, you have to clone the repository. Click on the green button ``` <>Code ``` (1), and copy the link of the git (2).  
