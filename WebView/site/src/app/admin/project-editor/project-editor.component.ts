@@ -7,6 +7,7 @@ import {map} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Created_id} from "../commons/Created_id";
 import {AppConfigService} from "../../config/app.config.service";
+import {QRCodeElementType, FixMeLater} from "angularx-qrcode"
 
 /**
  * @enum Onglet
@@ -83,6 +84,10 @@ export class ProjectEditorComponent {
    * @property {boolean} sharePopup - Show or not the share popup.
    */
   sharePopup: boolean = false;
+
+  /**
+   */
+   qrCodeElementType : QRCodeElementType = "canvas" as QRCodeElementType;
 
   /**
    * @property {boolean} showResponses
@@ -541,13 +546,58 @@ export class ProjectEditorComponent {
       }
   }
 
-   /**
-    * @method downloadQrCode
-    * Download QR Code currently displayed
-    */
-   downloadQrCode() {
+  /**
+   * @method saveAsImage
+   * Download QR Code currently displayed
+   * @param {FixMeLater} parent - QR Code to download
+   */
+  saveAsImage(parent: FixMeLater) {
+    let parentElement = null
 
-   }
+    if (this.qrCodeElementType === "canvas") {
+      // fetches base 64 data from canvas
+      parentElement = parent.qrcElement.nativeElement
+        .querySelector("canvas")
+        .toDataURL("image/png")
+    } else if (this.qrCodeElementType === "img" || this.qrCodeElementType === "url") {
+      // fetches base 64 data from image
+      parentElement = parent.qrcElement.nativeElement.querySelector("img").src
+    } else {
+      alert("Set elementType to 'canvas', 'img' or 'url'.")
+    }
+
+    if (parentElement) {
+      let blobData = this.convertBase64ToBlob(parentElement) // converts base 64 encoded image to blobData
+      const blob = new Blob([blobData], { type: "image/png" }) // saves as image
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = "qrcode" // name of the file
+      link.click()
+    }
+  }
+
+  /**
+   * @method convertBase64ToBlob
+   * Convert base 64 to blob
+   * @param {string} Base64Image - image to convert
+   */
+  private convertBase64ToBlob(Base64Image: string) {
+    // split into two parts
+    const parts = Base64Image.split(";base64,")
+    // hold the content type
+    const imageType = parts[0].split(":")[1]
+    // decode base64 string
+    const decodedData = window.atob(parts[1])
+    // create unit8array of size same as row data length
+    const uInt8Array = new Uint8Array(decodedData.length)
+    // insert all character code into uint8array
+    for (let i = 0; i < decodedData.length; ++i) {
+      uInt8Array[i] = decodedData.charCodeAt(i)
+    }
+    // return blob image after conversion
+    return new Blob([uInt8Array], { type: imageType })
+  }
 
   //----------------------------------------- Ressource -----------------------------------------
 

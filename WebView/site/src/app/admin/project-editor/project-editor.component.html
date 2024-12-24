@@ -245,7 +245,7 @@
 </div>
 
 <!-- Share Popup -->
-
+<!--
 <div *ngIf="sharePopup" class="d-flex align-items-center popup">
   <div class="container-fluid">
     <div class="d-flex justify-content-center">
@@ -253,16 +253,28 @@
         <h3 class="text-center">Share Project</h3>
         <div class="qrcodeImage">
           <qrcode
-            [qrdata]="qrData"
-            [width]="256"
-            [errorCorrectionLevel]="'M'"
+              #qrcode
+              [qrdata]="qrData"
+              [width]="256"
+              [errorCorrectionLevel]="'M'"
           ></qrcode>
         </div>
         <div class="d-flex justify-content-between mt-2">
-            <button type="button"
-                    class="m-1 p-1 btn cursor-pointer"
-                    (click)="downloadQrCode()">Download
-            </button>
+            <div class="downloadButton">
+                <button
+                    *ngIf="this.elementType !== 'svg'"
+                    mat-raised-button
+                    (click)="saveAsImage(qrcode)"
+                >
+                    Download
+                </button>
+                <a
+                    *ngIf="this.elementType === 'svg'"
+                    mat-raised-button
+                    [href]="qrCodeSrc"
+                    download="angularx-qrcode"
+                >Download</a>
+            </div>
           <button type="button"
                   class="m-1 p-1 btn cursor-pointer"
                   (click)="getShareUrl()">Copy link
@@ -275,5 +287,63 @@
       </div>
     </div>
   </div>
+</div>
+-->
+<div *ngIf="sharePopup" class="d-flex align-items-center popup">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="colorBack rounded p-2">
+                <mat-card>
+                    <div class="d-flex justify-content-center">
+                        <mat-card-header class="bold-text">
+                            <mat-card-title>Share Project</mat-card-title>
+                        </mat-card-header>
+                    </div>
+                    <mat-card-content>
+                        <div class="qrcodeImage">
+                            <qrcode
+                                #parent
+                                [elementType]="qrCodeElementType"
+                                [qrdata]="qrData"
+                                [width]="256"
+                                [errorCorrectionLevel]="'M'"
+                            ></qrcode>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3 flex-wrap">
+                            <div>
+                                <button
+                                    *ngIf="this.qrCodeElementType !== 'svg'"
+                                    mat-raised-button
+                                    class="m-1 p-1 btn cursor-pointer"
+                                    (click)="saveAsImage(parent)"
+                                >
+                                    Download
+                                </button>
+                                <a
+                                    *ngIf="this.qrCodeElementType === 'svg'"
+                                    mat-raised-button
+                                    [href]="qrData"
+                                    download="qrcode"
+                                >Download</a
+                                >
+                            </div>
+                            <div>
+                                <button type="button"
+                                        class="m-1 p-1 btn cursor-pointer"
+                                        (click)="getShareUrl()">Copy link
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button"
+                                        class="m-1 p-1 btn cursor-pointer material-symbols-outlined"
+                                        (click)="hideSharePopup()">Close
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
 </div>
 
