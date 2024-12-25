@@ -205,98 +205,114 @@ export class ProjectEditorComponent {
     const year = date.getFullYear().toString();
     return `${day}/${month}/${year}`;
   }
+    createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
+                      video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
+        const body: { [key: string]: any } = {};
+        body["name"] = name.value;
 
-  /**
-   * @method createNewResource(name: String)
-   * Create a new resource and push to the server.
-   *
-   * @param {string} name - The name of the new resource.
-   * @param {HTMLInputElement} thumbnail - The thumbnail associated with the new resource.
-   * @param {HTMLInputElement} video - The video element associated with the new resource.
-   * @param {HTMLInputElement} sound - The sound element associated with the new resource.
-   * @param {HTMLInputElement} image - The image element associated with the new resource.
-   */
-  createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
-                    video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
-    // Create the request body
-    const body: { [key: string]: any } = {};
-    body["name"] = name.value;
+        if (name.value === "") {
+            alert("Il manque le nom de la ressource !");
+            return;
+        }
 
-    if (name.value === "") {
-      alert("Il manque le nom de la ressource !");
-      return;
-    }
+        const isImagePresent = image.files != null && image.files.length > 0;
+        const isSoundPresent = sound.files != null && sound.files.length > 0;
+        const isVideoPresent = video.value !== "";
 
-    const isImagePresent = image.files != null && image.files.length > 0;
-    const isSoundPresent = sound.files != null && sound.files.length > 0;
-    const isVideoPresent = video.value !== "";
+        if ((isImagePresent || isSoundPresent) === isVideoPresent) {
+            alert("Impossible d'avoir du son ou une image en meme temps qu'une video");
+            return;
+        }
 
-    if ((isImagePresent || isSoundPresent) === isVideoPresent) {
-      alert("Impossible d'avoir du son ou une image en meme temps qu'une video");
-      return;
-    }
+        if (isVideoPresent) {
+            body["videoAsset"] = video.value;
+        } else if (!isSoundPresent && !isImagePresent) {
+            alert("Aucun media à jouer en AR choisit");
+            return;
+        }
 
-    if (isVideoPresent) {
-      body["videoAsset"] = video.value;
-    } else if (!isSoundPresent && !isImagePresent) {
-      alert("Aucun media à jouer en AR choisit");
-      return;
-    }
+        const promises = [];
 
-    // Array containing promises to execute the POST request only when all data has been retrieved
-    const promises = [];
+        const createThumbnailFromVideo = (videoUrl: string): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const videoElement = document.createElement("video");
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
 
-    // Add the thumbnail to the body if it exists
-    if (thumbnail.files != null && thumbnail.files.length !== 0) {
-      const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
-        reader.onload = () => {
-          body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
+                videoElement.src = videoUrl;
+                videoElement.crossOrigin = "anonymous";
+                videoElement.addEventListener("loadeddata", () => {
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    videoElement.currentTime = 0; // Seek to the first frame
+                });
+
+                videoElement.addEventListener("seeked", () => {
+                    context?.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    const thumbnailBase64 = canvas.toDataURL("image/png").replace('data:', '').replace(/^.+,/, '');
+                    resolve(thumbnailBase64);
+                });
+
+                videoElement.addEventListener("error", (err) => {
+                    reject(`Error loading video: ${err}`);
+                });
+            });
         };
-      });
-      reader.readAsDataURL(thumbnail.files[0]);
-      promises.push(p);
-    } else {
-      alert("Il manque l'image à capturer !");
-      return;
+
+        if (thumbnail.files != null && thumbnail.files.length !== 0) {
+            const reader = new FileReader();
+            const p = new Promise<void>((resolve) => {
+                reader.onload = () => {
+                    body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                    resolve();
+                };
+            });
+            reader.readAsDataURL(thumbnail.files[0]);
+            promises.push(p);
+        } else if (isVideoPresent) {
+            const videoUrl = video.value;
+            const p = createThumbnailFromVideo(videoUrl).then((thumbnailBase64) => {
+                body["thumbnail"] = thumbnailBase64;
+            });
+            promises.push(p);
+        } else {
+            alert("Il manque l'image à capturer !");
+            return;
+        }
+
+        if (image.files != null && image.files.length !== 0) {
+            const reader = new FileReader();
+            const p = new Promise<void>((resolve) => {
+                reader.onload = () => {
+                    body["imageAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                    resolve();
+                };
+            });
+            reader.readAsDataURL(image.files[0]);
+            promises.push(p);
+        }
+
+        if (sound.files != null && sound.files.length !== 0) {
+            const reader = new FileReader();
+            const p = new Promise<void>((resolve) => {
+                reader.onload = () => {
+                    body["soundAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                    resolve();
+                };
+            });
+            reader.readAsDataURL(sound.files[0]);
+            promises.push(p);
+        }
+
+        Promise.all(promises).then(() => {
+            // @ts-ignore
+            this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((res: Created_id) => {
+                this.hideNewResource();
+                this.updateProjectSelected();
+            });
+        });
     }
 
-    // Add the image if it exists
-    if (image.files != null && image.files.length !== 0) {
-      const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
-        reader.onload = () => {
-          body["imageAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
-        };
-      });
-      reader.readAsDataURL(image.files[0]);
-      promises.push(p);
-    }
-
-    // Add the sound if it exists
-    if (sound.files != null && sound.files.length !== 0) {
-      const reader = new FileReader();
-      const p = new Promise<void>((resolve) => {
-        reader.onload = () => {
-          body["soundAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-          resolve();
-        };
-      });
-      reader.readAsDataURL(sound.files[0]);
-      promises.push(p);
-    }
-
-    // Execute and send the POST request to create the resource when all promises have been fulfilled
-    Promise.all(promises).then(() => {
-      // @ts-ignore
-      this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((res: Created_id) => {
-        this.hideNewResource();
-        this.updateProjectSelected();
-      });
-    });
-  }
 
   /**
    * @method uploadNewThumbnail(thumbnail: HTMLInputElement)

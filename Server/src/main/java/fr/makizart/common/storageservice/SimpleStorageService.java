@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import fr.makizart.common.database.repositories.*;
 import fr.makizart.common.database.table.*;
 import fr.makizart.common.storageservice.dto.*;
+import fr.makizart.common.AsyncDockerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class SimpleStorageService implements StorageService {
 	private final ImageAssetRepository imageAssetRepository;
 	private final VideoAssetRepository videoAssetRepository;
 	private final SoundAssetReposetory soundAssetReposetory;
+	private final AsyncDockerService asyncDockerService;
 
 	final Pattern invalidName = Pattern.compile("[^-_.A-Za-z0-9]");
 
@@ -42,12 +44,15 @@ public class SimpleStorageService implements StorageService {
 			@Autowired ImageAssetRepository imageAssetRepository,
 			@Autowired VideoAssetRepository videoAssetRepository,
 			@Autowired SoundAssetReposetory soundAssetReposetory,
-			@Autowired FileSystemManager fileSystemManager) {
+			@Autowired FileSystemManager fileSystemManager,
+			@Autowired AsyncDockerService asyncDockerService) {
 		this.projectRepository = projectRepository;
 		this.arResourceRepository = arResourceRepository;
 		this.imageAssetRepository = imageAssetRepository;
 		this.videoAssetRepository = videoAssetRepository;
 		this.soundAssetReposetory = soundAssetReposetory;
+		this.asyncDockerService = asyncDockerService;
+
     }
 
 	@Override
@@ -241,6 +246,9 @@ public class SimpleStorageService implements StorageService {
 		return new IdDTO(project.getId());
 	}
 
+
+
+
 	@Override
 	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
             throws InvalidParameterException, NameAlreadyBoundException, IOException {
@@ -327,8 +335,10 @@ public class SimpleStorageService implements StorageService {
 
 			resource.setThumbnail(thumbnail);
 
+		System.out.println("Running on thread: " + Thread.currentThread().getName());
 		// Save marker data (marker1, marker2, marker3) as part of the resource
-		runDockerContainer(thumbnail, projectId);
+
+		asyncDockerService.runDockerContainer(projectId);
 
 
         // If no video asset is present, handle image and/or sound assets
@@ -409,7 +419,11 @@ public class SimpleStorageService implements StorageService {
 			return videoAssetRepository.findById(UUID.fromString(resourceID)).orElseThrow();
 	}
 
-	private void runDockerContainer(ImageAsset thumbnail, String projectId) {
+	/*
+	@Async
+	public void runDockerContainer(String projectId) {
+
+		System.out.println("Running docker on thread: " + Thread.currentThread().getName());
 
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));  // Log working directory
 
@@ -452,5 +466,5 @@ public class SimpleStorageService implements StorageService {
 			e.printStackTrace();
 		}
 	}
-
+*/
 }
