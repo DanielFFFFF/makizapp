@@ -1,5 +1,16 @@
-    <nav class="container-fluid color-component rounded" style="display: flex; justify-content: center; align-items: center; height: 60px; width: 100%; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-        <!-- Other nav elements -->
-        <h1 style="font-size: 24px; margin: 0;">Makizapp</h1>
-        <button class="btn btn-secondary" (click)="logout()">Logout</button>
-    </nav>
+<nav
+    class="container-fluid color-component rounded"
+    style="display: flex; align-items: center; position: relative; height: 60px; width: 100%; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);"
+>
+    <!-- Centered Heading -->
+    <h1 style="font-size: 24px; margin: 0; text-align: center; flex: 1;">Makizapp</h1>
+
+    <!-- Logout Button -->
+    <button
+        class="btn btn-secondary"
+        style="position: absolute; right: 20px;"
+        (click)="logout()"
+    >
+        Logout
+    </button>
+</nav>
