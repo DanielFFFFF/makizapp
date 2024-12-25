@@ -17,8 +17,8 @@ jobs:
       - name: Install Docker and Node in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.55.190.196
-          username: asus
+          host: 89.168.61.206
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             set -e
@@ -47,8 +47,8 @@ jobs:
       - name: Clone project and start DB
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.55.190.196
-          username: asus
+          host: 89.168.61.206
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
@@ -59,13 +59,12 @@ jobs:
             #delete DB data from previous run
             sudo docker compose down --volumes --remove-orphans
             sudo docker compose up -d
-      
 
       - name: mind tracker and spring boot
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 34.55.190.196
-          username: asus
+          host: 89.168.61.206
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           command_timeout : '30m'
           script: |
@@ -95,9 +94,12 @@ jobs:
             
             sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
             
-            echo "Building and starting Spring Boot..."
+            echo "Building Spring Boot..."
             sudo ./gradlew clean build
             dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
             mkdir -p ~/logs
+            echo " Exporting JWT_SECRET..."
+            sudo export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            echo " Starting Spring Boot..."
             sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
             sleep 10 # wait for app to start
