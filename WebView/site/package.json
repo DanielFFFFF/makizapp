@@ -6,6 +6,7 @@
     "start": "ng serve",
     "startDev": "ng serve --configuration development",
     "build": "ng build -configuration production",
+    "build-ci": "node --max_old_space_size=5048 ./node_modules/@angular/cli/bin/ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "compodoc": "npx compodoc -p src/tsconfig.app.json",

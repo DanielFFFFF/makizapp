@@ -80,7 +80,7 @@ jobs:
             npm install
             npm install -g @angular/cli
             ng analytics off
-            ng build --configuration production
+            npm run build -ci
             cd ../../
             
             echo "Moving Angular build output..."
