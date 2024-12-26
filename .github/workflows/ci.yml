@@ -32,7 +32,7 @@ jobs:
               echo "Installing Node.js via NVM..."
               if [ ! -d "$HOME/.nvm" ]; then
                 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-              fi
+              fi<
               export NVM_DIR="$HOME/.nvm"
               [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
               nvm install --lts
@@ -53,10 +53,21 @@ jobs:
           script: |
             sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
             # Remove the project if it already exists in order to remove .mind files remained in file system
-            if [ -d makizapp ]; then sudo rm -rf makizapp; fi   
-            git clone --branch containerization https://github.com/HanaeMelehi/makizapp.git
+            if [ ! -d makizapp ]; then 
+              git clone https://github.com/${{ github.repository }}.git
+            fi
+            
             cd makizapp
-            #delete DB data from previous run
+            git fetch --all
+            git checkout ${{ github.ref_name }} -f
+            git pull
+            
+            echo "Checking git operations
+            git status
+            git remote -v
+            git branch
+            
+            # delete DB data from previous run
             sudo docker compose down --volumes --remove-orphans
             sudo docker compose up -d
 
@@ -66,7 +77,7 @@ jobs:
           host: 89.168.61.206
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
-          command_timeout : '30m'
+          command_timeout : '60m'
           script: |
             set -e
             cd makizapp
