@@ -28,15 +28,15 @@ jobs:
                 sudo sh get-docker.sh
             fi
             
-            if ! command -v node > /dev/null 2>&1; then
-              echo "Installing Node.js via NVM..."
-              if [ ! -d "$HOME/.nvm" ]; then
-                curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-              fi
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-              nvm install --lts
-            fi
+#            if ! command -v node > /dev/null 2>&1; then
+#              echo "Installing Node.js via NVM..."
+#              if [ ! -d "$HOME/.nvm" ]; then
+#                curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+#              fi
+#              export NVM_DIR="$HOME/.nvm"
+#              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+#              nvm install --lts
+#            fi
             
             if ! command -v java > /dev/null 2>&1; then
               echo "Installing Java..."
@@ -44,7 +44,7 @@ jobs:
               java --version
             fi
 
-      - name: Clone project and start DB
+      - name: Clone project, start DB & check static folder existence in SpringBoot server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 89.168.61.206
@@ -62,11 +62,44 @@ jobs:
             echo "Checking git operations..."
             git status
             git remote -v
-            git branch
             
             # delete DB data from previous run
             sudo docker compose down --volumes --remove-orphans
+            # -d -> detached mode (run in background)
             sudo docker compose up -d
+            
+            echo "Moving Angular build output..."
+            # check if static folder exists
+            if [ ! -d SpringBootServer/src/main/resources/static/ ]; then
+              mkdir SpringBootServer/src/main/resources/static/
+            fi
+            #check if the folder is not empty
+            if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
+              sudo rm SpringBootServer/src/main/resources/static/*
+            fi
+
+      # Build the frontend inside the Runner and move the built files to the VM, precisely in the static folder of SpringBoot
+      # Hint: You'll need to use other actions from the marketplace
+      - name: Build frontend in Runner and move compiled ng files to Spring Boot in VM
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 'latest'
+
+      - name: Build frontend
+        run: |
+          cd WebView/site
+          npm install
+          npm run build-ci
+
+      - name: Move frontend build files to VM
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          host: 89.168.61.206
+          remote: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static'
+          username: ubuntu
+          privateKey: ${{ secrets.SSH_PRIVATE }}
+          local: 'WebView/site/dist/site/*'
+
 
       - name: mind tracker and spring boot
         uses: appleboy/ssh-action@v1.0.3
@@ -81,34 +114,20 @@ jobs:
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
             
-            echo "Building Angular frontend..."
-            cd WebView/site
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            npm install
-            npm install -g @angular/cli
-            ng analytics off
-            npm run build-ci
-            cd ../../
-            
-            echo "Moving Angular build output..."
-            # check if static folder exists
-            if [ ! -d SpringBootServer/src/main/resources/static/ ]; then
-              mkdir SpringBootServer/src/main/resources/static/
-            fi
-            #check if the folder is not empty
-            if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
-              sudo rm SpringBootServer/src/main/resources/static/*
-            fi
-            
-            sudo mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
+#            echo "Building Angular frontend..."
+#            cd WebView/site
+#            export NVM_DIR="$HOME/.nvm"
+#            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+#            npm install
+#            npm install -g @angular/cli
+#            ng analytics off
+#            npm run build-ci
+#            cd ../../
             
             echo "Building Spring Boot..."
             sudo ./gradlew clean build
             dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
             mkdir -p ~/logs
-            echo " Exporting JWT_SECRET..."
-            sudo export JWT_SECRET=${{ secrets.JWT_SECRET }}
             echo " Starting Spring Boot..."
             sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
             sleep 10 # wait for app to start
