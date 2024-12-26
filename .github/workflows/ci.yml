@@ -53,16 +53,13 @@ jobs:
           script: |
             sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
             # Remove the project if it already exists in order to remove .mind files remained in file system
-            if [ ! -d makizapp ]; then 
-              git clone https://github.com/${{ github.repository }}.git
-            fi
-            
+            if [ ! -d makizapp ]; then git clone https://github.com/${{ github.repository }}.git; fi
             cd makizapp
             git fetch --all
             git checkout ${{ github.ref_name }} -f
             git pull
             
-            echo "Checking git operations
+            echo "Checking git operations..."
             git status
             git remote -v
             git branch
