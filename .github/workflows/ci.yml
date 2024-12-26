@@ -77,10 +77,10 @@ jobs:
             cd WebView/site
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nice -n 10 npm install
-            nice -n 10 npm install -g @angular/cli
+            npm install
+            npm install -g @angular/cli
             ng analytics off
-            nice -n 10 ng build --configuration production
+            ng build --configuration production
             cd ../../
             
             echo "Moving Angular build output..."
