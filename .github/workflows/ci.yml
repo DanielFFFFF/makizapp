@@ -107,7 +107,7 @@ jobs:
           host: 89.168.61.206
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
-          command_timeout : '60m'
+          command_timeout: '60m'
           script: |
             set -e
             cd makizapp
