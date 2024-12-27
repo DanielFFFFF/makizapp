@@ -185,6 +185,10 @@ public interface StorageService  {
 	ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
             throws InvalidParameterException, NameAlreadyBoundException, IOException;
 
+
+	String createSettings(VideoSettingsDTO settings) throws IOException;
+
+
 	/**
 	 * Uploads an image for a resource.
 	 *

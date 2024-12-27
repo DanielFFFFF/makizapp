@@ -117,6 +117,11 @@ export class ProjectEditorComponent {
    */
   public qrData: string = '';
 
+  videoSize: number = 100;
+  videoOpacity: number = 100;
+  videoLoop: boolean = false;
+
+
   confirmDelete(): void {
     if(confirm("Are you sure wo want to delete this resource?")) {
       this.deleteResource()
@@ -206,7 +211,17 @@ export class ProjectEditorComponent {
     return `${day}/${month}/${year}`;
   }
     createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
-                      video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement) {
+                      video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement,
+                      videoSize: number,
+                      videoOpacity: number,
+                      videoLoop: boolean) {
+
+        console.log('Taille de la vidéo :', videoSize);
+        console.log('Opacité de la vidéo :', videoOpacity);
+        console.log('Lecture en boucle :', videoLoop);
+
+        this.createVideoParameters(videoSize, videoOpacity, videoLoop);
+
         const body: { [key: string]: any } = {};
         body["name"] = name.value;
 
@@ -313,8 +328,28 @@ export class ProjectEditorComponent {
         });
     }
 
+    createVideoParameters(videoSize: number, videoOpacity: number, videoLoop: boolean) {
+        const body = {
+            videoSize: videoSize,
+            videoOpacity: videoOpacity,
+            videoLoop: videoLoop
+        };
 
-  /**
+        console.log("Body envoyé :", body);
+
+        this.http.post(this.SERVER_PATH + `/admin/projects/test/create/videoParameters/`, body).subscribe({
+            next: (response) => {
+                console.log('Paramètres enregistrés sur le serveur :', response);
+            },
+            error: (error) => {
+                console.error('Erreur lors de l\'enregistrement sur le serveur', error);
+            }
+        });
+    }
+
+
+
+    /**
    * @method uploadNewThumbnail(thumbnail: HTMLInputElement)
    * Uploads a new thumbnail for the selected resource.
    * @param {HTMLInputElement} thumbnail - The thumbnail element associated with the new resource.

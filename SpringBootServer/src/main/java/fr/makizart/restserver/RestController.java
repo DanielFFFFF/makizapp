@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +39,11 @@ public class RestController {
             @PathVariable String project_id,
             @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException, IOException {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/admin/projects/test/create/videoParameters/")
+    public ResponseEntity<String> createSettings(@RequestBody VideoSettingsDTO settings) throws IOException {
+        return new ResponseEntity<>(storageService.createSettings(settings), HttpStatus.CREATED);
     }
 
     //----------------- PUT -----------------

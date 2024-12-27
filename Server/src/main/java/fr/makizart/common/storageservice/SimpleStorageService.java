@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
+
 @Component
 @Transactional
 public class SimpleStorageService implements StorageService {
@@ -389,6 +390,53 @@ public class SimpleStorageService implements StorageService {
 		System.out.println("Ressource created successfully!");
 		return new ArResourceDTO(resource);
 	}
+
+	@Override
+	public String createSettings(VideoSettingsDTO settings) throws IOException {
+
+		// Path to the settings file
+		String dirPath = "SpringBootServer/settings";
+		String filePath = dirPath + "/videoSettings.json"; // Nom du fichier pour les paramètres
+
+		// Créer l'objet File pour le répertoire
+		File dir = new File(dirPath);
+
+		// Vérifiez si le répertoire existe, sinon créez-le
+		if (!dir.exists()) {
+			System.out.println("Directory does not exist. Creating: " + dirPath);
+			boolean dirsCreated = dir.mkdirs();
+			if (!dirsCreated) {
+				throw new IOException("Failed to create directory: " + dirPath);
+			}
+		}
+
+		// Convertir les paramètres en JSON
+		String jsonString = convertSettingsToJson(settings);
+
+		// Écrire les paramètres dans le fichier
+		File file = new File(filePath);
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(jsonString);
+		} catch (IOException e) {
+			throw new IOException("Failed to save settings to file: " + filePath, e);
+		}
+
+		return jsonString;
+	}
+
+	// Méthode utilitaire pour convertir VideoSettingsDTO en JSON
+	private String convertSettingsToJson(VideoSettingsDTO settings) {
+		if (settings == null) {
+			throw new IllegalArgumentException("Settings cannot be null");
+		}
+
+		return "{\n" +
+				"  \"videoSize\": " + settings.getVideoSize() + ",\n" +
+				"  \"videoOpacity\": " + settings.getVideoOpacity() + ",\n" +
+				"  \"videoLoop\": " + settings.isVideoLoop() + "\n" +
+				"}";
+	}
+
 
 	@Override
 	public void overrideImage(String resourceId, String name, String image) throws InvalidParameterException, IOException, NameAlreadyBoundException {
