@@ -27,17 +27,7 @@ jobs:
                 curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
             fi
-            
-#            if ! command -v node > /dev/null 2>&1; then
-#              echo "Installing Node.js via NVM..."
-#              if [ ! -d "$HOME/.nvm" ]; then
-#                curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-#              fi
-#              export NVM_DIR="$HOME/.nvm"
-#              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-#              nvm install --lts
-#            fi
-            
+   
             if ! command -v java > /dev/null 2>&1; then
               echo "Installing Java..."
               sudo apt install openjdk-17-jdk openjdk-17-jre -y
@@ -113,16 +103,6 @@ jobs:
             cd makizapp
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
-            
-#            echo "Building Angular frontend..."
-#            cd WebView/site
-#            export NVM_DIR="$HOME/.nvm"
-#            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-#            npm install
-#            npm install -g @angular/cli
-#            ng analytics off
-#            npm run build-ci
-#            cd ../../
             
             echo "Building Spring Boot..."
             sudo ./gradlew clean build
