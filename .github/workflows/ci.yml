@@ -65,7 +65,7 @@ jobs:
             fi
             #check if the folder is not empty
             if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
-              sudo rm SpringBootServer/src/main/resources/static/*
+              sudo rm -rf SpringBootServer/src/main/resources/static/*
             fi
 
       # Build the frontend inside the Runner and move the built files to the VM, precisely in the static folder of SpringBoot
