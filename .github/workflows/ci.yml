@@ -89,7 +89,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           host: 89.168.61.206
-          remote: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static'
+          remote: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
           username: ubuntu
           privateKey: ${{ secrets.SSH_PRIVATE }}
           local: 'WebView/site/dist/site/'
@@ -109,8 +109,7 @@ jobs:
             cd ~/makizapp/SpringBootServer/src/main/resources/static
             ls -la
             
-            
-            
+  
             
 #      - name: mind tracker and spring boot
 #        uses: appleboy/ssh-action@v1.0.3
