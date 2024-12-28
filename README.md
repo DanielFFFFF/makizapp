@@ -20,59 +20,90 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 ## Context
 
 This project is a web application made in Angular and Spring boot that lets you play videos and images in augmented reality on images that serve as markers.
- 
+
 ## Getting Started
-1. To begin, you have to clone the repository. Click on the green button ``` <>Code ``` (1), and copy the link of the git (2).  
-   [Screen of the path to follow on GitHub](docs/images/screen_gitclone.png)
-2. Then, navigate with your terminale en the folder where you want to put the project Makizapp.
-3. Use the command ``` git clone [url of the project, copied into the first step] ```.
-4. After that, use ``` cd makizapp ```
-5. Now, you have to install some dependencies :
-    - TODO
+1. To begin, you have to clone the repository. For that, you need to navigate with your terminal in the folder where you want to put the project Makizapp.
+2. Use the command ```git clone https://github.com/DanielFFFFF/makizapp.git```.
+3. After that, enter the project by doing ```cd makizapp```.
 
-## How to run (Manual Setup)
-
+## First Execution
 1. Firstly we need a postgres database to communicate with the spring server
    - Use the docker compose file in the makizapp directory by running the command
-     ``` sudo docker compose up ```. This will create and run a container which runs a postgres database.
+     ```sudo docker compose up```. This will create and run a container which runs a postgres database.
    > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
 
-2. Set Enironment Variable
-   open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
+   > [How to reset database ?](Resetting-database)
+
+2. After that, we need to set the Environment Variable.
+   Open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new terminal and set it in global environment file:
    ```bash
    sudo nano /etc/environment
    source /etc/environment
    ```
-   You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
-   This is needed for the authentication to work in both root and ordinary environments.
+   > You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
+   > This is needed for the authentication to work in both root and ordinary environments.
 
-4. Configure the server so the api calls your machine :
-   - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```,
-     change the variable SERVER_PATH to the ip of your machine.
-   - Also change the IP in ```SpringBootServer/src/main/resources/static/application.yml```.
-     Your have to change the variable ``` address: ``` of the file like that :
+3. Then, do ```chmod +x first-build.sh``` and ```./first-build.sh```.
 
-   ```yml
-   server:
-    address: [ip of your machine]
-    port: 8080
-   ```
-   > To have your ip address, use the following command ``` hostname -I | awk '{print $1}' ```.
-   > Example of ip address :  ``` 192.168.6.63 ```.
+4. Afterwards, you should be able to connect using the ip of your machine in your browser with this command :
+   ```echo "https://$(hostname -I | awk '{print $1}'):8080"```
 
-5. Now, we will compile the front-end. Before, run this command to change the right of the file :
-   ``` chmod +x ./build-front.sh ```, and then run this command to compile : ``` ./build-front.sh ```.
+## How to run
 
-6. It's time to execute the application. To begin, you need to clean and compile with  ```sudo ./gradlew clean build ```.
-   After that, run the command ```sudo ./gradlew :SpringBootServer:bootRun ```.
+1. Just do ```sudo ./gradlew :SpringBootServer:bootRun```
+   > If you need to compile the front or / and the application, do ```./build-front.sh```
 
-   > If you prefer, you can use intelliJ. Right click on MakizApplication and Run, it should be in the following directory:
-   > ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```.
+## How to use the application as an Admin
 
-5. Afterwards you should be able to connect using the ip of your machine in your browser with this link :
-   ``` [ip of your machine]:8080 ```
+1. [Launch the application](How-to-run)
+   > If it's the first time [Launch the application for the first time](First Execution)
 
-1. We need to allow Springboot to use docker commands without sudo.
+2. Log in to the admin connector.
+
+### How to create new project
+
+Click on ```New folder```, then put a name and click on create.
+//Image
+
+### How to create a resource
+
+1. Select the project where you want to create a resource
+2. Click on ```Create new image tracking```
+3. Select at least a name and a video 
+   > By default, the first frame of the video will be chosen if no frame is selected
+4. Click on ```Enregistrer``` to save your resource.
+//Image
+### How to share a project
+
+1. To start, you need to go to the corresponding project
+2. After that, click on the gear and the button ```Share project```
+3. Now you have to choices : 
+   - You use the QR code
+   - You use the link
+
+## How to use the application as a User
+
+1. First of all, you need to scan the QR code or copy the link of a project
+> [Share a project](How-to-share-a-project)
+
+2. Now you can scan the images and enjoy
+//Image
+## Util
+
+### Resetting database
+
+If database is modified such as after the removal of the old fset markers, the database must be remade:
+
+```docker-compose down --volumes --remove-orphans```
+
+This command will completely reset the database, this will delete all projects in the database (but not the stored .mind files)
+
+
+
+
+## TODO
+
+We need to allow Springboot to use docker commands without sudo.
 
 Create  a docker group\
 ```sudo groupadd docker```\
@@ -92,49 +123,6 @@ from the makizapp folder run\
 docker build -t mind-tracker-compiler .
 docker run --rm -v ./output:/app/src/images mind-tracker-compiler
 
-2. We'll need a postgres database to communicate with the spring server
-    - Use the docker compose file in the makizapp directory by running the command
-      ```docker compose up```
-      This will create and run a container which runs a postgres database.
-
-3. Configure the server so the api calls your machine
-    - In ```SpringBootServer/src/main/resources/static/assets/app.config.json```
-      change the variable SERVER_PATH to the ip of your machine.
-    - Also change the IP in the application.yml file in the static server folder of the Springboot application,  for example if the ip of your machine is
-      192.168.14.31, you should have the following in your application.yml:
-```yml
-  server:
-    address: 192.168.14.31
-    port: 8080
-  ```
-
-
-4. Using intelliJ, right click on MakizApplication and Run, it should be in the following directory:
-   ```SpringBootServer/src/main/java/fr/makizart/restserver/MakizappApplication.java```
-   5.Afterwards you should be able to connect using the ip of your machine in your browser
-
-### How to compile front-end
-
-In
-```webview/site```
-run the command
-```ng build```
-this should compile into ```webview/site/dist/site/```
-you then need to move the newly compiled files into
-```SpringBootServer/src/main/resources/static```
-so that SpringBoot uses the newly compiled frontend.
-
-
-### Resetting database
-
-If database is modified such as after the removal of the old fset markers, the database must be remade:
-
-```docker-compose down --volumes --remove-orphans```
-
-This command will completely reset the database, this will delete all projects in the database (but not the stored .mind files)
-
-
-
 
 ## How to run (Automated Setup with Script)
 
@@ -150,21 +138,6 @@ Also, in order to test the app in external devices such as phones, you only need
 This steps are not necessary if you are running the app on the same machine you are developing on.
 
 ### Using the script:
-
-1. Firstly we need a postgres database to communicate with the spring server
-   - Use the docker compose file in the makizapp directory by running the command
-     ``` sudo docker compose up ```. This will create and run a container which runs a postgres database.
-   > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
-
-2. Set Enironment Variable
-   open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new temrinal and set it in global environment file: 
-   ```bash
-   sudo nano /etc/environment
-   source /etc/environment
-   ```
-   You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
-   This is needed for the authentication to work in both root and ordinary environments.
-
 
 2. Run the app:
     - ```shell
