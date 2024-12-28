@@ -83,13 +83,11 @@ jobs:
           npm install
           npm run build-ci
           echo "Verifying build output..."
-          ls -l dist/site
-          
+          cd dist/site
+          ls -la
 
       - name: Move frontend build files to VM
         uses: appleboy/scp-action@v0.1.7
-        run: |
-          cd WebView/site/dist/site
         with:
           host: 89.168.61.206
           target: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
