@@ -56,7 +56,7 @@ This project is a web application made in Angular and Spring boot that lets you 
 ## How to use the application as an Admin
 
 1. [Launch the application](#How-to-run)
-   > If it's the first time [Launch the application for the first time](#First Execution)
+   > If it's the first time [Launch the application for the first time](#First-Execution)
 
 2. Log in to the admin connector.
 
