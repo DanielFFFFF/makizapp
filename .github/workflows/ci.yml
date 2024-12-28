@@ -42,6 +42,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
             sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
+            
             # Remove the project if it already exists in order to remove .mind files remained in file system
             if [ ! -d makizapp ]; then git clone https://github.com/${{ github.repository }}.git; fi
             cd makizapp
@@ -115,17 +116,23 @@ jobs:
           host: 89.168.61.206
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
-          command_timeout: 60m
+          command_timeout: 30m
           script: |
             set -e
             cd makizapp
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
+            
+            # Stop the previous running server instance
+            if [ -f ~/springboot.pid ]; then
+              sudo kill $(cat ~/springboot.pid)
+              rm ~/springboot.pid
+            fi
 
             echo "Building Spring Boot..."
             sudo ./gradlew clean build
-            dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
             mkdir -p ~/logs
             echo " Starting Spring Boot..."
-            sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
+            # run server , forward output to log file and store pid in a file in order to stop it later ( on MAJ )
+            nohup sudo ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_output.log 2>&1 & echo $! > ~/springboot.pid
             sleep 10 # wait for app to start
