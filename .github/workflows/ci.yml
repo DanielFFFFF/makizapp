@@ -12,9 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.7
-
-        #install docker in vm from ci.yml
-      - name: Install Docker and Node in VM
+        
+      - name: Install Docker and Java in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 89.168.61.206
@@ -123,7 +122,7 @@ jobs:
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
             
-            # Stop the previous running server instance
+            
             if [ -f ~/springboot.pid ]; then
               sudo kill $(cat ~/springboot.pid)
               rm ~/springboot.pid
