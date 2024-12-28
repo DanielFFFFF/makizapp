@@ -84,6 +84,7 @@ jobs:
           npm run build-ci
           echo "Verifying build output..."
           ls -l dist/site
+          
 
       - name: Move frontend build files to VM
         uses: appleboy/scp-action@v0.1.7
