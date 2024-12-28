@@ -32,7 +32,7 @@ This project is a web application made in Angular and Spring boot that lets you 
      ```sudo docker compose up```. This will create and run a container which runs a postgres database.
    > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
 
-   > [How to reset database ?](Resetting-database)
+   > [How to reset database ?](#Resetting-database)
 
 2. After that, we need to set the Environment Variable.
    Open the secrets.txt and copy the line of JWT_SECRET with its value, then open a new terminal and set it in global environment file:
@@ -55,8 +55,8 @@ This project is a web application made in Angular and Spring boot that lets you 
 
 ## How to use the application as an Admin
 
-1. [Launch the application](How-to-run)
-   > If it's the first time [Launch the application for the first time](First Execution)
+1. [Launch the application](#How-to-run)
+   > If it's the first time [Launch the application for the first time](#First Execution)
 
 2. Log in to the admin connector.
 
@@ -84,7 +84,7 @@ Click on ```New folder```, then put a name and click on create.
 ## How to use the application as a User
 
 1. First of all, you need to scan the QR code or copy the link of a project
-> [Share a project](How-to-share-a-project)
+> [Share a project](#How-to-share-a-project)
 
 2. Now you can scan the images and enjoy
 //Image
