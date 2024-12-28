@@ -85,6 +85,8 @@ jobs:
           echo "Verifying build output..."
           cd dist/site
           ls -la
+          echo "Compressing the build output"
+          tar -cvzf site.tar.gz *
 
       - name: Move frontend build files to VM
         uses: appleboy/scp-action@v0.1.7
@@ -93,7 +95,7 @@ jobs:
           target: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
-          source: '.'
+          source: 'WebView/site/dist/site/site.tar.gz'
           overwrite: 'true'
 
       - name: Check output
@@ -105,9 +107,8 @@ jobs:
           script: |
             set -e
             cd ~/makizapp/SpringBootServer/src/main/resources/static
+            tar -xvzf site.tar.gz
             ls -la
-            
-  
             
 #      - name: mind tracker and spring boot
 #        uses: appleboy/ssh-action@v1.0.3
