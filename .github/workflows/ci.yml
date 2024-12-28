@@ -92,32 +92,43 @@ jobs:
           remote: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static'
           username: ubuntu
           privateKey: ${{ secrets.SSH_PRIVATE }}
-          local: 'WebView/site/dist/site/*'
+          local: 'WebView/site/dist/site/'
           dotfiles: false
-          concurrency: 1
           recursive: true
           verbose: true
-          port: 22
           atomicPut: false
 
-
-      - name: mind tracker and spring boot
+      - name: Check output
         uses: appleboy/ssh-action@v1.0.3
-        with:
+        with: 
           host: 89.168.61.206
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
-          command_timeout: 60m
           script: |
             set -e
-            cd makizapp
-            echo "Building Docker image for mind tracker..."
-            sudo docker build -t mind-tracker-compiler ./image-tracking-project
+            cd ~/makizapp/SpringBootServer/src/main/resources/static
+            ls -la
             
-            echo "Building Spring Boot..."
-            sudo ./gradlew clean build
-            dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
-            mkdir -p ~/logs
-            echo " Starting Spring Boot..."
-            sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
-            sleep 10 # wait for app to start
+            
+            
+            
+#      - name: mind tracker and spring boot
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: 89.168.61.206
+#          username: ubuntu
+#          key: ${{ secrets.SSH_PRIVATE }}
+#          command_timeout: 60m
+#          script: |
+#            set -e
+#            cd makizapp
+#            echo "Building Docker image for mind tracker..."
+#            sudo docker build -t mind-tracker-compiler ./image-tracking-project
+#
+#            echo "Building Spring Boot..."
+#            sudo ./gradlew clean build
+#            dateNow=$(date +"%Y-%m-%d_%H-%M-%S")
+#            mkdir -p ~/logs
+#            echo " Starting Spring Boot..."
+#            sudo nohup ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_$dateNow.log 2>&1 &
+#            sleep 10 # wait for app to start
