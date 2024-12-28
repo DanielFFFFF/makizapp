@@ -86,17 +86,14 @@ jobs:
           ls -l dist/site
 
       - name: Move frontend build files to VM
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: 89.168.61.206
-          remote: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
+          target: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
           username: ubuntu
-          privateKey: ${{ secrets.SSH_PRIVATE }}
-          local: 'WebView/site/dist/site/'
-          dotfiles: false
-          recursive: true
-          verbose: true
-          atomicPut: false
+          key: ${{ secrets.SSH_PRIVATE }}
+          source: 'WebView/site/dist/site/*'
+          overwrite: 'true'
 
       - name: Check output
         uses: appleboy/ssh-action@v1.0.3
