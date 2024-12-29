@@ -16,7 +16,7 @@ jobs:
       - name: Install Docker and Java in VM
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 89.168.61.206
+          host: 89.168.38.109
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
@@ -36,7 +36,7 @@ jobs:
       - name: Clone project, start DB & check static folder existence in SpringBoot server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 89.168.61.206
+          host: 89.168.38.109
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
@@ -89,7 +89,7 @@ jobs:
       - name: Move frontend build files to VM
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 89.168.61.206
+          host: 89.168.38.109
           target: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
@@ -99,7 +99,7 @@ jobs:
       - name: Check output
         uses: appleboy/ssh-action@v1.0.3
         with: 
-          host: 89.168.61.206
+          host: 89.168.38.109
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
@@ -112,7 +112,7 @@ jobs:
       - name: mind tracker and spring boot
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 89.168.61.206
+          host: 89.168.38.109
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE }}
           command_timeout: 30m
