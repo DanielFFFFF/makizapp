@@ -32,7 +32,7 @@ if ! [ -x "$(command -v ng)" ]; then
   exit 1
 else
   echo 'Angular CLI is already installed. Building the frontend...'
-  ng build
+  npm run build-ci
 fi
 
 # Moving to makizart root folder
@@ -41,9 +41,9 @@ cd ../../
 # Removing already generated frontend build files
 run_as_root rm -rf SpringBootServer/src/main/resources/static/*
 # Moving compiled frontend files to the backend
-run_as_root mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
+run_as_root mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static
 
 # Start the backend
 echo 'Starting the backend...'
 
-run_as_root ./gradlew clean build :SpringBootServer:bootRun
+sudo ./gradlew clean build :SpringBootServer:bootRun

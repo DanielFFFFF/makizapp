@@ -21,6 +21,7 @@ import { RegisterComponent } from './register/register.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import {LoadingBarHttpClientModule} from "@ngx-loading-bar/http-client";
 import {LoadingBarModule} from "@ngx-loading-bar/core";
+import { UsersListComponent } from './users-list/users-list.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {LoadingBarModule} from "@ngx-loading-bar/core";
     AdminComponent,
     ClientComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UsersListComponent
   ],
     imports: [
         BrowserModule,
