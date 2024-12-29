@@ -124,9 +124,9 @@ jobs:
             
             if [ -f ~/springboot.pid ]; then
               pid=$(cat ~/springboot.pid)
-              if [ -n "$pid" ]; then
+              if ps -p $pid > /dev/null; then
                 echo "Stopping already running Spring Boot..."
-                sudo kill $pid
+                sudo kill -0 $pid
               fi
             
               sudo rm ~/springboot.pid
