@@ -133,7 +133,7 @@ jobs:
             fi
 
             echo "Building Spring Boot..."
-            sudo ./gradlew clean build
+            # sudo ./gradlew clean build
             mkdir -p ~/logs
             echo " Starting Spring Boot..."
             # run server , forward output to log file and store pid in a file in order to stop it later ( on MAJ )
