@@ -3,7 +3,7 @@ name: CI/CD pipeline
 on:
   push:
     branches:
-      - containerization
+      - merge_auth
 
 jobs:
   deploy:
