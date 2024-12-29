@@ -6,7 +6,7 @@ on:
       - containerization
 
 jobs:
-  setup-docker:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -121,7 +121,6 @@ jobs:
             cd makizapp
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
-            
             
             if [ -f ~/springboot.pid ]; then
               sudo kill $(cat ~/springboot.pid)
