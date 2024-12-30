@@ -392,11 +392,11 @@ public class SimpleStorageService implements StorageService {
 	}
 
 	@Override
-	public String createSettings(VideoSettingsDTO settings) throws IOException {
+	public String createSettings(String projectId, VideoSettingsDTO settings) throws IOException {
 
 		// Path to the settings file
 		String dirPath = "SpringBootServer/settings";
-		String filePath = dirPath + "/videoSettings.json"; // Nom du fichier pour les paramètres
+		String filePath = dirPath + "/videoSettings" + projectId + ".json"; // Nom du fichier pour les paramètres
 
 		// Créer l'objet File pour le répertoire
 		File dir = new File(dirPath);

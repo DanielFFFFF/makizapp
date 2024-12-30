@@ -41,9 +41,11 @@ public class RestController {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/admin/projects/test/create/videoParameters/")
-    public ResponseEntity<String> createSettings(@RequestBody VideoSettingsDTO settings) throws IOException {
-        return new ResponseEntity<>(storageService.createSettings(settings), HttpStatus.CREATED);
+    @PostMapping("/admin/projects/{project_id}/create/videoParameters/")
+    public ResponseEntity<String> createSettings(
+            @PathVariable String project_id,
+            @RequestBody VideoSettingsDTO settings) throws IOException {
+        return new ResponseEntity<>(storageService.createSettings(project_id, settings), HttpStatus.CREATED);
     }
 
     //----------------- PUT -----------------

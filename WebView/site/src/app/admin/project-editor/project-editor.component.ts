@@ -328,6 +328,12 @@ export class ProjectEditorComponent {
         });
     }
 
+    /**
+     * @method Save the parameters of the video
+     * @param videoSize
+     * @param videoOpacity
+     * @param videoLoop
+     */
     createVideoParameters(videoSize: number, videoOpacity: number, videoLoop: boolean) {
         const body = {
             videoSize: videoSize,
@@ -337,7 +343,7 @@ export class ProjectEditorComponent {
 
         console.log("Body envoyé :", body);
 
-        this.http.post(this.SERVER_PATH + `/admin/projects/test/create/videoParameters/`, body).subscribe({
+        this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.getId()}/create/videoParameters/`, body).subscribe({
             next: (response) => {
                 console.log('Paramètres enregistrés sur le serveur :', response);
             },

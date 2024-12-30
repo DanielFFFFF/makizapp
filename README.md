@@ -23,14 +23,30 @@ This project is a web application made in Angular and Spring boot that lets you 
 
 ## Getting Started
 1. To begin, you have to clone the repository. For that, you need to navigate with your terminal in the folder where you want to put the project Makizapp.
-2. Use the command ```git clone https://github.com/DanielFFFFF/makizapp.git```.
-3. After that, enter the project by doing ```cd makizapp```.
+2. Use the command :
+   ```bash
+   git clone https://github.com/DanielFFFFF/makizapp.git
+   ```
+3. After that, enter the project by doing :
+   ```bash
+   cd makizapp
+   ```
 
 ## First Execution
 1. Firstly we need a postgres database to communicate with the spring server
-   - Use the docker compose file in the makizapp directory by running the command
-     ```sudo docker compose up```. This will create and run a container which runs a postgres database.
-   > If the port is already in use, you can list the processes using it with this command ```sudo lsof -i :5432``` and kill it with this command ```sudo kill [PID return with the previous command]```
+   - Use the docker compose file in the makizapp directory by running the command :
+     ```bash
+      sudo docker compose up
+     ```
+     This will create and run a container which runs a postgres database.
+   > If the port is already in use, you can list the processes using it with this command :
+   > ```bash
+   > sudo lsof -i :5432
+   > ```
+   > and kill it with this command 
+   > ```bash
+   > sudo kill [PID return with the previous command]
+   > ```
 
    > [How to reset database ?](#Resetting-database)
 
@@ -43,15 +59,27 @@ This project is a web application made in Angular and Spring boot that lets you 
    > You need to restart your machine  ```reboot``` in order to apply this change permanently, so its required only once.
    > This is needed for the authentication to work in both root and ordinary environments.
 
-3. Then, do ```chmod +x first-build.sh``` and ```./first-build.sh```.
+3. Then, do 
+   ```bash
+   chmod +x first-build.sh
+   ./first-build.sh
+   ```
 
 4. Afterwards, you should be able to connect using the ip of your machine in your browser with this command :
-   ```echo "https://$(hostname -I | awk '{print $1}'):8080"```
+   ```bash
+   echo "https://$(hostname -I | awk '{print $1}'):8080"
+   ```
 
 ## How to run
 
-1. Just do ```sudo ./gradlew :SpringBootServer:bootRun```
-   > If you need to compile the front or / and the application, do ```./build-front.sh```
+1. Just do 
+   ```bash
+   sudo ./gradlew :SpringBootServer:bootRun
+   ```
+   > If you need to compile the front or / and the application, do 
+   > ```bash
+   > ./build-front.sh
+   > ```
 
 ## How to use the application as an Admin
 
@@ -94,7 +122,9 @@ Click on ```New folder```, then put a name and click on create.
 
 If database is modified such as after the removal of the old fset markers, the database must be remade:
 
-```docker-compose down --volumes --remove-orphans```
+```bash
+docker-compose down --volumes --remove-orphans
+```
 
 This command will completely reset the database, this will delete all projects in the database (but not the stored .mind files)
 

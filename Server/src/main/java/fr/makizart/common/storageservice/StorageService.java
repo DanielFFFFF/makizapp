@@ -186,7 +186,14 @@ public interface StorageService  {
             throws InvalidParameterException, NameAlreadyBoundException, IOException;
 
 
-	String createSettings(VideoSettingsDTO settings) throws IOException;
+	/**
+	 * Create a new json file with settings of a video
+	 * @param projectId -> ID of the project, a long int encoded as a string.
+	 * @param settings -> The DTO containing information about the new settings.
+	 * @return the json with the settings
+	 * @throws IOException If we can't create a dirctory or save the settings
+	 */
+	String createSettings(String projectId, VideoSettingsDTO settings) throws IOException;
 
 
 	/**
