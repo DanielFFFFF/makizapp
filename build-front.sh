@@ -52,12 +52,3 @@ else
 fi
 
 echo "Deployment completed successfully!"
-
-# Clean and compile the app
-echo "Compile the application ..."
-sudo ./gradlew clean build
-echo "Application compiled"
-
-# Launch the app
-echo "Run the application ..."
-sudo ./gradlew :SpringBootServer:bootRun

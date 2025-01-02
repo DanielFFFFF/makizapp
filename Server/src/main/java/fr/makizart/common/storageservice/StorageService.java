@@ -174,15 +174,15 @@ public interface StorageService  {
 	IdDTO createProject(String name) throws InvalidParameterException, NameAlreadyBoundException;
 
 	/**
-	 * Creates a new resource in a project.
-	 *
-	 * @param projectId The ID of the project, a long int encoded as a string.
-	 * @param incomingResourceDTO The DTO containing information about the new resource.
-	 * @return An ArResourceDTO containing information about the newly created resource.
-	 * @throws InvalidParameterException   If the provided parameters are invalid.
-	 * @throws NameAlreadyBoundException  If the name is already exist for the resource.
-	 */
-	ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
+     * Creates a new resource in a project.
+     *
+     * @param projectId           The ID of the project, a long int encoded as a string.
+     * @param incomingResourceDTO The DTO containing information about the new resource.
+     * @return An ArResourceDTO containing information about the newly created resource.
+     * @throws InvalidParameterException If the provided parameters are invalid.
+     * @throws NameAlreadyBoundException If the name is already exist for the resource.
+     */
+	IdDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
             throws InvalidParameterException, NameAlreadyBoundException, IOException;
 
 

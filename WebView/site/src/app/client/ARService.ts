@@ -56,6 +56,7 @@ export class ARService {
     // Create as many entities as there are photos
     for (let i = 0; i < pngcount; i++) {
       this.getResourceVideoURL(project_id, pngcount - i - 1).subscribe(videoURL => {
+          this.getResourceSettings(project_id, pngcount - i - 1).subscribe(settings => {
         // Create the a-entity element with mindar-image-target attribute
         var aEntity = this.renderer.createElement(`a-entity`);
 
@@ -75,11 +76,12 @@ export class ARService {
         this.renderer.setAttribute(video, 'opacity', '0.8');
         this.renderer.setAttribute(video, 'preload', 'auto');
 
+        /*
         this.renderer.setAttribute(video, 'position', '0 0 0');
         this.renderer.setAttribute(video, 'height', '0.552');
         this.renderer.setAttribute(video, 'width', '1');
         this.renderer.setAttribute(video, 'rotation', '0 0 0');
-
+        */
 
 
 
@@ -89,8 +91,9 @@ export class ARService {
         // The video to be displayed
         this.renderer.setAttribute(aVideo, 'src', "#" + i.toString());
 
+        console.log(settings);
         // The settings
-        this.renderer.setAttribute(aVideo, 'opacity', '0.8');
+        this.renderer.setAttribute(aVideo, 'opacity', (settings.videoOpacity / 100).toString());
         this.renderer.setAttribute(aVideo, 'preload', 'auto');
         this.renderer.setAttribute(aVideo, 'position', '0 0 0');
         this.renderer.setAttribute(aVideo, 'height', '0.552');
@@ -130,7 +133,9 @@ export class ARService {
 
 
 
+          });
       });
+
 
 
     }
@@ -165,5 +170,15 @@ export class ARService {
       )
     );
   }
+
+    getResourceSettings(projectId: string | null, k: number): Observable<any> {
+        return this.http.get<Resource[]>(`${this.SERVER_PATH}/public/projects/${projectId}/resources`).pipe(
+            map((resources: Resource[]) => resources[k]), // Get the k-th resource
+            switchMap((resource: Resource) =>
+                this.http.get<any>(`${this.SERVER_PATH}/public/projects/resources/${projectId}/${resource.id}/settings`, { responseType: 'json' }) // Fetch the JSON file
+            )
+        );
+    }
+
 
 }

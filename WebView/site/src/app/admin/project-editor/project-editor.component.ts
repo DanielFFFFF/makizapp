@@ -216,11 +216,7 @@ export class ProjectEditorComponent {
                       videoOpacity: number,
                       videoLoop: boolean) {
 
-        console.log('Taille de la vidéo :', videoSize);
-        console.log('Opacité de la vidéo :', videoOpacity);
-        console.log('Lecture en boucle :', videoLoop);
 
-        this.createVideoParameters(videoSize, videoOpacity, videoLoop);
 
         const body: { [key: string]: any } = {};
         body["name"] = name.value;
@@ -320,11 +316,23 @@ export class ProjectEditorComponent {
         }
 
         Promise.all(promises).then(() => {
-            // @ts-ignore
-            this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((res: Created_id) => {
+            //@ts-ignore
+            this.http.post(this.SERVER_PATH + `/admin/projects/${this.project.id}/create/resource/`, body).subscribe((data: Created_id) => {
                 this.hideNewResource();
                 this.updateProjectSelected();
+                console.log('Taille de la vidéo :', videoSize);
+                console.log('Opacité de la vidéo :', videoOpacity);
+                console.log('Lecture en boucle :', videoLoop);
+
+                console.log(data);
+
+                //@ts-ignore
+                this.createVideoParameters(videoSize, videoOpacity, videoLoop, data.id);
+                // Handle successful resource creation, e.g., show success message or update UI
             });
+
+
+
         });
     }
 
@@ -333,12 +341,14 @@ export class ProjectEditorComponent {
      * @param videoSize
      * @param videoOpacity
      * @param videoLoop
+     * @param res_id
      */
-    createVideoParameters(videoSize: number, videoOpacity: number, videoLoop: boolean) {
+    createVideoParameters(videoSize: number, videoOpacity: number, videoLoop: boolean, res_id: string) {
         const body = {
             videoSize: videoSize,
             videoOpacity: videoOpacity,
-            videoLoop: videoLoop
+            videoLoop: videoLoop,
+            id: res_id
         };
 
         console.log("Body envoyé :", body);

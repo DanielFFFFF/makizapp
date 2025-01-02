@@ -251,7 +251,7 @@ public class SimpleStorageService implements StorageService {
 
 
 	@Override
-	public ArResourceDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
+	public IdDTO createResource(String projectId, IncomingResourceDTO incomingResourceDTO)
             throws InvalidParameterException, NameAlreadyBoundException, IOException {
 
 		// Create a new AR resource object*
@@ -388,16 +388,21 @@ public class SimpleStorageService implements StorageService {
 
 		// Return the created resource as a DTO
 		System.out.println("Ressource created successfully!");
-		return new ArResourceDTO(resource);
+
+		IdDTO idr = new IdDTO(resource.getId());
+		System.out.println(idr);
+		return idr;
 	}
 
 	@Override
 	public String createSettings(String projectId, VideoSettingsDTO settings) throws IOException {
 
+		// Path to the marker directory
+		String dirPath = "SpringBootServer/mind-markers/markers/" + projectId + "/settings/";
 		// Path to the settings file
-		String dirPath = "SpringBootServer/settings";
-		String filePath = dirPath + "/videoSettings" + projectId + ".json"; // Nom du fichier pour les paramètres
+		String filePath = dirPath + settings.getId()+ ".json"; // Nom du fichier pour les paramètres
 
+		System.out.print("TEST:" + filePath);
 		// Créer l'objet File pour le répertoire
 		File dir = new File(dirPath);
 
@@ -443,7 +448,6 @@ public class SimpleStorageService implements StorageService {
 		validateName(name);
 		ArResource resource = tryGetResource(resourceId);
 		try {
-
 			saveImage(image, resource);
 		}catch(IOException e){
 			throw new InvalidParameterException("Can't create image");

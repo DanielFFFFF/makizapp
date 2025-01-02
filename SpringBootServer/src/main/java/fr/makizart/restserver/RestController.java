@@ -6,18 +6,20 @@ import fr.makizart.common.storageservice.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameAlreadyBoundException;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -35,10 +37,11 @@ public class RestController {
     }
 
     @PostMapping("/admin/projects/{project_id}/create/resource/")
-    public ResponseEntity<ArResourceDTO> createResource(
+    public ResponseEntity<IdDTO> createResource(
             @PathVariable String project_id,
             @RequestBody IncomingResourceDTO dto) throws NameAlreadyBoundException, IOException {
         return new ResponseEntity<>(storageService.createResource(project_id, dto), HttpStatus.CREATED);
+
     }
 
     @PostMapping("/admin/projects/{project_id}/create/videoParameters/")
@@ -187,6 +190,45 @@ public class RestController {
     public ArResourceDTO getResource(@PathVariable String resource_id) {
         return storageService.getResource(resource_id);
     }
+
+
+    @GetMapping("/public/projects/resources/{projectID}/{resourceId}/settings")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> getResourceSettings(@PathVariable String resourceId, @PathVariable String projectID) {
+        try {
+
+            // Path to the marker directory
+            String dirPath = "SpringBootServer/mind-markers/markers/" + projectID + "/settings/";
+            // Path to the settings file
+
+            // Define the base directory where the JSON files are stored
+            Path basePath = Paths.get(dirPath);
+
+            // Construct the full path to the requested file
+            Path filePath = basePath.resolve(resourceId + ".json");
+
+            // Check if the file exists and is readable
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                throw new FileNotFoundException("Resource not found: " + resourceId);
+            }
+
+            // Read the file contents as a String
+            String content = Files.readString(filePath);
+
+            // Return the file content with the appropriate JSON Content-Type header
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(content);
+        } catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"error\": \"Resource not found\"}");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"Failed to read the resource\"}");
+        }
+    }
+
+
 
     @GetMapping("/admin/storage/")
     @ResponseStatus(HttpStatus.OK)
