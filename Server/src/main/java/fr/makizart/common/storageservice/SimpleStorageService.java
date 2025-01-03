@@ -438,7 +438,9 @@ public class SimpleStorageService implements StorageService {
 		return "{\n" +
 				"  \"videoSize\": " + settings.getVideoSize() + ",\n" +
 				"  \"videoOpacity\": " + settings.getVideoOpacity() + ",\n" +
-				"  \"videoLoop\": " + settings.isVideoLoop() + "\n" +
+				"  \"videoLoop\": " + settings.isVideoLoop() + ",\n" +
+				"  \"width\": " + settings.getWidth() + ",\n" +
+				"  \"height\": " + settings.getHeight() + "\n" +
 				"}";
 	}
 

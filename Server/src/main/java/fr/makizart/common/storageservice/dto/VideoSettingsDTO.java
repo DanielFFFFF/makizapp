@@ -5,6 +5,8 @@ public class VideoSettingsDTO {
     private double videoOpacity;
     private boolean videoLoop;
     private String id;
+    private int width;
+    private int height;
 
     // Getters et Setters
     public int getVideoSize() {
@@ -37,5 +39,21 @@ public class VideoSettingsDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

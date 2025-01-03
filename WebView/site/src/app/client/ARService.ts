@@ -76,6 +76,8 @@ export class ARService {
         this.renderer.setAttribute(video, 'opacity', '0.8');
         this.renderer.setAttribute(video, 'preload', 'auto');
 
+
+
         /*
         this.renderer.setAttribute(video, 'position', '0 0 0');
         this.renderer.setAttribute(video, 'height', '0.552');
@@ -96,9 +98,11 @@ export class ARService {
         this.renderer.setAttribute(aVideo, 'opacity', (settings.videoOpacity / 100).toString());
         this.renderer.setAttribute(aVideo, 'preload', 'auto');
         this.renderer.setAttribute(aVideo, 'position', '0 0 0');
-        this.renderer.setAttribute(aVideo, 'height', '0.552');
-        this.renderer.setAttribute(aVideo, 'width', '1');
+        let ratio = settings.height / settings.width;
+        this.renderer.setAttribute(aVideo, 'height', (ratio * settings.videoSize/100).toString() );
+        this.renderer.setAttribute(aVideo, 'width', (1 * settings.videoSize/100).toString());
         this.renderer.setAttribute(aVideo, 'rotation', '0 0 0');
+
 
 
 

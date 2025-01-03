@@ -21,6 +21,8 @@ import { RegisterComponent } from './register/register.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import {LoadingBarHttpClientModule} from "@ngx-loading-bar/http-client";
 import {LoadingBarModule} from "@ngx-loading-bar/core";
+import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatAnchor, MatButton} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -47,6 +49,11 @@ import {LoadingBarModule} from "@ngx-loading-bar/core";
         LoadingBarHttpClientModule,
         LoadingBarModule,
         QRCodeModule,
+        MatCardContent,
+        MatCardHeader,
+        MatButton,
+        MatAnchor,
+        MatCard,
     ],
   providers: [
       provideHttpClient(withInterceptors([AuthInterceptor])),

@@ -122,6 +122,7 @@ export class ProjectEditorComponent {
   videoLoop: boolean = false;
 
 
+
   confirmDelete(): void {
     if(confirm("Are you sure wo want to delete this resource?")) {
       this.deleteResource()
@@ -221,6 +222,9 @@ export class ProjectEditorComponent {
         const body: { [key: string]: any } = {};
         body["name"] = name.value;
 
+        let pixelWidth = 10;
+        let pixelHeight = 10;
+
         if (name.value === "") {
             alert("Il manque le nom de la ressource !");
             return;
@@ -244,6 +248,7 @@ export class ProjectEditorComponent {
 
         const promises = [];
 
+
         const createThumbnailFromVideo = (videoUrl: string): Promise<string> => {
             return new Promise((resolve, reject) => {
                 const videoElement = document.createElement("video");
@@ -255,6 +260,9 @@ export class ProjectEditorComponent {
                 videoElement.addEventListener("loadeddata", () => {
                     canvas.width = videoElement.videoWidth;
                     canvas.height = videoElement.videoHeight;
+                    pixelWidth = videoElement.videoWidth;
+                    pixelHeight = videoElement.videoHeight;
+
                     videoElement.currentTime = 0; // Seek to the first frame
                 });
 
@@ -323,11 +331,13 @@ export class ProjectEditorComponent {
                 console.log('Taille de la vidéo :', videoSize);
                 console.log('Opacité de la vidéo :', videoOpacity);
                 console.log('Lecture en boucle :', videoLoop);
+                console.log('Width', pixelWidth);
+                console.log('Lecture en boucle :', pixelHeight);
 
                 console.log(data);
 
                 //@ts-ignore
-                this.createVideoParameters(videoSize, videoOpacity, videoLoop, data.id);
+                this.createVideoParameters(pixelWidth, pixelHeight,videoSize, videoOpacity, videoLoop, data.id);
                 // Handle successful resource creation, e.g., show success message or update UI
             });
 
@@ -338,16 +348,20 @@ export class ProjectEditorComponent {
 
     /**
      * @method Save the parameters of the video
+     * @param pixelWidth
+     * @param pixelHeight
      * @param videoSize
      * @param videoOpacity
      * @param videoLoop
      * @param res_id
      */
-    createVideoParameters(videoSize: number, videoOpacity: number, videoLoop: boolean, res_id: string) {
+    createVideoParameters(pixelWidth : number, pixelHeight : number, videoSize: number, videoOpacity: number, videoLoop: boolean, res_id: string) {
         const body = {
             videoSize: videoSize,
             videoOpacity: videoOpacity,
             videoLoop: videoLoop,
+            width: pixelWidth,
+            height: pixelHeight,
             id: res_id
         };
 
