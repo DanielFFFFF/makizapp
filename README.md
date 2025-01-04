@@ -21,6 +21,18 @@ The goal of this repository is to improve upon the existing Makizapp created by 
 
 This project is a web application made in Angular and Spring boot that lets you play videos and images in augmented reality on images that serve as markers.
 
+## Summary
+- [Getting Started](#getting-started)
+- [First Execution](#first-execution)
+- [How to run](#how-to-run)
+- [How to use the application as an Admin](#how-to-use-the-application-as-an-admin)
+  - [How to create new project](#how-to-create-new-project)
+  - [How to create a resource](#how-to-create-a-resource)
+  - [How to share a project](#how-to-share-a-project)
+- [How to use the application as a User](#how-to-use-the-application-as-a-user)
+- [Util](#util)
+  - [Resetting database](#resetting-database)
+
 ## Getting Started
 1. To begin, you have to clone the repository. For that, you need to navigate with your terminal in the folder where you want to put the project Makizapp.
 2. Use the command :
@@ -91,7 +103,7 @@ This project is a web application made in Angular and Spring boot that lets you 
 ### How to create new project
 
 Click on ```New folder```, then put a name and click on create.
-//Image
+![How to create a new project](docs/Create_project.png "How to create a new project")
 
 ### How to create a resource
 
