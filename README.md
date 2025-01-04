@@ -103,7 +103,7 @@ This project is a web application made in Angular and Spring boot that lets you 
 ### How to create new project
 
 Click on ```New folder```, then put a name and click on create.
-![How to create a new project](docs/Create_project.png "How to create a new project")
+![How to create a new project](docs/images/Create_project.png "How to create a new project")
 
 ### How to create a resource
 
