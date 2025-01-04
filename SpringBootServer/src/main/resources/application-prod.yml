@@ -3,7 +3,7 @@ server:
     key-store-type: PKCS12
     keyAlias: makizart
     trust-store-password: makizart
-    key-store: classpath:keystore.p12
+    key-store: classpath:keystore.p12 # src/main/resources/keystore.p12 , classpath:src/main/ressouces in any java Spring Boot project
   error:
     include-exception: false
     include-message: never

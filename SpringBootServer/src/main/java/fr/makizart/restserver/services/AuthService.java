@@ -2,7 +2,7 @@ package fr.makizart.restserver.services;
 
 import fr.makizart.common.database.table.Utilisateur;
 import fr.makizart.common.storageservice.dto.AuthResponseDTO;
-import fr.makizart.common.storageservice.dto.RegisterResponseDTO;
+import fr.makizart.common.storageservice.dto.SingleMessageDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,13 +29,13 @@ public class AuthService {
         return new AuthResponseDTO(token, userInDatabase.isEnabled());
     }
 
-    public RegisterResponseDTO register(String username, String password) {
+    public SingleMessageDTO register(String username, String password) {
         Utilisateur user = new Utilisateur();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole("ADMIN");
         // user.setEnabled(true);
         userService.registerUser(user);
-        return new RegisterResponseDTO("User registration sent to the admin for approval");
+        return new SingleMessageDTO("User registration sent to the admin for approval");
     }
 }

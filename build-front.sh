@@ -24,7 +24,8 @@ cd ../..
 # Check if static directory exists before removing files
 if [ -d "SpringBootServer/src/main/resources/static" ]; then
   echo "Cleaning static directory..."
-  rm -rf SpringBootServer/src/main/resources/static/*.js
+  rm -rf SpringBootServer/src/main/resources/static/assets
+  rm SpringBootServer/src/main/resources/static/*
 else
   echo "Directory SpringBootServer/src/main/resources/static does not exist!"
   exit 1
@@ -32,7 +33,7 @@ fi
 
 # Copy the built Angular files to the static directory
 echo "Copying files to Spring Boot static directory..."
-cp -rf WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
+mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
 
 # Get the ip
 ip=$(hostname -I | awk '{print $1}')

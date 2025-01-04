@@ -1,0 +1,21 @@
+<div class="container py-4">
+    <h2 class="text-center text-primary mb-4">User Directory</h2>
+    <div class="row">
+        <div *ngFor="let user of users" class="col-md-4 col-sm-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-white" [ngClass]="user.enabled ? 'bg-primary' : 'bg-danger'">
+                    <h3 class="card-title mb-0">{{ user.username }}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>ID:</strong> {{ user.id }}</p>
+                    <p class="card-text"><strong>Role:</strong> {{ user.role }}</p>
+                    <p class="card-text"><strong>Enabled:</strong> {{ user.enabled ? 'Yes' : 'No' }}</p>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <button class="btn btn-outline-primary btn-sm" type="button" (click)="performUserOperation(user.id, user.enabled ? 'disable' : 'enable')">
+                        {{ user.enabled ? 'Disable' : 'Enable' }} </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

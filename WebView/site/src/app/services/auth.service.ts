@@ -51,16 +51,4 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem('token');
     }
-
-    getAuthHeaders(login = false, json = true) {
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders();
-        if (!json)
-            headers.set('Content-Type', 'text/plain');
-
-        if (!login) {
-            headers.set('Authorization', `Bearer ${token}`);
-        }
-        return headers;
-    }
 }

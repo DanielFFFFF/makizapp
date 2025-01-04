@@ -1,0 +1,141 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - merge_auth
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+        
+      - name: Install Docker and Java in VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 89.168.38.109
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            set -e
+            if ! command -v docker 2>&1 > /dev/null; then
+                echo "Installing Docker..."
+                curl -fsSL https://get.docker.com -o get-docker.sh
+                sudo sh get-docker.sh
+            fi
+   
+            if ! command -v java > /dev/null 2>&1; then
+              echo "Installing Java..."
+              sudo apt install openjdk-17-jdk openjdk-17-jre -y
+              java --version
+            fi
+
+      - name: Clone project, start DB & check static folder existence in SpringBoot server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 89.168.38.109
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev -y
+            
+            # Remove the project if it already exists in order to remove .mind files remained in file system
+            if [ ! -d makizapp ]; then git clone https://github.com/${{ github.repository }}.git; fi
+            cd makizapp
+            git fetch --all
+            git checkout ${{ github.ref_name }} -f
+            git pull
+            
+            echo "Checking git operations..."
+            git status
+            git remote -v
+            
+            # delete DB data from previous run
+            sudo docker compose down --volumes --remove-orphans
+            # -d -> detached mode (run in background)
+            sudo docker compose up -d
+            
+            echo "Moving Angular build output..."
+            # check if static folder exists
+            if [ ! -d SpringBootServer/src/main/resources/static/ ]; then
+              mkdir SpringBootServer/src/main/resources/static/
+            fi
+            #check if the folder is not empty
+            if [ "$(ls -A SpringBootServer/src/main/resources/static/)" ]; then
+              sudo find SpringBootServer/src/main/resources/static/ -mindepth 1 -delete
+            fi
+
+      # Build the frontend inside the Runner and move the built files to the VM, precisely in the static folder of SpringBoot
+      # Hint: You'll need to use other actions from the marketplace
+      - name: Build frontend in Runner and move compiled ng files to Spring Boot in VM
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 'latest'
+
+      - name: Build frontend
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          cd WebView/site
+          npm install
+          npm run build-ci
+          echo "Verifying build output..."
+          cd dist/site
+          ls -la
+
+      - name: Move frontend build files to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 89.168.38.109
+          target: '/home/ubuntu/makizapp/SpringBootServer/src/main/resources/static/'
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE }}
+          source: 'WebView/site/dist/site/*'
+          overwrite: 'true'
+
+      - name: Check output
+        uses: appleboy/ssh-action@v1.0.3
+        with: 
+          host: 89.168.38.109
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            set -e
+            cd ~/makizapp/SpringBootServer/src/main/resources/static
+            mv WebView/site/dist/site/* .
+            rm -rf WebView
+            ls -la
+            
+      - name: mind tracker and spring boot
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 89.168.38.109
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE }}
+          command_timeout: 30m
+          script: |
+            set -e
+            cd makizapp
+            echo "Building Docker image for mind tracker..."
+            sudo docker build -t mind-tracker-compiler ./image-tracking-project
+            
+            if [ -f ~/springboot.pid ]; then
+              pid=$(cat ~/springboot.pid)
+              if ps -p $pid > /dev/null; then
+                echo "Stopping already running Spring Boot..."
+                sudo kill -0 $pid
+              fi
+            
+              sudo rm ~/springboot.pid
+            fi
+
+            echo "Building Spring Boot..."
+            # sudo ./gradlew clean build
+            mkdir -p ~/logs
+            echo " Starting Spring Boot..."
+            # run server , forward output to log file and store pid in a file in order to stop it later ( on MAJ )
+            nohup sudo ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_output.log 2>&1 & echo $! > ~/springboot.pid
+            sleep 10 # wait for app to start

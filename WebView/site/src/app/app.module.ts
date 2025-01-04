@@ -23,6 +23,7 @@ import {LoadingBarHttpClientModule} from "@ngx-loading-bar/http-client";
 import {LoadingBarModule} from "@ngx-loading-bar/core";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatAnchor, MatButton} from "@angular/material/button";
+import { UsersListComponent } from './users-list/users-list.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatAnchor, MatButton} from "@angular/material/button";
     AdminComponent,
     ClientComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UsersListComponent
   ],
     imports: [
         BrowserModule,
