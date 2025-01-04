@@ -212,7 +212,7 @@ export class ProjectEditorComponent {
     return `${day}/${month}/${year}`;
   }
     createNewResource(name: HTMLInputElement, thumbnail: HTMLInputElement,
-                      video: HTMLInputElement, sound: HTMLInputElement, image: HTMLInputElement,
+                      video: HTMLInputElement,
                       videoSize: number,
                       videoOpacity: number,
                       videoLoop: boolean) {
@@ -230,18 +230,14 @@ export class ProjectEditorComponent {
             return;
         }
 
-        const isImagePresent = image.files != null && image.files.length > 0;
-        const isSoundPresent = sound.files != null && sound.files.length > 0;
+
         const isVideoPresent = video.value !== "";
 
-        if ((isImagePresent || isSoundPresent) === isVideoPresent) {
-            alert("Impossible d'avoir du son ou une image en meme temps qu'une video");
-            return;
-        }
+
 
         if (isVideoPresent) {
             body["videoAsset"] = video.value;
-        } else if (!isSoundPresent && !isImagePresent) {
+        } else {
             alert("Aucun media à jouer en AR choisit");
             return;
         }
@@ -307,29 +303,7 @@ export class ProjectEditorComponent {
             return;
         }
 
-        if (image.files != null && image.files.length !== 0) {
-            const reader = new FileReader();
-            const p = new Promise<void>((resolve) => {
-                reader.onload = () => {
-                    body["imageAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-                    resolve();
-                };
-            });
-            reader.readAsDataURL(image.files[0]);
-            promises.push(p);
-        }
 
-        if (sound.files != null && sound.files.length !== 0) {
-            const reader = new FileReader();
-            const p = new Promise<void>((resolve) => {
-                reader.onload = () => {
-                    body["soundAsset"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-                    resolve();
-                };
-            });
-            reader.readAsDataURL(sound.files[0]);
-            promises.push(p);
-        }
 
         Promise.all(promises).then(() => {
             //@ts-ignore

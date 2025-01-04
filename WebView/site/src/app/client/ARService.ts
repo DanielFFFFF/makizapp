@@ -154,6 +154,7 @@ export class ARService {
     return aScene;
   }
 
+
   // Creates a scene after using endpoint to count the amount of pngs in the project folder
   initializeARScene(project_id: string | null) {
     // Fetch the PNG count for the given project_id
@@ -167,7 +168,6 @@ export class ARService {
   }
 
   // Gets the URL of the video given the index in the directory
-
   getResourceVideoURL(projectId: string | null, k: number): Observable<string> {
     return this.http.get<Resource[]>(`${this.SERVER_PATH}/public/projects/${projectId}/resources`).pipe(
       map((resources: Resource[]) => resources[k]), // Get the k-th resource
@@ -185,6 +185,5 @@ export class ARService {
             )
         );
     }
-
 
 }
