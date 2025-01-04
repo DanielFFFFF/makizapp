@@ -76,6 +76,8 @@ export class ARService {
         this.renderer.setAttribute(video, 'opacity', '0.8');
         this.renderer.setAttribute(video, 'preload', 'auto');
 
+        this.renderer.setAttribute(video, 'autoplay', '');
+
 
 
         /*

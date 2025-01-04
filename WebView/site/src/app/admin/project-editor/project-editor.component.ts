@@ -282,8 +282,16 @@ export class ProjectEditorComponent {
             const reader = new FileReader();
             const p = new Promise<void>((resolve) => {
                 reader.onload = () => {
-                    body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
-                    resolve();
+                    const image = new Image();
+                    image.onload = () => {
+                        // Get image dimensions
+                        pixelWidth = image.width;
+                        pixelHeight = image.height;
+
+                        body["thumbnail"] = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                        resolve();
+                    };
+                    image.src = reader.result as string;
                 };
             });
             reader.readAsDataURL(thumbnail.files[0]);
