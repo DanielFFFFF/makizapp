@@ -125,7 +125,7 @@ jobs:
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
             
             echo "Checking for any process using port 8080..."
-            pid=$(sudo lsof -t -i:8080)
+            pid=$(sudo lsof -t -i:8080 || true)
             
             if [ -n "$pid" ]; then
               echo "Port 8080 is in use by PID $pid. Terminating the process..."
