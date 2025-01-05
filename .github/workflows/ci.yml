@@ -56,7 +56,7 @@ jobs:
             git remote -v
             
             # delete DB data from previous run
-            sudo docker compose down --volumes --remove-orphans
+            sudo docker stop java_db && sudo docker compose down --volumes --remove-orphans
             # -d -> detached mode (run in background)
             sudo docker compose up -d
             
