@@ -3,7 +3,9 @@ name: CI/CD pipeline
 on:
   push:
     branches:
-      - merge_auth
+      - merge_dep
+      - dan-features
+      - main
 
 jobs:
   deploy:
