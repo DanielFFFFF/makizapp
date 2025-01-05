@@ -13,7 +13,7 @@ fi
 
 # Install npm
 echo "Install npm..."
-#npm install
+npm install
 
 # Return to the root project directory
 cd ../..

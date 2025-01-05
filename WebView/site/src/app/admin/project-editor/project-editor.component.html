@@ -288,7 +288,7 @@
                         </div>
                         <div class="d-flex justify-content-center mt-3 flex-wrap">
                             <div>
-                                <button
+                                <button type="button"
                                     *ngIf="this.qrCodeElementType !== 'svg'"
                                     mat-raised-button
                                     class="m-1 p-1 btn cursor-pointer"
@@ -299,6 +299,7 @@
                                 <a
                                     *ngIf="this.qrCodeElementType === 'svg'"
                                     mat-raised-button
+                                    class="m-1 p-1 btn cursor-pointer"
                                     [href]="qrData"
                                     download="qrcode"
                                 >Download</a
