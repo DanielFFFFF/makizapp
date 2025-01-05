@@ -124,20 +124,21 @@ jobs:
             echo "Building Docker image for mind tracker..."
             sudo docker build -t mind-tracker-compiler ./image-tracking-project
             
-            if [ -f ~/springboot.pid ]; then
-              pid=$(cat ~/springboot.pid)
-              if ps -p $pid > /dev/null; then
-                echo "Stopping already running Spring Boot..."
-                sudo kill -0 $pid
-              fi
+            echo "Checking for any process using port 8080..."
+            pid=$(sudo lsof -ti:8080)
             
-              sudo rm ~/springboot.pid
+            if [ -n "$pid" ]; then
+            echo "Port 8080 is in use by PID $pid. Terminating the process..."
+            sudo kill -9 $pid
+            else
+            echo "Port 8080 is free."
             fi
-
+            
             echo "Building Spring Boot..."
-            # sudo ./gradlew clean build
+            sudo ./gradlew clean build --refresh-dependencies
+            
             mkdir -p ~/logs
-            echo " Starting Spring Boot..."
-            # run server , forward output to log file and store pid in a file in order to stop it later ( on MAJ )
+            echo "Starting Spring Boot application..."
             nohup sudo ./gradlew :SpringBootServer:bootRun > ~/logs/springboot_output.log 2>&1 & echo $! > ~/springboot.pid
-            sleep 10 # wait for app to start
+            sleep 20 # wait for app to start
+
