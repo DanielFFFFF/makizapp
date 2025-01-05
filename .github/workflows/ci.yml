@@ -128,10 +128,10 @@ jobs:
             pid=$(sudo lsof -ti:8080)
             
             if [ -n "$pid" ]; then
-            echo "Port 8080 is in use by PID $pid. Terminating the process..."
-            sudo kill -9 $pid
+              echo "Port 8080 is in use by PID $pid. Terminating the process..."
+              sudo kill -9 $pid
             else
-            echo "Port 8080 is free."
+              echo "Port 8080 is free."
             fi
             
             echo "Building Spring Boot..."
