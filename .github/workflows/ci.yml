@@ -129,7 +129,12 @@ jobs:
             
             if [ -n "$pid" ]; then
               echo "Port 8080 is in use by PID $pid. Terminating the process..."
-              sudo kill -9 $pid
+              if sudo kill -9 $pid; then
+                echo "Successfully terminated process $pid."
+              else
+                echo "Failed to terminate process $pid." >&2
+                exit 1
+              fi
             else
               echo "Port 8080 is free."
             fi
