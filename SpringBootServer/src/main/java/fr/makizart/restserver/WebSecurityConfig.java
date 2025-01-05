@@ -37,8 +37,8 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                       // Autoriser l'accès public aux endpoints de login
-//                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/api/user/**").hasAuthority("ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/user/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
 

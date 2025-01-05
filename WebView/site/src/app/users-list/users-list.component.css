@@ -1,0 +1,37 @@
+h2 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.card-body {
+    font-size: 0.9rem;
+}
+
+.card-footer {
+    border-top: none;
+}
+
+.btn {
+    transition: transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+}

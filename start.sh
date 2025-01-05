@@ -1,9 +1,24 @@
 #!/bin/bash
 
+# Prompt for the root password
+read -s -p "Enter root password: " ROOT_PASSWORD
+echo
+
+# Function to run a command with optional sudo
+run_as_root() {
+  if [ "$EUID" -ne 0 ]; then
+    printf "Running as root: %s\n" "$*"
+    echo "$ROOT_PASSWORD" | sudo -S "$@"
+  else
+    printf "Running as root: %s\n" "$*"
+    "$@"
+  fi
+}
+
 # Build the frontend
 cd WebView/site
 
-## Check if --test flag is passed (example ./start.sh --test)
+# Check if --test flag is passed (example ./start.sh --test)
 if [ "$1" == "--test" ]; then
   echo "Skipping frontend dependencies installation..."
 else
@@ -17,21 +32,18 @@ if ! [ -x "$(command -v ng)" ]; then
   exit 1
 else
   echo 'Angular CLI is already installed. Building the frontend...'
-  ng build
+  npm run build-ci
 fi
 
-#Moving to makizart root folder
+# Moving to makizart root folder
 cd ../../
 
 # Removing already generated frontend build files
-rm -rf SpringBootServer/src/main/resources/static/*
+run_as_root rm -rf SpringBootServer/src/main/resources/static/*
 # Moving compiled frontend files to the backend
-mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static/
+run_as_root mv WebView/site/dist/site/* SpringBootServer/src/main/resources/static
 
 # Start the backend
 echo 'Starting the backend...'
 
-# Rn spring with gradle:
-sudo ./gradlew clean build
-sudo ./gradlew :SpringBootServer:bootRun
-
+sudo ./gradlew clean build :SpringBootServer:bootRun
