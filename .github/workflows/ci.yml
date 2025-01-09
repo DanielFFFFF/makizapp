@@ -3,8 +3,6 @@ name: CI/CD pipeline
 on:
   push:
     branches:
-      - merge_dep
-      - dan-features
       - main
 
 jobs:
